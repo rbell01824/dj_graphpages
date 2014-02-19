@@ -25,7 +25,7 @@ from django.db import models
 
 class CIA(models.Model):
     """
-    ci world fact book
+    cia world fact book
     """
     country_code = models.CharField(max_length=2, primary_key=True)
     name = models.CharField(max_length=50)

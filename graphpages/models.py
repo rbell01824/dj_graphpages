@@ -25,4 +25,20 @@ __status__ = "dev"
 
 from django.db import models
 
-# Create your models here.
+
+class GraphPage(models.Model):
+    """
+    graph page
+    """
+    name = models.CharField(max_length=50)
+    description = models.TextField()
+    form = models.TextField()
+    page = models.TextField()
+    query = models.TextField()
+
+    class Meta:
+        verbose_name = "Graph Page"
+        verbose_name = "Graph Page"
+
+    def __unicode__(self):
+        return u'{}'.format(self.name)
