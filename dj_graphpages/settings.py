@@ -36,7 +36,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'baby_names',
+    'test_data',
     'graphpages',
 )
 
@@ -60,7 +60,7 @@ WSGI_APPLICATION = 'dj_graphpages.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'NAME': os.path.join(BASE_DIR, 'db_graphpages.sqlite3'),
     }
 }
 
