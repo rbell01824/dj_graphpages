@@ -5,7 +5,7 @@
 11/18/13 - Initial creation
 
 Dependencies:
-pip install django
+
 
 """
 
