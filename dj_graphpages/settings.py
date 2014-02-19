@@ -21,8 +21,7 @@ SECRET_KEY = '27@9*07$@h4djs^7=r!b%ijhtc$946n3uzmjm0q&)g$13dz1f$'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
-TEMPLATE_DEBUG = True
+TEMPLATE_DEBUG = DEBUG
 
 ALLOWED_HOSTS = []
 
@@ -30,14 +29,19 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = (
+    #'django_admin_bootstrapped.bootstrap3',
+    #'django_admin_bootstrapped',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'bootstrap3',
     'test_data',
     'graphpages',
+    'chartkick',
+    'chartkick_demo',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -80,5 +84,19 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
-
+STATIC_ROOT = ''
 STATIC_URL = '/static/'
+
+import chartkick
+STATICFILES_DIRS = (
+    chartkick.js(),
+)
+
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+)
+
+# TEMPLATE_DIRS = (
+#     'charts',
+# )
