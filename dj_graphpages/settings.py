@@ -37,7 +37,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'bootstrap3',
+    # 'bootstrap3',
     # 'twitter_bootstrap',
     'dj_graphpages',
     'graphpages',
@@ -92,6 +92,7 @@ STATIC_URL = '/static/'
 import chartkick
 STATICFILES_DIRS = (
     chartkick.js(),
+    os.path.join(BASE_DIR, 'static'),
 )
 
 STATICFILES_FINDERS = (
@@ -99,9 +100,9 @@ STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 )
 
-# TEMPLATE_DIRS = (
-#     'charts',
-# )
+TEMPLATE_DIRS = (
+    os.path.join(BASE_DIR, 'templates'),
+)
 
 TEMPLATE_LOADERS = ('django.template.loaders.filesystem.Loader',
                     'django.template.loaders.app_directories.Loader',

@@ -4,6 +4,7 @@ from django.contrib import admin
 admin.autodiscover()
 
 from .views import index
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 urlpatterns = patterns('',
     # Examples:
@@ -15,3 +16,5 @@ urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
     url(r'^$', index, name='index'),
 )
+
+urlpatterns += staticfiles_urlpatterns()
