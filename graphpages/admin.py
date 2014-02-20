@@ -22,10 +22,28 @@ __status__ = "dev"
 
 
 from django.contrib import admin
-from .models import GraphPage
+from .models import GraphPageTags, GraphPage
+
+
+class GraphPageTagsAdmin(admin.ModelAdmin):
+    model = GraphPageTags
+    search_fields = ('tag', 'description')
+    list_display = ('tag', 'description')
+    fields = ('tag', 'description')
+    save_on_top = True
+    pass
+admin.site.register(GraphPageTags, GraphPageTagsAdmin)
 
 
 class GraphPageAdmin(admin.ModelAdmin):
+    model = GraphPage
+    search_fields = ('name', 'description')
+    list_display = ('name', 'description', 'form', 'page', 'query')
+    fields = (('name', 'description', 'tags',),
+              'form',
+              ('page_format', 'page',),
+              'query')
+    save_on_top = True
     pass
 admin.site.register(GraphPage, GraphPageAdmin)
 
