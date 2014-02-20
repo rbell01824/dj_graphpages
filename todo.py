@@ -26,4 +26,5 @@ __status__ = "dev"
 # todo 2: create landing page with menu
 # todo 2: About page
 # todo 2: Contact page
-# todo 2: dropdown cruft
+# todo 2: tests for models, see http://effectivedjango.com/tutorial/models.html
+# todo 3: system level test for navigation

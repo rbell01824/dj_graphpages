@@ -20,3 +20,15 @@ __maintainer__ = "rbell01824"
 __email__ = "rbell01824@gmail.com"
 __status__ = "dev"
 
+
+from django.views.generic import ListView
+
+from .models import CIA, Countries
+
+
+class ListCIAView(ListView):
+    model = CIA
+
+
+class ListCountriesView(ListView):
+    model = Countries

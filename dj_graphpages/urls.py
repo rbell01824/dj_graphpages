@@ -11,7 +11,7 @@ urlpatterns = patterns('',
     # url(r'^$', 'dj_graphpages.views.home', name='home'),
     # url(r'^blog/', include('blog.urls')),
 
-    # url(r'^import/', include('test_data.urls')),
+    url(r'^test_data/', include('test_data.urls')),
     url(r'^demo/', include('chartkick_demo.urls')),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^$', index, name='index'),

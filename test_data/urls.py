@@ -21,11 +21,12 @@ __maintainer__ = "rbell01824"
 __email__ = "rbell01824@gmail.com"
 __status__ = "dev"
 
-from django.conf.urls import patterns, url
+from django.conf.urls import patterns, include, url
 
-# from .views import import_baby_names
+from test_data.views import ListCIAView, ListCountriesView
 
-# urlpatterns = patterns('',
-#                        url(r'^$', import_baby_names, name='import_baby_names')
-#                        )
 
+urlpatterns = patterns('',
+                       url(r'^cia$', ListCIAView.as_view(), name='cia_list', ),
+                       url(r'^countries$', ListCountriesView.as_view(), name='countries_list', ),
+                       )
