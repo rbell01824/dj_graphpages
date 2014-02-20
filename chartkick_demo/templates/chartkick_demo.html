@@ -1,30 +1,54 @@
+{% extends "base.html" %}
 {% load chartkick %}
 
-<!DOCTYPE HTML>
-<html>
-    <head>
-        <title>Chartkick.py demo (sources examples/demo)</title>
+{#{% block extraheader %}#}
+{#    <script src="http://code.highcharts.com/highcharts.js"></script>#}
+{#    <script src="http://code.highcharts.com/modules/exporting.js"></script>#}
+{#    <script src="http://ankane.github.io/chartkick/chartkick.js"></script>#}
+{##}
+{#    <script src="http://www.google.com/jsapi"></script>#}
+{#    <script src="http://ankane.github.io/chartkick/chartkick.js"></script>#}
+{#{% endblock extraheader %}#}
 
-        <!--
-        <script src="http://www.google.com/jsapi"></script>
-        <script src="http://ankane.github.io/chartkick/chartkick.js"></script>
-        -->
+{% block content %}
+    <h3>{{ exchange_text }}</h3>
+    {% line_chart exchange with min=0.4 id='rates' %}
+    {% pie_chart browser_stats with library={"title":"Browser Statistics, May 2013"} %}
+    {% column_chart browser_stats %}
+    {% line_chart temperature with id='temperature' %}
+    {% bar_chart sizes with id='sizes' %}
+    {% area_chart areas with id='areas' %}
+    <h3>End of charts</h3>
+{% endblock content %}
 
-        <!--
-        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
-        <script src="http://code.highcharts.com/highcharts.js"></script>
-        -->
-        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
-        <script src="http://code.highcharts.com/highcharts.js"></script>
-        <script src="http://ankane.github.io/chartkick/chartkick.js"></script>
+{#{% load chartkick %}#}
+{##}
+{#<!DOCTYPE HTML>#}
+{#<html>#}
+{#    <head>#}
+{#        <title>Chartkick.py demo (sources examples/demo)</title>#}
+{##}
+{#        <!--#}
+{#        <script src="http://www.google.com/jsapi"></script>#}
+{#        <script src="http://ankane.github.io/chartkick/chartkick.js"></script>#}
+{#        -->#}
+{##}
+{#        <!--#}
+{#        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>#}
+{#        <script src="http://code.highcharts.com/highcharts.js"></script>#}
+{#        -->#}
+{#        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>#}
+{#        <script src="http://code.highcharts.com/highcharts.js"></script>#}
+{#        <script src="http://ankane.github.io/chartkick/chartkick.js"></script>#}
+{##}
+{#    </head>#}
+{#    <body>#}
+{#        {% line_chart exchange with min=0.4 id='rates' %}#}
+{#        {% pie_chart browser_stats with library={"title":"Browser Statistics, May 2013"} %}#}
+{#        {% column_chart browser_stats %}#}
+{#        {% line_chart temperature with id='temperature' %}#}
+{#        {% bar_chart sizes with id='sizes' %}#}
+{#        {% area_chart areas with id='areas' %}#}
+{#    </body>#}
+{#</html>#}
 
-    </head>
-    <body>
-        {% line_chart exchange with min=0.4 id='rates' %}
-        {% pie_chart browser_stats with library={"title":"Browser Statistics, May 2013"} %}
-        {% column_chart browser_stats %}
-        {% line_chart temperature with id='temperature' %}
-        {% bar_chart sizes with id='sizes' %}
-        {% area_chart areas with id='areas' %}
-    </body>
-</html>

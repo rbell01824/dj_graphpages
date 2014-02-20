@@ -41,6 +41,7 @@ def charts(request):
                 '2011-01-31': 0.7489, '2012-01-31': 0.7755,
                 '2013-01-31': 0.7531,
                 }
+    exchange_text = 'Exchange Rates Chart'
 
     browser_stats = [['Chrome', 52.9], ['Firefox', 27.7], ['Opera', 1.6],
                      ['Internet Explorer', 12.6], ['Safari', 4]]
