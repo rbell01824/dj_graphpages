@@ -1,0 +1,22 @@
+{#{% load staticfiles %}#}
+{#<script type="text/javascript" src="{% static 'twitter_bootstrap/js/transition.js' %}"></script>#}
+
+{% load bootstrap3 %}
+
+{#Load CSS and JavaScript#}
+{% bootstrap_css %} {% bootstrap_javascript %}
+
+{#Display django.contrib.messages as Bootstrap alerts#}
+{% bootstrap_messages %}
+
+<form class="span6 well">
+    <label>Username</label>
+    <input type="text" class="span4" placeholder="Type user name here..." />
+    <br/>
+    <label>Password</label>
+    <input type="text" class="span4" placeholder="Type password here..." />
+    <br/>
+    <br/>
+    <button class="btn bnt-primary">Submit</button>
+    <button class="btn">Clear</button>
+</form>

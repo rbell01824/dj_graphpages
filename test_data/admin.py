@@ -62,8 +62,6 @@ class CountriesAdmin(admin.ModelAdmin):
                      'life_expectancy', 'infant_mortality')
     # list_filter = ('country_size', 'population', 'life_expectancy', 'infant_mortality')
     # filter_horizontal = ('users',)
-
     save_on_top = True
-    pass
     pass
 admin.site.register(Countries, CountriesAdmin)

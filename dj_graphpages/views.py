@@ -19,7 +19,9 @@ __version__ = "0.1"
 __status__ = "dev"
 
 from django.http import HttpResponse
+from django.shortcuts import render
 
 
 def index(request):
-    return HttpResponse("Hello, world. You're at the demo main index.")
+    context = {'foo': 'bar'}
+    return render(request, 'base.html', context )

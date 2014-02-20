@@ -38,10 +38,12 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'bootstrap3',
-    'test_data',
+    # 'twitter_bootstrap',
+    'dj_graphpages',
     'graphpages',
     'chartkick',
     'chartkick_demo',
+    'test_data',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -100,3 +102,7 @@ STATICFILES_FINDERS = (
 # TEMPLATE_DIRS = (
 #     'charts',
 # )
+
+TEMPLATE_LOADERS = ('django.template.loaders.filesystem.Loader',
+                    'django.template.loaders.app_directories.Loader',
+                    )
