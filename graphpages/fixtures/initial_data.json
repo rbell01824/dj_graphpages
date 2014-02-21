@@ -1,0 +1,131 @@
+[
+{
+    "pk": 1, 
+    "model": "graphpages.graphtemplatetags", 
+    "fields": {
+        "tag": "Chartkick", 
+        "description": "Uses chartkick charts"
+    }
+},
+{
+    "pk": 2, 
+    "model": "graphpages.graphtemplatetags", 
+    "fields": {
+        "tag": "Highchart", 
+        "description": "Uses highchart charts"
+    }
+},
+{
+    "pk": 3, 
+    "model": "graphpages.graphtemplatetags", 
+    "fields": {
+        "tag": "Pie", 
+        "description": "Pie chart"
+    }
+},
+{
+    "pk": 4, 
+    "model": "graphpages.graphtemplatetags", 
+    "fields": {
+        "tag": "Line", 
+        "description": "Line chart"
+    }
+},
+{
+    "pk": 5, 
+    "model": "graphpages.graphtemplatetags", 
+    "fields": {
+        "tag": "Column", 
+        "description": "Column chart"
+    }
+},
+{
+    "pk": 6, 
+    "model": "graphpages.graphtemplatetags", 
+    "fields": {
+        "tag": "Bar", 
+        "description": "Bar chart"
+    }
+},
+{
+    "pk": 7, 
+    "model": "graphpages.graphtemplatetags", 
+    "fields": {
+        "tag": "Area", 
+        "description": "Area chart"
+    }
+},
+{
+    "pk": 8, 
+    "model": "graphpages.graphtemplatetags", 
+    "fields": {
+        "tag": "Combo", 
+        "description": "Combo chart"
+    }
+},
+{
+    "pk": 1, 
+    "model": "graphpages.graphtemplates", 
+    "fields": {
+        "tags": [
+            1, 
+            4
+        ], 
+        "name": "Line", 
+        "template": "{% extends \"base.html\" %}\r\n{% load chartkick %}\r\n\r\n{% block content %}\r\n    <h3>{{ title }}</h3>\r\n    {% line_chart data %}\r\n{% endblock content %}", 
+        "description": "Chartkick single line chart with title & data"
+    }
+},
+{
+    "pk": 2, 
+    "model": "graphpages.graphtemplates", 
+    "fields": {
+        "tags": [
+            1, 
+            3
+        ], 
+        "name": "Pie", 
+        "template": "{% extends \"base.html\" %}\r\n{% load chartkick %}\r\n\r\n{% block content %}\r\n    <h3>{{ title }}</h3>\r\n    {% pie_chart data %}\r\n{% endblock content %}", 
+        "description": "Chartkick single pie chart with title & data"
+    }
+},
+{
+    "pk": 3, 
+    "model": "graphpages.graphtemplates", 
+    "fields": {
+        "tags": [
+            1, 
+            5
+        ], 
+        "name": "Column", 
+        "template": "{% extends \"base.html\" %}\r\n{% load chartkick %}\r\n\r\n{% block content %}\r\n    <h3>{{ title }}</h3>\r\n    {% column_chart data %}\r\n{% endblock content %}", 
+        "description": "Chartkick single column chart with title & data"
+    }
+},
+{
+    "pk": 4, 
+    "model": "graphpages.graphtemplates", 
+    "fields": {
+        "tags": [
+            1, 
+            6
+        ], 
+        "name": "Bar", 
+        "template": "{% extends \"base.html\" %}\r\n{% load chartkick %}\r\n\r\n{% block content %}\r\n    <h3>{{ title }}</h3>\r\n    {% bar_chart data %}\r\n{% endblock content %}", 
+        "description": "Chartkick single bar chart with title & data"
+    }
+},
+{
+    "pk": 5, 
+    "model": "graphpages.graphtemplates", 
+    "fields": {
+        "tags": [
+            1, 
+            7
+        ], 
+        "name": "Area", 
+        "template": "{% extends \"base.html\" %}\r\n{% load chartkick %}\r\n\r\n{% block content %}\r\n    <h3>{{ title }}</h3>\r\n    {% area_chart data %}\r\n{% endblock content %}", 
+        "description": "Chartkick single area chart with title & data"
+    }
+}
+]

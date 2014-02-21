@@ -23,9 +23,11 @@ __status__ = "dev"
 # todo 1: change django administration banner
 # todo 1: get local versions of jquery and ALL the bootstrap cruft
 
+
 # todo 2: put jquery.min.js into static
 # todo 2: put highcharts.js into static
 # todo 2: put chartkick.js into static
+# todo 2: format graph page list field widths
 # todo 2: start user documentation
 # todo 2: About page
 # todo 2: Contact page

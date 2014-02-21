@@ -12,6 +12,7 @@ urlpatterns = patterns('',
     # url(r'^blog/', include('blog.urls')),
 
     url(r'^test_data/', include('test_data.urls')),
+    url(r'^graphpages/', include('graphpages.urls')),
     url(r'^demo/', include('chartkick_demo.urls')),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^$', index, name='index'),

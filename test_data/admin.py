@@ -30,7 +30,8 @@ class CIAAdmin(admin.ModelAdmin):
     search_fields = ('name', 'country_code')
     # list_filter = ('is_active', 'users', 'created_by', 'created_on', 'status')
     # ordering = ('name')
-    list_display = ('name', 'country_code', 'total_area', 'coastline',
+    list_display = ('name', 'country_code',
+                    'total_area', 'land_area', 'coastline',
                     'population', 'birth_rate', 'p_growth',
                     'phone_mobiles', 'internet_users')
     fields = (('name', 'country_code'),
@@ -41,7 +42,7 @@ class CIAAdmin(admin.ModelAdmin):
               ('internet_users', 'isps'),
               ('birth_rate', 'death_rate'))
     # filter_horizontal = ('users',)
-    list_editable = ('phone_mobiles', 'internet_users',)
+    list_editable = ('land_area', 'phone_mobiles', 'internet_users',)
     save_on_top = True
     pass
 admin.site.register(CIA, CIAAdmin)

@@ -27,7 +27,7 @@ from django.db import models
 
 
 class GraphTemplateTags(models.Model):
-    tag = models.CharField(max_length=20, unique=True, primary_key=True)
+    tag = models.CharField(max_length=20, unique=True)
     description = models.TextField()
 
     class Meta:
@@ -40,7 +40,7 @@ class GraphTemplateTags(models.Model):
 
 class GraphTemplates(models.Model):
     name = models.CharField(max_length=50,          # name of template
-                            unique=True, primary_key=True)
+                            unique=True)
     description = models.TextField(blank=True,      # some sort of useful description
                                    help_text='Description with parameters')
     tags = models.ManyToManyField(GraphTemplateTags,
@@ -57,7 +57,7 @@ class GraphTemplates(models.Model):
 
 
 class GraphPageTags(models.Model):
-    tag = models.CharField(max_length=20, unique=True, primary_key=True)
+    tag = models.CharField(max_length=20, unique=True)
     description = models.TextField()
 
     class Meta:
@@ -76,7 +76,8 @@ class GraphPage(models.Model):
                     ('rst', 'reStructuredText'),
                     ('md', 'markdown'))
 
-    name = models.CharField(max_length=50, unique=True, primary_key=True)       # name of graph page
+    name = models.CharField(max_length=50,          # name of graph page
+                            unique=True)
     description = models.TextField(blank=True)      # some sort of useful description
     tags = models.ManyToManyField(GraphPageTags,
                                   blank=True,
