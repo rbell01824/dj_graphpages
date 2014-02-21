@@ -49,13 +49,23 @@ class GraphTemplatesAdmin(admin.ModelAdmin):
               'template')
     formfield_overrides = {models.ManyToManyField: {'widget': SelectMultiple(attrs={'size': '10'})}, }
     save_on_top = True
+    actions = ['delete_selected', 'duplicate_records']
     pass
 
+    # noinspection PyMethodMayBeStatic
     def tags_list(self, obj):
         rtn = ''
         for tag in obj.tags.all():
             rtn += '; ' + tag.tag
         return rtn[1:]
+
+    # noinspection PyMethodMayBeStatic,PyUnusedLocal
+    def duplicate_records(self, request, queryset):
+        for obj in queryset:
+            obj.id = None
+            obj.name += '_dup'
+            obj.save()
+    duplicate_records.short_description = "Duplicate selected records"
 admin.site.register(GraphTemplates, GraphTemplatesAdmin)
 
 
@@ -84,9 +94,10 @@ class GraphPageAdmin(admin.ModelAdmin):
     formfield_overrides = {models.ManyToManyField: {'widget': SelectMultiple(attrs={'size': '10'})}, }
     save_on_top = True
     ordering = ('name',)
-    actions = ['delete_selected', 'graph_admin_action']
+    actions = ['delete_selected', 'duplicate_records', 'graph_admin_action']
     pass
 
+    # noinspection PyMethodMayBeStatic
     def tags_list(self, obj):
         rtn = ''
         for tag in obj.tags.all():
@@ -101,4 +112,12 @@ class GraphPageAdmin(admin.ModelAdmin):
         # ct = ContentType.objects.get_for_model(queryset.model)
         return HttpResponseRedirect("/graphpages/graph/%s" % (selected[0]))
     graph_admin_action.short_description = 'Display graph'
+
+    # noinspection PyMethodMayBeStatic,PyUnusedLocal
+    def duplicate_records(self, request, queryset):
+        for obj in queryset:
+            obj.id = None
+            obj.name += '_dup'
+            obj.save()
+    duplicate_records.short_description = "Duplicate selected records"
 admin.site.register(GraphPage, GraphPageAdmin)
