@@ -48,6 +48,7 @@ class GraphTemplatesAdmin(admin.ModelAdmin):
     fields = (('name', 'description', 'tags',),
               'template')
     formfield_overrides = {models.ManyToManyField: {'widget': SelectMultiple(attrs={'size': '10'})}, }
+    ordering = ('name',)
     save_on_top = True
     actions = ['delete_selected', 'duplicate_records']
     pass

@@ -72,6 +72,14 @@
     }
 },
 {
+    "pk": 10, 
+    "model": "graphpages.graphtemplatetags", 
+    "fields": {
+        "tag": "Side by side", 
+        "description": "Charts appear side by side"
+    }
+},
+{
     "pk": 1, 
     "model": "graphpages.graphtemplates", 
     "fields": {
@@ -150,6 +158,20 @@
     }
 },
 {
+    "pk": 7, 
+    "model": "graphpages.graphtemplates", 
+    "fields": {
+        "tags": [
+            1, 
+            9, 
+            10
+        ], 
+        "name": "Pie 2 Side by side", 
+        "template": "{% extends \"base.html\" %}\r\n{% load chartkick %}\r\n\r\n{% block content %}\r\n    <div class=\"container-fluid\">\r\n        <div class=\"jumbotron\">\r\n            <h3>Django Graph Pages</h3>\r\n\r\n            <p>This template displays two pie charts side by side in a fluid grid.</p>\r\n\r\n        </div>\r\n    </div>\r\n\r\n    <div class=\"container-fluid\">\r\n        <div class=\"row\">\r\n            <div class=\"col-md-6\">\r\n                <h3>{{ title1 }}</h3>\r\n                {% pie_chart data1 with id='chart-1' %}\r\n            </div>\r\n            <div class=\"col-md-6\">\r\n                <h3>{{ title2 }}</h3>\r\n                {% pie_chart data2 with id='chart-2' %}\r\n            </div>\r\n        </div>\r\n    </div>\r\n{% endblock content %}", 
+        "description": "Chartkick two pie charts side by side with title1, data_1, title2, & data_2"
+    }
+},
+{
     "pk": 1, 
     "model": "graphpages.graphpagetags", 
     "fields": {
@@ -211,6 +233,20 @@
         "query": "title1 = 'Top 10 countries by land area'\r\nr = CIA.objects.order_by('-land_area')[:10]\r\ndata1 = [[o.name, o.land_area] for o in r]\r\n\r\ntitle2 = 'Top 10 countries by population'\r\nr = CIA.objects.order_by('-population')[:10]\r\ndata2 = [[o.name, o.population] for o in r]\r\n\r\n", 
         "page": "", 
         "description": "Top 20 countries by land area and population\r\n"
+    }
+},
+{
+    "pk": 4, 
+    "model": "graphpages.graphpage", 
+    "fields": {
+        "name": "Top 10 countries by land area and population 2", 
+        "form": "", 
+        "tags": [], 
+        "page_format": "html", 
+        "template": 7, 
+        "query": "title1 = 'Top 10 countries by land area'\r\nr = CIA.objects.order_by('-land_area')[:10]\r\ndata1 = [[o.name, o.land_area] for o in r]\r\n\r\ntitle2 = 'Top 10 countries by population'\r\nr = CIA.objects.order_by('-population')[:10]\r\ndata2 = [[o.name, o.population] for o in r]\r\n\r\n", 
+        "page": "", 
+        "description": "Top 20 countries by land area and population side by side\r\n"
     }
 }
 ]
