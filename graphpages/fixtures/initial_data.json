@@ -127,5 +127,37 @@
         "template": "{% extends \"base.html\" %}\r\n{% load chartkick %}\r\n\r\n{% block content %}\r\n    <h3>{{ title }}</h3>\r\n    {% area_chart data %}\r\n{% endblock content %}", 
         "description": "Chartkick single area chart with title & data"
     }
+},
+{
+    "pk": 1, 
+    "model": "graphpages.graphpagetags", 
+    "fields": {
+        "tag": "CIA", 
+        "description": "CIA World Factbook"
+    }
+},
+{
+    "pk": 2, 
+    "model": "graphpages.graphpagetags", 
+    "fields": {
+        "tag": "Countries", 
+        "description": "Countries Data"
+    }
+},
+{
+    "pk": 1, 
+    "model": "graphpages.graphpage", 
+    "fields": {
+        "name": "Top 20 countries by land area", 
+        "form": "", 
+        "tags": [
+            1
+        ], 
+        "page_format": "html", 
+        "template": 3, 
+        "query": "title = 'Top 20 countries by land area'\r\nr = CIA.objects.order_by('-land_area')[:20]\r\ndata = [[o.name, o.land_area] for o in r]\r\n", 
+        "page": "", 
+        "description": "Top 20 countries by land area"
+    }
 }
 ]
