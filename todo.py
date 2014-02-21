@@ -18,6 +18,7 @@ __license__ = "All rights reserved"
 __version__ = "0.1"
 __status__ = "dev"
 
+# todo 1: revise memnubar to deal with graphtemplates & graphpage list/add/edit
 # todo 1: cleanup list format for graphpage name, description, form, page, query
 # todo 1: change django administration banner
 # todo 1: get local versions of jquery and ALL the bootstrap cruft

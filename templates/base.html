@@ -24,6 +24,7 @@
     <!-- styles -->
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css">
+    <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
 
     <!-- extrahead  -->
     {% block extrahead %}
@@ -46,22 +47,29 @@
         </div>
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
-                <li><a href="">List</a></li>
-                <li><a href="">Add</a></li>
-                <li><a href="">Edit</a></li>
-                <li><a href="/demo/chartkick">Chartkick Demo</a></li>
+                <li><a href=""><i class="fa fa-table fa-2x"></i>List</a></li>
+                <li><a href=""><i class="fa fa-plus fa-2x"></i>Add</a></li>
+                <li><a href=""><i class="fa fa-pencil-square-o fa-2x"></i>Edit</a></li>
+                <li><a href="/demo/chartkick"><i class="fa fa-bar-chart-o fa-2x"></i>Chartkick Demo</a></li>
                 <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Data List <b class="caret"></b></a>
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        <i class="fa fa-table fa-2x"></i>Data List <b class="caret"></b>
+                    </a>
                     <ul class="dropdown-menu">
-                        <li><a href="/admin/test_data/cia/">CIA List</a></li>
+                        <li><a href="/admin/test_data/cia/">CIA World Factbook</a></li>
                         {# <li class="divider"></li>#}
                         <li><a href="/admin/test_data/countries/">Countries List</a></li>
                         {# <li class="dropdown-header">Nav header</li>#}
                     </ul>
                 </li>
-                <li><a href="/admin">Admin</a></li>
-                <li><a href="#about">About</a></li>
-                <li><a href="#contact">Contact</a></li>
+                <li><a href="/admin"><i class="fa fa-cogs fa-2x"></i>Admin</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                {# <li class="active"><a href="./">Default</a></li>#}
+                {# <li><a href="../navbar-static-top/">Static top</a></li>#}
+                {# <li><a href="../navbar-fixed-top/">Fixed top</a></li>#}
+                <li><a href="#about"><i class="fa fa-comment fa-2x"></i>About</a></li>
+                <li><a href="#contact"><i class="fa fa-envelope fa-2x"></i>Contact</a></li>
             </ul>
         </div>
     </div>

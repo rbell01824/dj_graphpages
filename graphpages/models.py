@@ -26,6 +26,36 @@ __status__ = "dev"
 from django.db import models
 
 
+class GraphTemplateTags(models.Model):
+    tag = models.CharField(max_length=20, unique=True, primary_key=True)
+    description = models.TextField()
+
+    class Meta:
+        verbose_name = "Graph Template Tags"
+        verbose_name_plural = "Graph Template Tags"
+
+    def __unicode__(self):
+        return u'{}'.format(self.tag)
+
+
+class GraphTemplates(models.Model):
+    name = models.CharField(max_length=50,          # name of template
+                            unique=True, primary_key=True)
+    description = models.TextField(blank=True,      # some sort of useful description
+                                   help_text='Description with parameters')
+    tags = models.ManyToManyField(GraphTemplateTags,
+                                  blank=True,
+                                  null=True)
+    template = models.TextField(blank=True)         # the actual template
+
+    class Meta:
+        verbose_name = "Graph Template"
+        verbose_name_plural = "Graph Templates"
+
+    def __unicode__(self):
+        return u'{}'.format(self.name)
+
+
 class GraphPageTags(models.Model):
     tag = models.CharField(max_length=20, unique=True, primary_key=True)
     description = models.TextField()
@@ -56,8 +86,12 @@ class GraphPage(models.Model):
                                    choices=PAGE_FORMATS,
                                    default='html',
                                    blank=True)
-    page = models.TextField()           # text of the page with graphs embeded a la django template
-    query = models.TextField()          # some django/python to get data for the page
+    template = models.ForeignKey(GraphTemplates,    # base template if present
+                                 blank=True,
+                                 null=True)
+    page = models.TextField(blank=True,             # text of the page with graphs embeded a la django template
+                            null=True)
+    query = models.TextField()                      # some django/python to get data for the page
 
     class Meta:
         verbose_name = "Graph Page"
