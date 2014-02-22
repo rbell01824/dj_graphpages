@@ -8,6 +8,7 @@ from django.views.generic import TemplateView
 
 from .views import index
 from graphpages.views import GraphListView
+import forms_builder.forms.urls
 
 urlpatterns = patterns('',
     # Examples:
@@ -20,6 +21,7 @@ urlpatterns = patterns('',
     url(r'^graphpages/', include('graphpages.urls')),
     url(r'^demo/', include('chartkick_demo.urls')),
     url(r'^admin/', include(admin.site.urls)),
+    url(r'^forms/', include(forms_builder.forms.urls)),
     url(r'^$', index, name='index'),
 )
 
