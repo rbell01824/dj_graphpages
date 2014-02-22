@@ -42,7 +42,6 @@ INSTALLED_APPS = (
     # 'twitter_bootstrap',
     'dj_graphpages',
     'graphpages',
-    'display_graph_page',
     'chartkick',
     'chartkick_demo',
     'test_data',

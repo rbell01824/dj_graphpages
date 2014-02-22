@@ -33,6 +33,7 @@ from django.template import Context, Template
 from .models import GraphTemplates, GraphTemplateTags
 from .models import GraphPage, GraphPageTags
 from test_data.models import Countries, CIA
+from django.views.generic.list import ListView
 
 
 def get_graph_template(graphpage_obj):
@@ -77,3 +78,7 @@ def graph(request, graph_pk):
     graphpage_obj = get_object_or_404(GraphPage, pk=graph_pk)
     response = build_graph_response(graphpage_obj)
     return HttpResponse(response)
+
+
+class GraphListView(ListView):
+    model = GraphPage
