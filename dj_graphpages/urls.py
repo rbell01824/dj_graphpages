@@ -22,6 +22,7 @@ urlpatterns = patterns('',
     url(r'^demo/', include('chartkick_demo.urls')),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^forms/', include(forms_builder.forms.urls)),
+    url(r'^forms2/', include('form_designer.urls')),
     url(r'^$', index, name='index'),
 )
 

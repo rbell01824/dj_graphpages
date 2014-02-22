@@ -45,7 +45,8 @@ INSTALLED_APPS = (
     'chartkick',
     'chartkick_demo',
     'test_data',
-    'forms_builder.forms'
+    'forms_builder.forms',
+    'form_designer',
 )
 
 MIDDLEWARE_CLASSES = (
