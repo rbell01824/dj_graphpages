@@ -248,5 +248,79 @@
         "page": "", 
         "description": "Top 20 countries by land area and population side by side\r\n"
     }
+},
+{
+    "pk": 1, 
+    "model": "graphpages.graph2tags", 
+    "fields": {
+        "tag": "CIA", 
+        "description": "CIA World Factbook data"
+    }
+},
+{
+    "pk": 2, 
+    "model": "graphpages.graph2tags", 
+    "fields": {
+        "tag": "Countries", 
+        "description": "United Nations Country Data"
+    }
+},
+{
+    "pk": 1, 
+    "model": "graphpages.graph2template", 
+    "fields": {
+        "tags": [], 
+        "name": "Top 20 countries by land area column", 
+        "template": "{% extends \"base.html\" %}\r\n{% load chartkick %}\r\n\r\n{% block content %}\r\n    <h3>{{ title }}</h3>\r\n    {% column_chart data %}\r\n{% endblock content %}", 
+        "description": ""
+    }
+},
+{
+    "pk": 2, 
+    "model": "graphpages.graph2template", 
+    "fields": {
+        "tags": [
+            1
+        ], 
+        "name": "Top 30 countries by land area column with embeded calcs", 
+        "template": "{% extends \"base.html\" %}\r\n{% load chartkick %}\r\n{% load graphpage_tags %}\r\n\r\n{% block content %}\r\n\r\n    {% expr map(list, CIA.objects.order_by('-land_area').values_list('name', 'land_area')[:30]) as data %}\r\n\r\n    <h3>Top 30 countries by land area</h3>\r\n    {% column_chart data %}\r\n\r\n{% endblock content %}", 
+        "description": ""
+    }
+},
+{
+    "pk": 1, 
+    "model": "graphpages.graph2query", 
+    "fields": {
+        "query": "\r\ntitle = 'Top 20 countries by land area'\r\nr = CIA.objects.order_by('-land_area')[:20]\r\ndata = [[o.name, o.land_area] for o in r]", 
+        "tags": [], 
+        "name": "Top 20 countries by land area column", 
+        "description": ""
+    }
+},
+{
+    "pk": 1, 
+    "model": "graphpages.graph2graph", 
+    "fields": {
+        "name": "Top 20 countries by land area", 
+        "form": null, 
+        "tags": [
+            1
+        ], 
+        "template": 1, 
+        "query": 1, 
+        "description": ""
+    }
+},
+{
+    "pk": 2, 
+    "model": "graphpages.graph2graph", 
+    "fields": {
+        "name": "Top 30 countries by land area", 
+        "form": null, 
+        "tags": [], 
+        "template": 2, 
+        "query": null, 
+        "description": ""
+    }
 }
 ]
