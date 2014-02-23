@@ -291,12 +291,12 @@ class Graph2GraphAdmin(admin.ModelAdmin):
     display_graph.allow_tags = True
 
     search_fields = ('name', 'description')
-    readonly_fields = ('form_current_value', 'page_current_value', 'query_current_value')
+    readonly_fields = ('form_current_value', 'template_current_value', 'query_current_value')
     list_display = ('display_graph', 'name', 'tags_list', 'description',
-                    'form', 'page', 'query')
+                    'form', 'template', 'query')
     fieldsets = ((None, {'fields': (('name',
                                      'form_current_value',
-                                     'page_current_value',
+                                     'template_current_value',
                                      'query_current_value',
                                      'tags',))}),
                  ('Description', {
@@ -305,9 +305,9 @@ class Graph2GraphAdmin(admin.ModelAdmin):
                  ('Form', {
                      'classes': ('collapse',),
                      'fields': ('form',)}),
-                 ('Page', {
+                 ('Template', {
                      'classes': ('collapse',),
-                     'fields': ('page',)}),
+                     'fields': ('template',)}),
                  ('Query', {
                      'classes': ('collapse',),
                      'fields': ('query',)}),
@@ -331,8 +331,8 @@ class Graph2GraphAdmin(admin.ModelAdmin):
         return 'Form: ' + obj.form.name
 
     # noinspection PyMethodMayBeStatic
-    def page_current_value(self, obj):
-        return 'Page: ' + obj.page.name
+    def template_current_value(self, obj):
+        return 'Template: ' + obj.template.name
 
     # noinspection PyMethodMayBeStatic
     def query_current_value(self, obj):

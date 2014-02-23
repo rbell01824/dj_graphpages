@@ -143,11 +143,11 @@ class Graph2View(View):
         """
         # todo 2: make exec safe
         # todo 1: rewrite to use globals and locals properly
-        query_text = graph2obj.query
-        query_text = query_text.strip()
+        query_text = graph2obj.query.query
         # global_context = {}
         # local_context = {}
-        if len(query_text) > 0:
+        if query_text and len(query_text.strip()) > 0:
+            query_text = query_text.strip()
             exec(query_text, None, None)
         context = Context(locals())
         return context
@@ -159,7 +159,7 @@ class Graph2View(View):
         :type graph2obj: Graph2Graph
         """
         template_text = ''
-        if graph2obj.page:            # use page if available
-            template_text = graph2obj.page
+        if graph2obj.template:              # use page if available
+            template_text = graph2obj.template.template
         # todo 2: other validations go here
         return Template(template_text)

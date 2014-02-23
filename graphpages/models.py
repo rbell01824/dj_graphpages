@@ -189,9 +189,9 @@ class Graph2Graph(models.Model):
     form = models.ForeignKey(Graph2Form,
                              blank=True,
                              null=True)
-    page = models.ForeignKey(Graph2Template,
-                             blank=True,
-                             null=True)
+    template = models.ForeignKey(Graph2Template,
+                                 blank=True,
+                                 null=True)
     query = models.ForeignKey(Graph2Query,
                               blank=True,
                               null=True)
