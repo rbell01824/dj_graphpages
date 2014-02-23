@@ -178,6 +178,7 @@ class Graph2Query(models.Model):
     pass
 
 
+# todo 1: review with JZ and add a single in situ textarea to hold stuff
 class Graph2Graph(models.Model):
     name = models.CharField(max_length=200,
                             blank=False,

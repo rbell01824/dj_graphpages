@@ -143,12 +143,15 @@ class Graph2View(View):
         """
         # todo 2: make exec safe
         # todo 1: rewrite to use globals and locals properly
+        if not graph2obj.query:
+            return Context({})
         query_text = graph2obj.query.query
+        if len(query_text.strip()) <= 0:
+            return Context({})
         # global_context = {}
         # local_context = {}
-        if query_text and len(query_text.strip()) > 0:
-            query_text = query_text.strip()
-            exec(query_text, None, None)
+        query_text = query_text.strip()
+        exec(query_text, None, None)
         context = Context(locals())
         return context
 
