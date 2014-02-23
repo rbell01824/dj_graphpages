@@ -100,3 +100,106 @@ class GraphPage(models.Model):
 
     def __unicode__(self):
         return u'{}'.format(self.name)
+#
+###############################################################################
+#
+# GraphPage2: improved models
+#
+###############################################################################
+#
+
+
+class Graph2Tags(models.Model):
+    tag = models.SlugField(max_length=20, unique=True)
+    description = models.TextField(blank=True)
+
+    class Meta:
+        verbose_name = "Graph2 Tags"
+        verbose_name_plural = "Graph2 Tags"
+
+    def __unicode__(self):
+        return u'{}'.format(self.tag)
+
+
+class Graph2Form(models.Model):
+    name = models.CharField(max_length=200,
+                            blank=False,
+                            unique=True)
+    description = models.TextField(blank=True)
+    tags = models.ManyToManyField(Graph2Tags,
+                                  blank=True,
+                                  null=True)
+    form = models.TextField(blank=False)
+
+    class Meta:
+        verbose_name = "Graph2 Form"
+        verbose_name_plural = "Graph2 Form"
+
+    def __unicode__(self):
+        return u'{}'.format(self.name)
+    pass
+
+
+class Graph2Template(models.Model):
+    name = models.CharField(max_length=200,
+                            blank=False,
+                            unique=True)
+    description = models.TextField(blank=True)
+    tags = models.ManyToManyField(Graph2Tags,
+                                  blank=True,
+                                  null=True)
+    template = models.TextField(blank=False)
+
+    class Meta:
+        verbose_name = "Graph2 Template"
+        verbose_name_plural = "Graph2 Template"
+
+    def __unicode__(self):
+        return u'{}'.format(self.name)
+    pass
+
+
+class Graph2Query(models.Model):
+    name = models.CharField(max_length=200,
+                            blank=False,
+                            unique=True)
+    description = models.TextField(blank=True)
+    tags = models.ManyToManyField(Graph2Tags,
+                                  blank=True,
+                                  null=True)
+    query = models.TextField(blank=False)
+
+    class Meta:
+        verbose_name = "Graph2 Query"
+        verbose_name_plural = "Graph2 Query"
+
+    def __unicode__(self):
+        return u'{}'.format(self.name)
+    pass
+
+
+class Graph2Graph(models.Model):
+    name = models.CharField(max_length=200,
+                            blank=False,
+                            unique=True)
+    description = models.TextField(blank=True)
+    tags = models.ManyToManyField(GraphPageTags,
+                                  blank=True,
+                                  null=True)
+    form = models.ForeignKey(Graph2Form,
+                             blank=True,
+                             null=True)
+    page = models.ForeignKey(Graph2Template,
+                             blank=True,
+                             null=True)
+    query = models.ForeignKey(Graph2Query,
+                              blank=True,
+                              null=True)
+
+    class Meta:
+        verbose_name = "Graph2 Graph"
+        verbose_name_plural = "Graph2 Graph"
+
+    def __unicode__(self):
+        return u'{}'.format(self.name)
+    pass
