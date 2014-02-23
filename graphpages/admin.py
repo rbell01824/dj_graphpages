@@ -187,17 +187,16 @@ class Graph2FormAdmin(admin.ModelAdmin):
             obj.id = None
             obj.name += '_dup'
             obj.save()
+    duplicate_records.short_description = "Duplicate selected records"
 
     def formfield_for_dbfield(self, db_field, **kwargs):
         if db_field.name == 'name':
             kwargs['widget'] = TextInput(attrs={'size': '140'})
         if db_field.name == 'description':
-            kwargs['widget'] = Textarea(attrs={'rows': '3', 'cols': '120'})
+            kwargs['widget'] = Textarea(attrs={'rows': '3', 'cols': '140'})
+        if db_field.name == 'form':
+            kwargs['widget'] = Textarea(attrs={'rows': '10', 'cols': '140'})
         return super(Graph2FormAdmin, self).formfield_for_dbfield(db_field, **kwargs)
-
-    duplicate_records.short_description = "Duplicate selected records"
-
-
 admin.site.register(Graph2Form, Graph2FormAdmin)
 
 
@@ -227,9 +226,16 @@ class Graph2TemplateAdmin(admin.ModelAdmin):
             obj.id = None
             obj.name += '_dup'
             obj.save()
-
     duplicate_records.short_description = "Duplicate selected records"
 
+    def formfield_for_dbfield(self, db_field, **kwargs):
+        if db_field.name == 'name':
+            kwargs['widget'] = TextInput(attrs={'size': '140'})
+        if db_field.name == 'description':
+            kwargs['widget'] = Textarea(attrs={'rows': '3', 'cols': '140'})
+        if db_field.name == 'template':
+            kwargs['widget'] = Textarea(attrs={'rows': '10', 'cols': '140'})
+        return super(Graph2TemplateAdmin, self).formfield_for_dbfield(db_field, **kwargs)
 
 admin.site.register(Graph2Template, Graph2TemplateAdmin)
 
@@ -260,19 +266,39 @@ class Graph2QueryAdmin(admin.ModelAdmin):
             obj.id = None
             obj.name += '_dup'
             obj.save()
-
     duplicate_records.short_description = "Duplicate selected records"
 
+    def formfield_for_dbfield(self, db_field, **kwargs):
+        if db_field.name == 'name':
+            kwargs['widget'] = TextInput(attrs={'size': '140'})
+        if db_field.name == 'description':
+            kwargs['widget'] = Textarea(attrs={'rows': '3', 'cols': '140'})
+        if db_field.name == 'query':
+            kwargs['widget'] = Textarea(attrs={'rows': '10', 'cols': '140'})
+        return super(Graph2QueryAdmin, self).formfield_for_dbfield(db_field, **kwargs)
 
 admin.site.register(Graph2Query, Graph2QueryAdmin)
 
 
 class Graph2GraphAdmin(admin.ModelAdmin):
     model = Graph2Graph
+
+    # noinspection PyMethodMayBeStatic
+    def display_graph(self, obj):
+        rtn = u"<div><a class='btn btn-primary btn-sm' href='/graphpages/graph2/%s'>Display</a></div>" % obj.id
+        return rtn
+    display_graph.short_description = ''
+    display_graph.allow_tags = True
+
     search_fields = ('name', 'description')
-    list_display = ('name', 'tags_list', 'description',
+    readonly_fields = ('form_current_value', 'page_current_value', 'query_current_value')
+    list_display = ('display_graph', 'name', 'tags_list', 'description',
                     'form', 'page', 'query')
-    fieldsets = ((None, {'fields': (('name', 'tags',))}),
+    fieldsets = ((None, {'fields': (('name',
+                                     'form_current_value',
+                                     'page_current_value',
+                                     'query_current_value',
+                                     'tags',))}),
                  ('Description', {
                      'classes': ('collapse',),
                      'fields': ('description',)}),
@@ -285,7 +311,8 @@ class Graph2GraphAdmin(admin.ModelAdmin):
                  ('Query', {
                      'classes': ('collapse',),
                      'fields': ('query',)}),
-    )
+                 )
+    list_display_links = ('name',)
     filter_horizontal = ('tags',)
     save_on_top = True
     ordering = ('name',)
@@ -298,6 +325,26 @@ class Graph2GraphAdmin(admin.ModelAdmin):
         for tag in obj.tags.all():
             rtn += '; ' + tag.tag
         return rtn[1:]
+
+    # noinspection PyMethodMayBeStatic
+    def form_current_value(self, obj):
+        return 'Form: ' + obj.form.name
+
+    # noinspection PyMethodMayBeStatic
+    def page_current_value(self, obj):
+        return 'Page: ' + obj.page.name
+
+    # noinspection PyMethodMayBeStatic
+    def query_current_value(self, obj):
+        return 'Query: ' + obj.query.name
+
+    # noinspection PyMethodMayBeStatic,PyUnusedLocal
+    def duplicate_records(self, request, queryset):
+        for obj in queryset:
+            obj.id = None
+            obj.name += '_dup'
+            obj.save()
+    duplicate_records.short_description = "Duplicate selected records"
 
     def formfield_for_dbfield(self, db_field, **kwargs):
         if db_field.name == 'name':
@@ -312,18 +359,8 @@ class Graph2GraphAdmin(admin.ModelAdmin):
         # r = selected[0]
         #noinspection PyUnusedLocal
         # ct = ContentType.objects.get_for_model(queryset.model)
-        return HttpResponseRedirect("/graphpages/graph/%s" % (selected[0]))
-
+        return HttpResponseRedirect("/graphpages/graph2/%s" % (selected[0]))
     graph_admin_action.short_description = 'Display graph'
-
-    # noinspection PyMethodMayBeStatic,PyUnusedLocal
-    def duplicate_records(self, request, queryset):
-        for obj in queryset:
-            obj.id = None
-            obj.name += '_dup'
-            obj.save()
-
-    duplicate_records.short_description = "Duplicate selected records"
 
 
 admin.site.register(Graph2Graph, Graph2GraphAdmin)
