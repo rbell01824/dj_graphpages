@@ -178,7 +178,6 @@ class Graph2Query(models.Model):
     pass
 
 
-# todo 1: review with JZ and add a single in situ textarea to hold stuff
 class Graph2Graph(models.Model):
     name = models.CharField(max_length=200,
                             blank=False,
@@ -204,3 +203,34 @@ class Graph2Graph(models.Model):
     def __unicode__(self):
         return u'{}'.format(self.name)
     pass
+
+#
+###############################################################################
+#
+# GraphPage3: improved models
+#
+###############################################################################
+#
+
+
+class Graph3Graph(models.Model):
+    name = models.CharField(max_length=200,
+                            blank=False,
+                            unique=True)
+    description = models.TextField(blank=True)
+    tags = models.ManyToManyField(GraphPageTags,
+                                  blank=True,
+                                  null=True)
+    form = models.TextField(blank=True)
+    query = models.TextField(blank=True)
+    template = models.TextField(blank=True)
+
+    class Meta:
+        verbose_name = "Graph3 Graph"
+        verbose_name_plural = "Graph3 Graph"
+
+    def __unicode__(self):
+        return u'{}'.format(self.name)
+    pass
+
+

@@ -21,16 +21,21 @@ __maintainer__ = "rbell01824"
 __email__ = "rbell01824@gmail.com"
 __status__ = "dev"
 
-from django.contrib import admin
-from .models import GraphPageTags, GraphPage
-from .models import GraphTemplateTags, GraphTemplates
-from .models import Graph2Tags, Graph2Form, Graph2Template, Graph2Graph, Graph2Query
+import uuid
+import copy
+
 # from django.contrib.contenttypes.models import ContentType
 from django.http import HttpResponseRedirect
 from django.forms import SelectMultiple
 from django.db import models
-from django.utils.text import slugify
+# from django.utils.text import slugify
 from django.forms import Textarea, TextInput
+from django.contrib import admin
+
+from .models import GraphPageTags, GraphPage
+from .models import GraphTemplateTags, GraphTemplates
+from .models import Graph2Tags, Graph2Form, Graph2Template, Graph2Graph, Graph2Query
+from .models import Graph3Graph
 
 
 class GraphTemplateTagsAdmin(admin.ModelAdmin):
@@ -279,6 +284,8 @@ class Graph2QueryAdmin(admin.ModelAdmin):
 
 admin.site.register(Graph2Query, Graph2QueryAdmin)
 
+###############################################################################
+
 
 class Graph2GraphAdmin(admin.ModelAdmin):
     model = Graph2Graph
@@ -364,3 +371,111 @@ class Graph2GraphAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Graph2Graph, Graph2GraphAdmin)
+
+###############################################################################
+
+
+class Graph3GraphAdmin(admin.ModelAdmin):
+    model = Graph3Graph
+
+    # noinspection PyMethodMayBeStatic
+    def display_graph(self, obj):
+        rtn = u"<div><a class='btn btn-primary btn-sm' href='/graphpages/graph3/%s'>Display</a></div>" % obj.id
+        return rtn
+    display_graph.short_description = ''
+    display_graph.allow_tags = True
+
+    search_fields = ('name', 'description')
+    readonly_fields = ('form_slug', 'query_slug', 'template_slug')
+    list_display = ('display_graph', 'name', 'tags_slug', 'description',
+                    'form_slug', 'query_slug', 'template_slug'
+                    )
+    fieldsets = ((None, {'fields': (('name',
+                                     'form_slug',
+                                     'query_slug',
+                                     'template_slug',
+                                     'tags',))}),
+                 ('Description', {
+                     'classes': ('collapse',),
+                     'fields': ('description',)}),
+                 ('Form', {
+                     'classes': ('collapse',),
+                     'fields': ('form',)}),
+                 ('Query', {
+                     'classes': ('collapse',),
+                     'fields': ('query',)}),
+                 ('Template', {
+                     'classes': ('collapse',),
+                     'fields': ('template',)}),
+                 )
+    list_display_links = ('name',)
+    filter_horizontal = ('tags',)
+    save_on_top = True
+    ordering = ('name',)
+    actions = ['delete_selected', 'duplicate_records', 'graph_admin_action']
+    pass
+
+    # noinspection PyMethodMayBeStatic
+    def tags_slug(self, obj):
+        """
+        Make list of tags seperated by ';'
+        """
+        rtn = ''
+        for tag in obj.tags.all():
+            rtn += '; ' + tag.tag
+        return rtn[1:]
+
+    # noinspection PyMethodMayBeStatic
+    def form_slug(self, obj):
+        """
+        Generate form text for list display
+        """
+        return obj.form
+
+    # noinspection PyMethodMayBeStatic
+    def query_slug(self, obj):
+        return obj.query
+
+    # noinspection PyMethodMayBeStatic
+    def template_slug(self, obj):
+        return obj.template
+
+    def formfield_for_dbfield(self, db_field, **kwargs):
+        if db_field.name == 'name':
+            kwargs['widget'] = TextInput(attrs={'class': 'span12','size': '140'})
+        if db_field.name == 'description':
+            kwargs['widget'] = Textarea(attrs={'class': 'span8', 'rows': '3', 'cols': '120'})
+        if db_field.name == 'form':
+            kwargs['widget'] = Textarea(attrs={'class': 'span8', 'rows': '3', 'cols': '120'})
+        if db_field.name == 'query':
+            kwargs['widget'] = Textarea(attrs={'class': 'span8', 'rows': '3', 'cols': '120'})
+        if db_field.name == 'template':
+            kwargs['widget'] = Textarea(attrs={'class': 'span8', 'rows': '20', 'cols': '120'})
+        return super(Graph3GraphAdmin, self).formfield_for_dbfield(db_field, **kwargs)
+
+    # noinspection PyMethodMayBeStatic,PyUnusedLocal
+    def duplicate_records(self, request, queryset):
+        """
+        Duplicate the selected records
+        """
+        for obj in queryset:
+            newobj = copy.deepcopy(obj)
+            newobj.id = None
+            newobj.name += uuid.uuid1().hex
+            newobj.save()
+            # noinspection PyStatementEffect
+            newobj.tags.add(*obj.tags.all())
+    duplicate_records.short_description = "Duplicate selected records"
+
+    # noinspection PyMethodMayBeStatic,PyUnusedLocal
+    def graph_admin_action(self, request, queryset):
+        """
+        Display this graph
+        """
+        selected = request.POST.getlist(admin.ACTION_CHECKBOX_NAME)
+        # r = selected[0]
+        #noinspection PyUnusedLocal
+        # ct = ContentType.objects.get_for_model(queryset.model)
+        return HttpResponseRedirect("/graphpages/3raph3/%s" % (selected[0]))
+    graph_admin_action.short_description = 'Display graph'
+admin.site.register(Graph3Graph, Graph3GraphAdmin)

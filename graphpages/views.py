@@ -31,7 +31,7 @@ from django.db.models import Sum
 from django.template import Context, Template
 
 from .models import GraphTemplates, GraphTemplateTags
-from .models import GraphPage, GraphPageTags, Graph2Graph
+from .models import GraphPage, GraphPageTags, Graph2Graph, Graph3Graph
 from test_data.models import Countries, CIA
 from django.views.generic.list import ListView
 from django.views.generic import View
@@ -81,9 +81,7 @@ def graph(request, graph_pk):
     response = build_graph_response(graphpage_obj)
     return HttpResponse(response)
 
-
-class GraphListView(ListView):
-    model = GraphPage
+###############################################################################
 
 
 class Graph2View(View):
@@ -166,3 +164,95 @@ class Graph2View(View):
             template_text = graph2obj.template.template
         # todo 2: other validations go here
         return Template(template_text)
+
+###############################################################################
+
+
+class Graph3View(View):
+
+    # noinspection PyMethodMayBeStatic
+    def get(self, request, graph_pk):
+        """
+        If there is a form, display it.  When the form is posted control will return to the post method.
+        If no form, then display the graph
+        """
+        graph3obj = get_object_or_404(Graph3Graph, pk=graph_pk)
+        if graph3obj.form:
+            self.graph_form(request, graph3obj)
+        # no form, so deal with the template and query
+        response = self.build_graph_response(request, graph3obj)
+        return HttpResponse(response)
+
+    # noinspection PyMethodMayBeStatic,PyUnusedLocal
+    def post(self, request, graph_pk):
+        """
+        :param request:
+        :type request:
+        :param graph_pk:
+        :type graph_pk:
+        """
+        # todo 1: view logic
+        return HttpResponse('hi from graph3view post')
+
+    # noinspection PyMethodMayBeStatic
+    def graph_form(self, request, graph3obj):
+        """
+        Here we build a form from the graph form and return it.
+        Subsequently, a post will return the form.
+        """
+        # todo 1: actually support forms
+        raise ValidationError('Graph improperly configured. No form.')
+
+    # noinspection PyMethodMayBeStatic,PyUnusedLocal
+    def build_graph_response(self, request, graph3obj):
+        """
+        If there is a query, get it and exec.
+        Otherwise everything must be in the page.
+
+        :param request:
+        :type request:
+        :param graph3obj:
+        :type graph3obj: Graph3Graph
+        """
+        context = self.get_query_context(graph3obj)
+        template = self.get_graph_template(graph3obj)
+        response = template.render(context)
+        return response
+
+    # noinspection PyMethodMayBeStatic
+    def get_query_context(self, graph3obj):
+        """
+        :param graph3obj:
+        :type graph3obj: Graph2Graph
+        """
+        # todo 2: make exec safe
+        # todo 1: rewrite to use globals and locals properly
+        if not graph3obj.query:
+            return Context({})
+        query_text = graph3obj.query
+        if len(query_text.strip()) <= 0:
+            return Context({})
+        # global_context = {}
+        # local_context = {}
+        query_text = query_text.strip()
+        exec(query_text, None, None)
+        context = Context(locals())
+        return context
+
+    # noinspection PyMethodMayBeStatic
+    def get_graph_template(self, graph3obj):
+        """
+        :param graph3obj:
+        :type graph3obj: Graph2Graph
+        """
+        template_text = ''
+        if graph3obj.template:              # use page if available
+            template_text = graph3obj.template
+        # todo 2: other validations go here
+        return Template(template_text)
+
+###############################################################################
+
+
+class Graph3GraphListView(ListView):
+    model = Graph3Graph

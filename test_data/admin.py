@@ -42,7 +42,7 @@ class CIAAdmin(admin.ModelAdmin):
               ('internet_users', 'isps'),
               ('birth_rate', 'death_rate'))
     # filter_horizontal = ('users',)
-    list_editable = ('land_area', 'phone_mobiles', 'internet_users',)
+    list_editable = ('phone_mobiles', 'internet_users',)
     save_on_top = True
     pass
 admin.site.register(CIA, CIAAdmin)
@@ -55,12 +55,12 @@ class CountriesAdmin(admin.ModelAdmin):
     # ordering = ('name')
     list_display = ('country_name', 'a2', 'a3', 'id', 'num',
                     'country_size', 'population', 'life_expectancy', 'infant_mortality')
-    fields = (('country_name', 'a2', 'a3', 'id', 'num'),
+    fields = ('country_name',
+              ('a2', 'a3',),
+              ('id', 'num',),
               ('country_size',),
-              ('population', 'life_expectancy', 'infant_mortality'))
-    list_editable = ('a2', 'a3', 'num',
-                     'country_size', 'population',
-                     'life_expectancy', 'infant_mortality')
+              'population', 'life_expectancy', 'infant_mortality')
+    list_editable = ('population', )
     # list_filter = ('country_size', 'population', 'life_expectancy', 'infant_mortality')
     # filter_horizontal = ('users',)
     save_on_top = True

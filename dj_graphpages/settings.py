@@ -32,6 +32,7 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = (
     # 'django_admin_bootstrapped.bootstrap3',
     # 'django_admin_bootstrapped',
+    'suit',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -120,3 +121,34 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.tz",
     "django.contrib.messages.context_processors.messages",
 )
+
+# Django Suit configuration example
+SUIT_CONFIG = {
+    # header
+    'ADMIN_NAME': 'Graph Pages',
+    'HEADER_DATE_FORMAT': 'l, jS F Y',
+    'HEADER_TIME_FORMAT': 'H:i',
+
+    # forms
+    'SHOW_REQUIRED_ASTERISK': True,  # Default True
+    'CONFIRM_UNSAVED_CHANGES': True, # Default True
+
+    # menu
+    # 'SEARCH_URL': '/admin/auth/user/',
+    'MENU_ICONS': {
+       # 'sites': 'icon-leaf',
+       # 'auth': 'icon-lock',
+    },
+    'MENU_OPEN_FIRST_CHILD': True, # Default True
+    'MENU_EXCLUDE': ('auth', 'sites'),
+    'MENU': (
+        # 'sites',
+        # {'app': 'auth', 'icon':'icon-lock', 'models': ('user', 'group')},
+        # {'label': 'Settings', 'icon':'icon-cog', 'models': ('auth.user', 'auth.group')},
+        {'label': 'Graphpages', 'icon': 'icon-signal', 'models': ('graphpages.graph3graph',)},
+        {'label': 'Support', 'icon':'icon-question-sign', 'url': '/support/'},
+    ),
+
+    # misc
+    # 'LIST_PER_PAGE': 15
+}

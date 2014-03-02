@@ -21,9 +21,10 @@ __status__ = "dev"
 
 from django.conf.urls import patterns, url
 
-from graphpages.views import graph, Graph2View
+from graphpages.views import graph, Graph2View, Graph3View
 
 urlpatterns = patterns('',
                        url(r'graph/(?P<graph_pk>.+)$', graph, name='graph'),
                        url(r'graph2/(?P<graph_pk>.+)$', Graph2View.as_view(), name='graph2'),
+                       url(r'graph3/(?P<graph_pk>.+)$', Graph3View.as_view(), name='graph3'),
                        )
