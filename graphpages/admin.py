@@ -31,6 +31,9 @@ from django.db import models
 # from django.utils.text import slugify
 from django.forms import Textarea, TextInput
 from django.contrib import admin
+from django import forms
+
+from suit.widgets import AutosizedTextarea
 
 from .models import GraphPageTags, GraphPage
 from .models import GraphTemplateTags, GraphTemplates
@@ -375,6 +378,10 @@ admin.site.register(Graph2Graph, Graph2GraphAdmin)
 ###############################################################################
 
 
+class GraphForm(forms.Form):
+    number_countries = forms.IntegerField(max_value=50, min_value=5, label='Number of countries')
+
+
 class Graph3GraphAdmin(admin.ModelAdmin):
     model = Graph3Graph
 
@@ -390,14 +397,10 @@ class Graph3GraphAdmin(admin.ModelAdmin):
     list_display = ('display_graph', 'name', 'tags_slug', 'description',
                     'form_slug', 'query_slug', 'template_slug'
                     )
-    fieldsets = ((None, {'fields': (('name',
-                                     'form_slug',
-                                     'query_slug',
-                                     'template_slug',
-                                     'tags',))}),
-                 ('Description', {
-                     'classes': ('collapse',),
-                     'fields': ('description',)}),
+    fieldsets = ((None, {'fields': ('name', 'description', 'tags',)}),
+                 # ('Description', {
+                 #     'classes': ('collapse',),
+                 #     'fields': ('description',)}),
                  ('Form', {
                      'classes': ('collapse',),
                      'fields': ('form',)}),
@@ -442,15 +445,15 @@ class Graph3GraphAdmin(admin.ModelAdmin):
 
     def formfield_for_dbfield(self, db_field, **kwargs):
         if db_field.name == 'name':
-            kwargs['widget'] = TextInput(attrs={'class': 'span12','size': '140'})
+            kwargs['widget'] = TextInput(attrs={'class': 'span12', 'size': '140'})
         if db_field.name == 'description':
-            kwargs['widget'] = Textarea(attrs={'class': 'span8', 'rows': '3', 'cols': '120'})
+            kwargs['widget'] = Textarea(attrs={'class': 'span12', 'rows': '2', 'cols': '140'})
         if db_field.name == 'form':
-            kwargs['widget'] = Textarea(attrs={'class': 'span8', 'rows': '3', 'cols': '120'})
+            kwargs['widget'] = Textarea(attrs={'class': 'span12', 'rows': '3', 'cols': '140'})
         if db_field.name == 'query':
-            kwargs['widget'] = Textarea(attrs={'class': 'span8', 'rows': '3', 'cols': '120'})
+            kwargs['widget'] = Textarea(attrs={'class': 'span12', 'rows': '3', 'cols': '140'})
         if db_field.name == 'template':
-            kwargs['widget'] = Textarea(attrs={'class': 'span8', 'rows': '20', 'cols': '120'})
+            kwargs['widget'] = Textarea(attrs={'class': 'span12', 'rows': '20', 'cols': '140'})
         return super(Graph3GraphAdmin, self).formfield_for_dbfield(db_field, **kwargs)
 
     # noinspection PyMethodMayBeStatic,PyUnusedLocal
