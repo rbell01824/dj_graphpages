@@ -32,25 +32,29 @@
       {% block header %}
         {% if not is_popup %}
           <!-- Header -->
-          <div id="header" class="header">
-            <div id="branding">
-              <a href="{% url 'admin:index' %}"><h1 id="site-name">{% block branding %}{{ 'ADMIN_NAME'|suit_conf }}{% endblock %}</h1></a>
+          <div id="header" class="header"
+               style="background-color: #ffffff; background-image: none;">
+            <div id="branding" style="border: none;">
+              <a  class="navbar-brand active" href="{% url 'index' %}">
+                  <h1 id="site-name" style="color: black; text-shadow: none;">
+                      {% block branding %}{{ 'ADMIN_NAME'|suit_conf }}{% endblock %}
+                  </h1>
+              </a>
             </div>
 
             {% block header_time %}
-            <div class="header-content header-content-first">
+            <div class="header-content header-content-first" style="border: none;">
               <div class="header-column icon">
                 <i class="icon-time"></i>
               </div>
-              <div class="header-column">
+              <div class="header-column" style="text-shadow: none; color: black;">
                 <span class="date"> {% suit_date %}</span><br>
-                <span class="time" id="clock">{% suit_time %}</span>
+                <span class="time" id="clock" style="color: black">{% suit_time %}</span>
               </div>
             </div>
             {% endblock %}
 
             {% block header_content %}
-                <h1>kkkkkkkkkkkk</h1>
               <!--<div class="header-content">
                 <div class="header-column icon">
                   <i class="icon-comment"></i>
@@ -62,11 +66,13 @@
             {% endblock %}
 
             {% if user.is_active and user.is_staff %}
-              <div id="user-tools">
-                {% trans 'Welcome,' %}
+              <div id="user-tools" style="text-shadow: none; color: black;">
+                {% trans 'Welcome:' %}
                 <strong>
                   {% filter force_escape %}
-                    {% firstof user.first_name user.username %}{% endfilter %}</strong>.
+                    {% firstof user.first_name user.username %}
+                  {% endfilter %}
+                </strong>
                 <span class="user-links">
                 {% block userlinks %}
                   {% url 'django-admindocs-docroot' as docsroot %}
@@ -74,7 +80,8 @@
                     <a href="{{ docsroot }}">{% trans 'Documentation' %}</a>
                    <span class="separator">|</span>
                   {% endif %}
-                  <a href="{% url 'admin:password_change' %}">{% trans 'Change password' %}</a>
+                  {# disable change password ---------------------------------- #}
+                  {# <a href="{% url 'admin:password_change' %}">{% trans 'Change password' %}</a>#}
                   <span class="separator">|</span>
                   <a href="{% url 'admin:logout' %}">{% trans 'Log out' %}</a>
                   </span>
