@@ -18,6 +18,8 @@ __license__ = "All rights reserved"
 __version__ = "0.1"
 __status__ = "dev"
 
+import re
+
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 from django.core.exceptions import ValidationError
@@ -176,19 +178,20 @@ class Graph3View(View):
         If there is a form, display it.  When the form is posted control will return to the post method.
         There we will build and display the graph.
 
-        If no form, then build and display the graph.
+        If no form, then build and display the graph here.
         """
         graph3obj = get_object_or_404(Graph3Graph, pk=graph_pk)
-        if graph3obj.form:
+        if graph3obj.form:                  # process form if present
             graph_form_response = self.build_graph_form_response(request, graph3obj)
-            HttpResponse(graph_form_response)
-        # no form, so deal with the template and query
-        graph_graph_response = self.build_graph_graph_response(request, graph3obj)
-        return HttpResponse(graph_graph_response)
+            return HttpResponse(graph_form_response)
+        else:                               # no form, build and display the graph
+            graph_graph_response = self.build_graph_graph_response(request, graph3obj)
+            return HttpResponse(graph_graph_response)
 
     # noinspection PyMethodMayBeStatic,PyUnusedLocal
     def post(self, request, graph_pk):
         """
+        There was a form.  Process it and if valid build and display the graph.
         :param request:
         :type request:
         :param graph_pk:
@@ -203,8 +206,27 @@ class Graph3View(View):
         Here we build a form from the graph form and return it.
         Subsequently, a post will return the form.
         """
-        # todo 1: actually support forms
-        raise ValidationError('Graph improperly configured. No form.')
+        from django import forms
+
+        # get the form
+
+        # todo 1: here need a custom template tag {% form %} ... {% endform %}
+        match = re.match(r'.*{% comment form %}(?P<THEFORM>.*){% endcomment %}.*',
+                         graph3obj.form, re.MULTILINE | re.DOTALL)
+        if not match:
+            raise ValidationError('Can not find form definition.')
+        form_text = match.group('THEFORM')
+        print '========='
+        print form_text
+        print '========='
+        exec(form_text, locals(), locals())
+        graph_pk = graph3obj.pk
+        # noinspection PyUnresolvedReferences
+        form = GraphForm()                  # create the unbound form
+        template = Template(graph3obj.form)
+        context = Context(locals())
+        response = template.render(context)
+        return response
 
     # noinspection PyMethodMayBeStatic,PyUnusedLocal
     def build_graph_graph_response(self, request, graph3obj):

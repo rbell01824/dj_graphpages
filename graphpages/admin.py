@@ -375,15 +375,17 @@ class Graph2GraphAdmin(admin.ModelAdmin):
 
 admin.site.register(Graph2Graph, Graph2GraphAdmin)
 
+
+#
 ###############################################################################
-
-
-class GraphForm(forms.Form):
-    number_countries = forms.IntegerField(max_value=50, min_value=5, label='Number of countries')
+#
+# GraphPage3: improved models
+#
+###############################################################################
+#
 
 
 class Graph3GraphAdmin(admin.ModelAdmin):
-    model = Graph3Graph
 
     # noinspection PyMethodMayBeStatic
     def display_graph(self, obj):
@@ -392,6 +394,7 @@ class Graph3GraphAdmin(admin.ModelAdmin):
     display_graph.short_description = ''
     display_graph.allow_tags = True
 
+    model = Graph3Graph
     search_fields = ('name', 'description')
     readonly_fields = ('form_slug', 'query_slug', 'template_slug')
     list_display = ('display_graph', 'name', 'tags_slug', 'description',
@@ -416,6 +419,7 @@ class Graph3GraphAdmin(admin.ModelAdmin):
     save_on_top = True
     ordering = ('name',)
     actions = ['delete_selected', 'duplicate_records', 'graph_admin_action']
+    SLUG_LEN = 20
     pass
 
     # noinspection PyMethodMayBeStatic
@@ -433,15 +437,15 @@ class Graph3GraphAdmin(admin.ModelAdmin):
         """
         Generate form text for list display
         """
-        return obj.form
+        return obj.form[:min(self.SLUG_LEN, len(obj.form))]
 
     # noinspection PyMethodMayBeStatic
     def query_slug(self, obj):
-        return obj.query
+        return obj.query[:min(self.SLUG_LEN, len(obj.query))]
 
     # noinspection PyMethodMayBeStatic
     def template_slug(self, obj):
-        return obj.template
+        return obj.template[:min(self.SLUG_LEN, len(obj.template))]
 
     def formfield_for_dbfield(self, db_field, **kwargs):
         if db_field.name == 'name':
