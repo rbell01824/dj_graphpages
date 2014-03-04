@@ -30,7 +30,8 @@ from django.shortcuts import render_to_response
 from django.shortcuts import get_object_or_404
 from django.db.models import Count
 from django.db.models import Sum
-from django.template import Context, Template
+from django.template import Context, RequestContext, Template
+from django import forms
 
 from .models import GraphTemplates, GraphTemplateTags
 from .models import GraphPage, GraphPageTags, Graph2Graph, Graph3Graph
@@ -64,7 +65,7 @@ def get_query_text(graphpage_obj):
 
 def get_context(graphpage_obj):
     # todo 2: make exec safe
-    # todo 1: rewrite to use globals and locals properly
+    # todo 2: rewrite to use globals and locals properly
     exec(get_query_text(graphpage_obj), None, None)
     context = Context(locals())
     return context
@@ -109,7 +110,6 @@ class Graph2View(View):
         :param graph_pk:
         :type graph_pk:
         """
-        # todo 1: view logic
         return HttpResponse('hi from graph2view post')
 
     # noinspection PyMethodMayBeStatic
@@ -117,7 +117,6 @@ class Graph2View(View):
         """
         Here we build a form from the graph form and return it.  Subsequently, a post will return the form.
         """
-        # todo 1: actually support forms
         raise ValidationError('Graph improperly configured. No form.')
 
     # noinspection PyMethodMayBeStatic,PyUnusedLocal
@@ -141,8 +140,6 @@ class Graph2View(View):
         :param graph2obj:
         :type graph2obj: Graph2Graph
         """
-        # todo 2: make exec safe
-        # todo 1: rewrite to use globals and locals properly
         if not graph2obj.query:
             return Context({})
         query_text = graph2obj.query.query
@@ -164,7 +161,6 @@ class Graph2View(View):
         template_text = ''
         if graph2obj.template:              # use page if available
             template_text = graph2obj.template.template
-        # todo 2: other validations go here
         return Template(template_text)
 
 ###############################################################################
@@ -197,7 +193,15 @@ class Graph3View(View):
         :param graph_pk:
         :type graph_pk:
         """
+        graph3obj = Graph3Graph.objects.get(graph_pk)
+        form = self.build_graph_form(graph3obj)
         # todo 1: view logic
+        # # ContactForm was defined in the the previous section
+        # form = ContactForm(request.POST) # A form bound to the POST data
+        # if form.is_valid(): # All validation rules pass
+        #     # Process the data in form.cleaned_data
+        #     # ...
+        #     return HttpResponseRedirect('/thanks/') # Redirect after POST
         return HttpResponse('hi from graph3view post')
 
     # noinspection PyMethodMayBeStatic
@@ -206,27 +210,27 @@ class Graph3View(View):
         Here we build a form from the graph form and return it.
         Subsequently, a post will return the form.
         """
-        from django import forms
+        form = self.build_graph_form(graph3obj)     # create the unbound form
+        template = Template(graph3obj.form)         # create template object
+        context = RequestContext(request, {'graph_pk': graph3obj.pk, 'form': form})
+        response = template.render(context)
+        return response
 
-        # get the form
-
-        # todo 1: here need a custom template tag {% form %} ... {% endform %}
+    # noinspection PyMethodMayBeStatic,PyUnusedLocal
+    def build_graph_form(self, graph3obj):
+        """
+        Create a form object from the form definition in a graph3obj.
+        """
         match = re.match(r'.*{% form\s*[A-Za-z_0-9]*\s*%}(?P<THEFORM>.*){% endform\s*[A-Za-z_0-9]*\s*%}.*',
                          graph3obj.form, re.MULTILINE | re.DOTALL)
         if not match:
             raise ValidationError('Can not find form definition.')
         form_text = match.group('THEFORM')
-        print '========='
-        print form_text
-        print '========='
+        # todo 2: figure out why locals() has to be where globals should be and only pass in what is really needed
         exec(form_text, locals(), locals())
-        graph_pk = graph3obj.pk
         # noinspection PyUnresolvedReferences
         form = GraphForm()                  # create the unbound form
-        template = Template(graph3obj.form)
-        context = Context({'pk': graph_pk, 'form': form})
-        response = template.render(context)
-        return response
+        return form  this is an instance of an unbound form, what is really needed is the class
 
     # noinspection PyMethodMayBeStatic,PyUnusedLocal
     def build_graph_graph_response(self, request, graph3obj):
@@ -251,8 +255,8 @@ class Graph3View(View):
         :type graph3obj: Graph2Graph
         """
         # todo 2: make exec safe
-        # todo 1: rewrite to use globals and locals properly
-        # todo: if there is a request post context then we need to get that data into local() context
+        # todo 2: rewrite to use globals and locals properly
+        # todo 1: if there is a request post context then we need to get that data into local() context
         if not graph3obj.query:
             return Context({})
         query_text = graph3obj.query

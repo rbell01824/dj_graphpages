@@ -384,7 +384,7 @@ admin.site.register(Graph2Graph, Graph2GraphAdmin)
 ###############################################################################
 #
 
-
+# todo: do form like this: https://github.com/darklow/django-suit-examples/blob/master/admin.py
 class Graph3GraphAdmin(admin.ModelAdmin):
 
     # noinspection PyMethodMayBeStatic
@@ -401,17 +401,11 @@ class Graph3GraphAdmin(admin.ModelAdmin):
                     'form_slug', 'query_slug', 'template_slug'
                     )
     fieldsets = ((None, {'fields': ('name', 'description', 'tags',)}),
-                 # ('Description', {
-                 #     'classes': ('collapse',),
-                 #     'fields': ('description',)}),
                  ('Form', {
-                     'classes': ('collapse',),
+                     'classes': ('full-width',),
                      'fields': ('form',)}),
-                 ('Query', {
-                     'classes': ('collapse',),
-                     'fields': ('query',)}),
-                 ('Template', {
-                     'classes': ('collapse',),
+                 ('Graph Page', {
+                     'classes': ('full-width',),
                      'fields': ('template',)}),
                  )
     list_display_links = ('name',)
@@ -453,11 +447,11 @@ class Graph3GraphAdmin(admin.ModelAdmin):
         if db_field.name == 'description':
             kwargs['widget'] = Textarea(attrs={'class': 'span12', 'rows': '2', 'cols': '140'})
         if db_field.name == 'form':
-            kwargs['widget'] = Textarea(attrs={'class': 'span12', 'rows': '3', 'cols': '140'})
+            kwargs['widget'] = Textarea(attrs={'class': 'span12', 'rows': '10', 'cols': '140'})
         if db_field.name == 'query':
             kwargs['widget'] = Textarea(attrs={'class': 'span12', 'rows': '3', 'cols': '140'})
         if db_field.name == 'template':
-            kwargs['widget'] = Textarea(attrs={'class': 'span12', 'rows': '20', 'cols': '140'})
+            kwargs['widget'] = Textarea(attrs={'class': 'span12', 'rows': '10', 'cols': '140'})
         return super(Graph3GraphAdmin, self).formfield_for_dbfield(db_field, **kwargs)
 
     # noinspection PyMethodMayBeStatic,PyUnusedLocal

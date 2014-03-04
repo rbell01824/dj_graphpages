@@ -54,7 +54,7 @@ register = template.Library()
 # use _() to translate a string. Expr tag also can used context variables.
 #
 
-# todo 1: need to deal with setting context so that these are more readily available
+# todo 2: need to deal with setting context so that these are more readily available
 from test_data.models import Countries, CIA
 
 
@@ -77,7 +77,7 @@ class ExprNode(template.Node):
             if self.var_name:
                 # context[self.var_name] = eval(self.expr_string, d)
                 # context.dicts[0][self.varname] = eval(self.expr_string, d)
-                # todo 1: this is a hack to run in the global context, fixme fixme fixme
+                # todo 2: this is a hack to run in the global context, fixme fixme fixme
                 # context.dicts[0][self.varname] = eval(self.expr_string)
                 context[self.var_name] = eval(self.expr_string)
                 return ''
@@ -107,7 +107,7 @@ def do_expr(parser, token):
     return ExprNode(expr_string, var_name)
 do_expr = register.tag('expr', do_expr)
 
-# todo 1: resolve this
+# todo 2: resolve this
 # kunitoki (on June 9, 2010):
 # This doesn't work inside template blocks in inherited templates
 # (will give errors in dict.update). This update in the node will work on both places:
