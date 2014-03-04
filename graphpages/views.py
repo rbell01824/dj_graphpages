@@ -211,7 +211,7 @@ class Graph3View(View):
         # get the form
 
         # todo 1: here need a custom template tag {% form %} ... {% endform %}
-        match = re.match(r'.*{% comment form %}(?P<THEFORM>.*){% endcomment %}.*',
+        match = re.match(r'.*{% form\s*[A-Za-z_0-9]*\s*%}(?P<THEFORM>.*){% endform\s*[A-Za-z_0-9]*\s*%}.*',
                          graph3obj.form, re.MULTILINE | re.DOTALL)
         if not match:
             raise ValidationError('Can not find form definition.')
@@ -224,7 +224,7 @@ class Graph3View(View):
         # noinspection PyUnresolvedReferences
         form = GraphForm()                  # create the unbound form
         template = Template(graph3obj.form)
-        context = Context(locals())
+        context = Context({'pk': graph_pk, 'form': form})
         response = template.render(context)
         return response
 

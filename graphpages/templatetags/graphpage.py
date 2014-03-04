@@ -20,6 +20,8 @@ __status__ = "dev"
 
 from django import template
 from django.utils.translation import gettext_lazy as _
+from django.template.base import Context, Node
+
 import re
 
 register = template.Library()
@@ -143,3 +145,65 @@ do_expr = register.tag('expr', do_expr)
 # (You could reconfigure the regex to check for "as global" or "as" and set
 # the variable appropriately)
 #
+
+
+@register.tag(name='form')
+def do_form(parser, token):
+    """
+    Stops the template engine from rendering the contents of this block tag.
+
+    Usage::
+
+        {% form %}
+            {% don't process this %}
+        {% endform %}
+
+    You can also designate a specific closing tag block (allowing the
+    unrendered use of ``{% endform %}``)::
+
+        {% form myblock %}
+            ...
+        {% endform myblock %}
+    """
+    nodelist = parser.parse(('endform',))
+    parser.delete_first_token()
+    return FormNode(nodelist.render(Context()))
+
+
+class FormNode(Node):
+    def __init__(self, content):
+        self.content = content
+
+    def render(self, context):
+        return self.content
+
+
+@register.tag(name='query')
+def do_query(parser, token):
+    """
+    Stops the template engine from rendering the contents of this block tag.
+
+    Usage::
+
+        {% query %}
+            {% don't process this %}
+        {% endquery %}
+
+    You can also designate a specific closing tag block (allowing the
+    unrendered use of ``{% endquery %}``)::
+
+        {% query myblock %}
+            ...
+        {% endquery myblock %}
+    """
+    nodelist = parser.parse(('endquery',))
+    parser.delete_first_token()
+    return QueryNode(nodelist.render(Context()))
+
+
+class QueryNode(Node):
+    def __init__(self, content):
+        self.content = content
+
+    def render(self, context):
+        return self.content

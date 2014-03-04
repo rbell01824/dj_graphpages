@@ -283,7 +283,7 @@
             1
         ], 
         "name": "Top 30 countries by land area column with embeded calcs", 
-        "template": "{% extends \"base.html\" %}\r\n{% load chartkick %}\r\n{% load graphpage_tags %}\r\n\r\n{% block content %}\r\n\r\n    {% expr map(list, CIA.objects.order_by('-land_area').values_list('name', 'land_area')[:30]) as data %}\r\n\r\n    <h3>Top 30 countries by land area</h3>\r\n    {% column_chart data %}\r\n\r\n{% endblock content %}", 
+        "template": "{% extends \"base.html\" %}\r\n{% load chartkick %}\r\n{% load graphpage %}\r\n\r\n{% block content %}\r\n\r\n    {% expr map(list, CIA.objects.order_by('-land_area').values_list('name', 'land_area')[:30]) as data %}\r\n\r\n    <h3>Top 30 countries by land area</h3>\r\n    {% column_chart data %}\r\n\r\n{% endblock content %}",
         "description": ""
     }
 },
