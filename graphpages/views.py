@@ -31,6 +31,7 @@ from django.shortcuts import get_object_or_404
 from django.db.models import Count
 from django.db.models import Sum
 from django.template import Context, RequestContext, Template
+# noinspection PyUnresolvedReferences
 from django import forms
 
 from .models import GraphTemplates, GraphTemplateTags
@@ -38,6 +39,10 @@ from .models import GraphPage, GraphPageTags, Graph2Graph, Graph3Graph
 from test_data.models import Countries, CIA
 from django.views.generic.list import ListView
 from django.views.generic import View
+
+
+# class DummyForm(forms.Form):
+#     subject = forms.CharField(max_length=100)
 
 
 def get_graph_template(graphpage_obj):
@@ -210,14 +215,15 @@ class Graph3View(View):
         Here we build a form from the graph form and return it.
         Subsequently, a post will return the form.
         """
-        form = self.build_graph_form(graph3obj)     # create the unbound form
-        template = Template(graph3obj.form)         # create template object
+        fc = self.build_graph_form_class(graph3obj)     # create the unbound form
+        form = fc()                                     # create the unbound form
+        template = Template(graph3obj.form)             # create template object
         context = RequestContext(request, {'graph_pk': graph3obj.pk, 'form': form})
         response = template.render(context)
         return response
 
     # noinspection PyMethodMayBeStatic,PyUnusedLocal
-    def build_graph_form(self, graph3obj):
+    def build_graph_form_class(self, graph3obj):
         """
         Create a form object from the form definition in a graph3obj.
         """
@@ -227,10 +233,9 @@ class Graph3View(View):
             raise ValidationError('Can not find form definition.')
         form_text = match.group('THEFORM')
         # todo 2: figure out why locals() has to be where globals should be and only pass in what is really needed
-        exec(form_text, locals(), locals())
+        exec(form_text, globals(), locals())
         # noinspection PyUnresolvedReferences
-        form = GraphForm()                  # create the unbound form
-        return form  this is an instance of an unbound form, what is really needed is the class
+        return GraphForm            # return the graphform class
 
     # noinspection PyMethodMayBeStatic,PyUnusedLocal
     def build_graph_graph_response(self, request, graph3obj):
