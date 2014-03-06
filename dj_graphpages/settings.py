@@ -45,6 +45,7 @@ INSTALLED_APPS = (
     'graphpages',
     'chartkick',
     'chartkick_demo',
+    'crispy_forms',
     'test_data',
     'forms_builder.forms',
     'form_designer',
@@ -130,8 +131,8 @@ SUIT_CONFIG = {
     'HEADER_TIME_FORMAT': 'H:i',
 
     # forms
-    'SHOW_REQUIRED_ASTERISK': True,  # Default True
-    'CONFIRM_UNSAVED_CHANGES': True, # Default True
+    'SHOW_REQUIRED_ASTERISK': True,     # Default True
+    'CONFIRM_UNSAVED_CHANGES': True,    # Default True
 
     # menu
     # 'SEARCH_URL': '/admin/auth/user/',
@@ -139,16 +140,18 @@ SUIT_CONFIG = {
        # 'sites': 'icon-leaf',
        # 'auth': 'icon-lock',
     },
-    'MENU_OPEN_FIRST_CHILD': True, # Default True
+    'MENU_OPEN_FIRST_CHILD': True,      # Default True
     'MENU_EXCLUDE': ('auth', 'sites'),
     'MENU': (
         # 'sites',
         # {'app': 'auth', 'icon':'icon-lock', 'models': ('user', 'group')},
         # {'label': 'Settings', 'icon':'icon-cog', 'models': ('auth.user', 'auth.group')},
         {'label': 'Graphpages', 'icon': 'icon-signal', 'models': ('graphpages.graph3graph',)},
-        {'label': 'Support', 'icon':'icon-question-sign', 'url': '/support/'},
+        {'label': 'Support', 'icon': 'icon-question-sign', 'url': '/support/'},
     ),
 
     # misc
     # 'LIST_PER_PAGE': 15
 }
+
+CRISPY_TEMPLATE_PACK = 'bootstrap3'
