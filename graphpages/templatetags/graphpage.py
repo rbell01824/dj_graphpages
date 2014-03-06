@@ -54,9 +54,6 @@ register = template.Library()
 # use _() to translate a string. Expr tag also can used context variables.
 #
 
-# todo 2: need to deal with setting context so that these are more readily available
-from test_data.models import Countries, CIA
-
 
 class ExprNode(template.Node):
     def __init__(self, expr_string, var_name):
@@ -147,6 +144,7 @@ do_expr = register.tag('expr', do_expr)
 #
 
 
+# noinspection PyUnusedLocal
 @register.tag(name='form')
 def do_form(parser, token):
     """
@@ -167,15 +165,22 @@ def do_form(parser, token):
     """
     nodelist = parser.parse(('endform',))
     parser.delete_first_token()
-    return FormNode(nodelist.render(Context()))
+    rtn = """
+        <form method="post" class="bootstrap3">
+            {{ form | crispy }}
+        </form>
+        """
+    return FormNode(template.Template(rtn))
 
 
-class FormNode(Node):
-    def __init__(self, content):
-        self.content = content
+class FormNode(template.Node):
+    def __init__(self, xtemplate):
+        self.xtemplate = xtemplate
 
     def render(self, context):
-        return self.content
+        c = self.xtemplate.Context({})
+        r = self.xtemplate.render(c)
+        return ''
 
 
 @register.tag(name='query')

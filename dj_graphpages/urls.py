@@ -11,10 +11,6 @@ from graphpages.views import Graph3GraphListView
 import forms_builder.forms.urls
 
 urlpatterns = patterns('',
-    # Examples:
-    # url(r'^$', 'dj_graphpages.views.home', name='home'),
-    # url(r'^blog/', include('blog.urls')),
-
     url(r'^test_data/', include('test_data.urls')),
     url(r'^display_graph_pages$',
         Graph3GraphListView.as_view(), name=Graph3GraphListView),
