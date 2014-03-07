@@ -29,6 +29,7 @@ from django import forms
 from crispy_forms.helper import FormHelper
 # noinspection PyUnresolvedReferences
 from crispy_forms.layout import Submit
+from crispy_forms.utils import render_crispy_form
 
 import re
 
@@ -198,7 +199,7 @@ class FormNode(template.Node):
         exec(self.content, globals(), locals())
         # noinspection PyUnresolvedReferences
         unbound_form = GraphForm()
-        rtn = unbound_form.as_p()
+        rtn = render_crispy_form(unbound_form)
         return rtn
 
 
