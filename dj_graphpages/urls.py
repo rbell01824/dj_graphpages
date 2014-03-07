@@ -7,7 +7,7 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.views.generic import TemplateView
 
 from .views import index
-from graphpages.views import Graph3GraphListView
+from graphpages.views import Graph3GraphListView, CrispyView
 import forms_builder.forms.urls
 
 urlpatterns = patterns('',
@@ -19,6 +19,7 @@ urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
     url(r'^forms/', include(forms_builder.forms.urls)),
     url(r'^forms2/', include('form_designer.urls')),
+    url(r'^crispy$', CrispyView.as_view(), name=CrispyView),
     url(r'^$', index, name='index'),
 )
 
