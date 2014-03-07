@@ -137,8 +137,8 @@ SUIT_CONFIG = {
     # menu
     # 'SEARCH_URL': '/admin/auth/user/',
     'MENU_ICONS': {
-       # 'sites': 'icon-leaf',
-       # 'auth': 'icon-lock',
+        # 'sites': 'icon-leaf',
+        # 'auth': 'icon-lock',
     },
     'MENU_OPEN_FIRST_CHILD': True,      # Default True
     'MENU_EXCLUDE': ('auth', 'sites'),
@@ -155,3 +155,4 @@ SUIT_CONFIG = {
 }
 
 CRISPY_TEMPLATE_PACK = 'bootstrap3'
+CRISPY_FAIL_SILENTLY = not DEBUG

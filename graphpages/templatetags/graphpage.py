@@ -22,6 +22,14 @@ from django import template
 from django.utils.translation import gettext_lazy as _
 from django.template.base import Context, Node
 
+# These are needed inside the exec for the form tag
+# noinspection PyUnresolvedReferences
+from django import forms
+# noinspection PyUnresolvedReferences
+from crispy_forms.helper import FormHelper
+# noinspection PyUnresolvedReferences
+from crispy_forms.layout import Submit
+
 import re
 
 register = template.Library()
@@ -143,6 +151,8 @@ do_expr = register.tag('expr', do_expr)
 # the variable appropriately)
 #
 
+###############################################################################
+
 
 # noinspection PyUnusedLocal
 @register.tag(name='form')
@@ -153,8 +163,19 @@ def do_form(parser, token):
     Usage::
 
         {% form %}
-            {% don't process this %}
+            form class definition goes here
         {% endform %}
+
+     Example::
+        {% form no_countries %}
+        class GraphForm(forms.Form):
+            title = forms.CharField(min_length=3, max_length=80, label='Title')
+            number_countries = forms.IntegerField(max_value=50, min_value=5,
+                                                  label='Number of countries')
+            helper = FormHelper()
+            helper.form_method = 'POST'
+            helper.add_input(Submit('submit', 'Show graph', css_class='btn-primary'))
+        {% endform no_countries %}
 
     You can also designate a specific closing tag block (allowing the
     unrendered use of ``{% endform %}``)::
@@ -165,24 +186,23 @@ def do_form(parser, token):
     """
     nodelist = parser.parse(('endform',))
     parser.delete_first_token()
-    rtn = """
-        <form method="post" class="bootstrap3">
-            {{ form | crispy }}
-        </form>
-        """
-    return FormNode(template.Template(rtn))
+    return FormNode(nodelist.render(Context()))
 
 
 class FormNode(template.Node):
-    def __init__(self, xtemplate):
-        self.xtemplate = xtemplate
+    def __init__(self, content):
+        self.content = content
 
     def render(self, context):
-        c = self.xtemplate.Context({})
-        r = self.xtemplate.render(c)
-        return ''
+        # When we get here, self.content has the form definition.  We need to turn it into html.
+        exec(self.content, globals(), locals())
+        # noinspection PyUnresolvedReferences
+        unbound_form = GraphForm()
+        rtn = unbound_form.as_p()
+        return rtn
 
 
+# noinspection PyUnusedLocal
 @register.tag(name='query')
 def do_query(parser, token):
     """

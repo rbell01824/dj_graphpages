@@ -34,6 +34,9 @@ from django.template import Context, RequestContext, Template
 # noinspection PyUnresolvedReferences
 from django import forms
 
+from crispy_forms.helper import FormHelper
+from crispy_forms.layout import Submit
+
 from .models import GraphTemplates, GraphTemplateTags
 from .models import GraphPage, GraphPageTags, Graph2Graph, Graph3Graph
 from test_data.models import Countries, CIA
@@ -41,8 +44,144 @@ from django.views.generic.list import ListView
 from django.views.generic import View, FormView
 
 
-# class DummyForm(forms.Form):
-#     subject = forms.CharField(max_length=100)
+class GraphForm(forms.Form):
+    title = forms.CharField(min_length=3, max_length=80, label='Title')
+    number_countries = forms.IntegerField(max_value=50, min_value=5,
+                                          label='Number of countries')
+    helper = FormHelper()
+    helper.form_method = 'POST'
+    helper.add_input(Submit('submit', 'Show graph', css_class='btn-primary'))
+
+
+###############################################################################
+
+
+class Graph3View(View):
+
+    # noinspection PyMethodMayBeStatic
+    def get(self, request, graph_pk):
+        """
+        If there is a form, display it.  When the form is posted control will return to the post method.
+        There we will build and display the graph.
+
+        If no form, then build and display the graph here.
+        """
+        graph3obj = get_object_or_404(Graph3Graph, pk=graph_pk)
+        if graph3obj.form:                  # process form if present
+            # graph_form_response = self.build_graph_form_response(request, graph3obj)
+            t = Template(graph3obj.form)
+            c = Context({})
+            return HttpResponse(t.render(c))
+        else:                               # no form, build and display the graph
+            graph_graph_response = self.build_graph_graph_response(request, graph3obj)
+            return HttpResponse(graph_graph_response)
+
+    # noinspection PyMethodMayBeStatic,PyUnusedLocal
+    def post(self, request, graph_pk):
+        """
+        There was a form.  Process it and if valid build and display the graph.
+        :param request:
+        :type request:
+        :param graph_pk:
+        :type graph_pk:
+        """
+        graph3obj = Graph3Graph.objects.get(graph_pk)
+        form = self.build_graph_form_class(graph3obj)
+        # # ContactForm was defined in the the previous section
+        # form = ContactForm(request.POST) # A form bound to the POST data
+        # if form.is_valid(): # All validation rules pass
+        #     # Process the data in form.cleaned_data
+        #     # ...
+        #     return HttpResponseRedirect('/thanks/') # Redirect after POST
+        return HttpResponse('hi from graph3view post')
+
+    # noinspection PyMethodMayBeStatic
+    def build_graph_form_response(self, request, graph3obj):
+        """
+        Here we build a form from the graph form and return it.
+        Subsequently, a post will return the form.
+        """
+        formclass = self.build_graph_form_class(graph3obj)      # create the form class
+        form = formclass()                                      # create the unbound form
+        template = Template(graph3obj.form)                     # create template object
+        context = RequestContext(request, {'graph_pk': graph3obj.pk, 'form': form})
+        response = template.render(context)
+        return response
+
+    # noinspection PyMethodMayBeStatic,PyUnusedLocal
+    def build_graph_form_class(self, graph3obj):
+        """
+        Create a form object from the form definition in a graph3obj.
+        """
+        match = re.match(r'.*{% form\s*[A-Za-z_0-9]*\s*%}(?P<THEFORM>.*){% endform\s*[A-Za-z_0-9]*\s*%}.*',
+                         graph3obj.form, re.MULTILINE | re.DOTALL)
+        if not match:
+            raise ValidationError('Can not find form definition.')
+        form_text = match.group('THEFORM')
+        exec(form_text, globals(), locals())
+        # noinspection PyUnresolvedReferences
+        return GraphForm            # return the graphform class
+
+    # noinspection PyMethodMayBeStatic,PyUnusedLocal
+    def build_graph_graph_response(self, request, graph3obj):
+        """
+        If there is a query, get it and exec.
+        Otherwise just display the page.
+
+        :param request:
+        :type request:
+        :param graph3obj:
+        :type graph3obj: Graph3Graph
+        """
+        context = self.execute_query_to_build_context(request, graph3obj)
+        template = self.get_graph_template(graph3obj)
+        response = template.render(context)
+        return response
+
+    # noinspection PyMethodMayBeStatic
+    def execute_query_to_build_context(self, request, graph3obj):
+        """
+        :param graph3obj:
+        :type graph3obj: Graph2Graph
+        """
+        # todo 2: make exec safe
+        # todo 2: rewrite to use globals and locals properly
+        # todo 1: if there is a request post context then we need to get that data into local() context
+        if not graph3obj.query:
+            return Context({})
+        query_text = graph3obj.query
+        if len(query_text.strip()) <= 0:
+            return Context({})
+        # global_context = {}
+        # local_context = {}
+        query_text = query_text.strip()
+        # todo: run the query_text through Template to expand macros
+        # todo: look into specifing locals and globals
+        exec(query_text, None, None)
+        context = Context(locals())
+        return context
+
+    # noinspection PyMethodMayBeStatic
+    def get_graph_template(self, graph3obj):
+        """
+        :param graph3obj:
+        :type graph3obj: Graph2Graph
+        """
+        template_text = ''
+        if graph3obj.template:                      # use page if available
+            template_text = graph3obj.template
+        # todo 2: other validations go here
+        return Template(template_text)
+
+
+###############################################################################
+
+
+class Graph3GraphListView(ListView):
+    model = Graph3Graph
+
+
+###############################################################################
 
 
 def get_graph_template(graphpage_obj):
@@ -168,138 +307,13 @@ class Graph2View(View):
             template_text = graph2obj.template.template
         return Template(template_text)
 
-###############################################################################
-
-
-class Graph3View(View):
-
-    # noinspection PyMethodMayBeStatic
-    def get(self, request, graph_pk):
-        """
-        If there is a form, display it.  When the form is posted control will return to the post method.
-        There we will build and display the graph.
-
-        If no form, then build and display the graph here.
-        """
-        graph3obj = get_object_or_404(Graph3Graph, pk=graph_pk)
-        if graph3obj.form:                  # process form if present
-            graph_form_response = self.build_graph_form_response(request, graph3obj)
-            return HttpResponse(graph_form_response)
-        else:                               # no form, build and display the graph
-            graph_graph_response = self.build_graph_graph_response(request, graph3obj)
-            return HttpResponse(graph_graph_response)
-
-    # noinspection PyMethodMayBeStatic,PyUnusedLocal
-    def post(self, request, graph_pk):
-        """
-        There was a form.  Process it and if valid build and display the graph.
-        :param request:
-        :type request:
-        :param graph_pk:
-        :type graph_pk:
-        """
-        graph3obj = Graph3Graph.objects.get(graph_pk)
-        form = self.build_graph_form(graph3obj)
-        # todo 1: view logic
-        # # ContactForm was defined in the the previous section
-        # form = ContactForm(request.POST) # A form bound to the POST data
-        # if form.is_valid(): # All validation rules pass
-        #     # Process the data in form.cleaned_data
-        #     # ...
-        #     return HttpResponseRedirect('/thanks/') # Redirect after POST
-        return HttpResponse('hi from graph3view post')
-
-    # noinspection PyMethodMayBeStatic
-    def build_graph_form_response(self, request, graph3obj):
-        """
-        Here we build a form from the graph form and return it.
-        Subsequently, a post will return the form.
-        """
-        fc = self.build_graph_form_class(graph3obj)     # create the unbound form
-        form = fc()                                     # create the unbound form
-        template = Template(graph3obj.form)             # create template object
-        context = RequestContext(request, {'graph_pk': graph3obj.pk, 'form': form})
-        response = template.render(context)
-        return response
-
-    # noinspection PyMethodMayBeStatic,PyUnusedLocal
-    def build_graph_form_class(self, graph3obj):
-        """
-        Create a form object from the form definition in a graph3obj.
-        """
-        match = re.match(r'.*{% form\s*[A-Za-z_0-9]*\s*%}(?P<THEFORM>.*){% endform\s*[A-Za-z_0-9]*\s*%}.*',
-                         graph3obj.form, re.MULTILINE | re.DOTALL)
-        if not match:
-            raise ValidationError('Can not find form definition.')
-        form_text = match.group('THEFORM')
-        # todo 2: figure out why locals() has to be where globals should be and only pass in what is really needed
-        exec(form_text, globals(), locals())
-        # noinspection PyUnresolvedReferences
-        return GraphForm            # return the graphform class
-
-    # noinspection PyMethodMayBeStatic,PyUnusedLocal
-    def build_graph_graph_response(self, request, graph3obj):
-        """
-        If there is a query, get it and exec.
-        Otherwise just display the page.
-
-        :param request:
-        :type request:
-        :param graph3obj:
-        :type graph3obj: Graph3Graph
-        """
-        context = self.execute_query_to_build_context(request, graph3obj)
-        template = self.get_graph_template(graph3obj)
-        response = template.render(context)
-        return response
-
-    # noinspection PyMethodMayBeStatic
-    def execute_query_to_build_context(self, request, graph3obj):
-        """
-        :param graph3obj:
-        :type graph3obj: Graph2Graph
-        """
-        # todo 2: make exec safe
-        # todo 2: rewrite to use globals and locals properly
-        # todo 1: if there is a request post context then we need to get that data into local() context
-        if not graph3obj.query:
-            return Context({})
-        query_text = graph3obj.query
-        if len(query_text.strip()) <= 0:
-            return Context({})
-        # global_context = {}
-        # local_context = {}
-        query_text = query_text.strip()
-        # todo: run the query_text through Template to expand macros
-        # todo: look into specifing locals and globals
-        exec(query_text, None, None)
-        context = Context(locals())
-        return context
-
-    # noinspection PyMethodMayBeStatic
-    def get_graph_template(self, graph3obj):
-        """
-        :param graph3obj:
-        :type graph3obj: Graph2Graph
-        """
-        template_text = ''
-        if graph3obj.template:                      # use page if available
-            template_text = graph3obj.template
-        # todo 2: other validations go here
-        return Template(template_text)
-
-###############################################################################
-
-
-class Graph3GraphListView(ListView):
-    model = Graph3Graph
-
 
 ###############################################################################
 #
 # Test crispy forms to make sure it's working
 #
 from crispy_forms.helper import FormHelper
+# noinspection PyUnresolvedReferences
 from crispy_forms.layout import Layout, Div, Submit, HTML, Button, Row, Field
 from crispy_forms.bootstrap import AppendedText, PrependedText, FormActions
 
@@ -308,11 +322,11 @@ class SimpleForm(forms.Form):
     text_input = forms.CharField()
 
     textarea = forms.CharField(
-        widget = forms.Textarea(),
+        widget=forms.Textarea(),
     )
 
     radio_buttons = forms.ChoiceField(
-        choices = (
+        choices=(
             ('option_one', "Option one is this and that be sure to include why it's great"),
             ('option_two', "Option two can is something else and selecting it will deselect option one")
         ),
@@ -321,18 +335,19 @@ class SimpleForm(forms.Form):
     )
 
     checkboxes = forms.MultipleChoiceField(
-        choices = (
+        choices=(
             ('option_one', "Option one is this and that be sure to include why it's great"),
             ('option_two', 'Option two can also be checked and included in form results'),
             ('option_three', 'Option three can yes, you guessed it also be checked and included in form results')
         ),
         initial = 'option_one',
         widget = forms.CheckboxSelectMultiple,
-        help_text = "<strong>Note:</strong> Labels surround all the options for much larger click areas and a more usable form.",
+        help_text = "<strong>Note:</strong> "
+                    "Labels surround all the options for much larger click areas and a more usable form.",
     )
 
     appended_text = forms.CharField(
-        help_text = "Here's more help text"
+        help_text="Here's more help text"
     )
 
     prepended_text = forms.CharField()
@@ -340,7 +355,7 @@ class SimpleForm(forms.Form):
     prepended_text_two = forms.CharField()
 
     multicolon_select = forms.MultipleChoiceField(
-        choices = (('1', '1'), ('2', '2'), ('3', '3'), ('4', '4'), ('5', '5')),
+        choices=(('1', '1'), ('2', '2'), ('3', '3'), ('4', '4'), ('5', '5')),
     )
 
     # Uni-form
@@ -352,7 +367,8 @@ class SimpleForm(forms.Form):
         'radio_buttons',
         Field('checkboxes', style="background: #FAFAFA; padding: 10px;"),
         AppendedText('appended_text', '.00'),
-        PrependedText('prepended_text', '<input type="checkbox" checked="checked" value="" id="" name="">', active=True),
+        PrependedText('prepended_text',
+                      '<input type="checkbox" checked="checked" value="" id="" name="">', active=True),
         PrependedText('prepended_text_two', '@'),
         'multicolon_select',
         FormActions(
@@ -364,5 +380,13 @@ class SimpleForm(forms.Form):
 
 class CrispyView(FormView):
     template_name = 'crispy.html'
-    form_class = SimpleForm
-
+    form_text = """
+class GraphForm(forms.Form):
+    title = forms.CharField(min_length=3, max_length=80, label='Title')
+    number_countries = forms.IntegerField(max_value=50, min_value=5, label='Number of countries')
+    helper = FormHelper()
+    helper.form_method = 'POST'
+    helper.add_input(Submit('submit', 'Show graph', css_class='btn-primary'))
+        """
+    exec(form_text, globals(), locals())
+    form_class = GraphForm
