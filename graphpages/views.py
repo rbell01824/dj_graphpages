@@ -70,7 +70,7 @@ class Graph3View(View):
         if graph3obj.form:                  # process form if present
             # graph_form_response = self.build_graph_form_response(request, graph3obj)
             t = Template(graph3obj.form)
-            c = Context({})
+            c = Context({'graph_pk': graph3obj.pk})
             return HttpResponse(t.render(c))
         else:                               # no form, build and display the graph
             graph_graph_response = self.build_graph_graph_response(request, graph3obj)
@@ -382,6 +382,7 @@ class CrispyView(FormView):
     template_name = 'crispy.html'
     form_class = SimpleForm
 
+# noinspection PyStatementEffect
 """
 {% extends "base.html" %}
 {% load graphpage %}
@@ -404,6 +405,7 @@ class GraphForm(forms.Form):
                                           label='Number of countries')
     helper = FormHelper()
     helper.form_method = 'POST'
+    helper.form_action = 'graphpages/graphpage3/{{graph_pk}}'
     helper.add_input(Submit('submit', 'Show graph', css_class='btn-primary'))
 {% endform no_countries %}
 
@@ -418,6 +420,7 @@ class GraphForm(forms.Form):
 {% endblock content %}
 """
 
+# noinspection PyStatementEffect
 """
 {% extends "base.html" %}
 {% load chartkick %}
@@ -457,4 +460,3 @@ data2 = [[o.name, o.population] for o in r]
     </div>
 {% endblock content %}
 """
-

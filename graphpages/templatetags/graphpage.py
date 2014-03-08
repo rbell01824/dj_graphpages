@@ -199,7 +199,7 @@ class FormNode(template.Node):
         exec(self.content, globals(), locals())
         # noinspection PyUnresolvedReferences
         unbound_form = GraphForm()
-        rtn = render_crispy_form(unbound_form)
+        rtn = render_crispy_form(unbound_form,context=context)
         return rtn
 
 
