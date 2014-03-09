@@ -47,8 +47,14 @@ class GraphPageGraph(models.Model):
                                   blank=True,
                                   null=True)
     form = models.TextField(blank=True)
+    form_ref = models.ForeignKey('self', related_name='fk_form',
+                                 default=None, null=True)
     query = models.TextField(blank=True)
+    query_ref = models.ForeignKey('self', related_name='fk_query',
+                                  default=None, null=True)
     template = models.TextField(blank=True)
+    template_ref = models.ForeignKey('self', related_name='fk_template',
+                                     default=None, null=True)
 
     class Meta:
         verbose_name = "GraphPage Graph"
@@ -57,5 +63,3 @@ class GraphPageGraph(models.Model):
     def __unicode__(self):
         return u'{}'.format(self.name)
     pass
-
-

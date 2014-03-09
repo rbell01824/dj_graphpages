@@ -66,11 +66,11 @@ class GraphPageGraphAdmin(admin.ModelAdmin):
         (None, {'classes': ('suit-tab suit-tab-general',),
                 'fields': ('name', 'description', 'tags',)}),
         ('Form', {'classes': ('suit-tab suit-tab-form',),
-                  'fields': ('form',)}),
+                  'fields': ('form_ref', 'form',)}),
         ('Query', {'classes': ('suit-tab suit-tab-query',),
-                   'fields': ('query',)}),
+                   'fields': ('query_ref', 'query',)}),
         ('Graph Page', {'classes': ('suit-tab suit-tab-graphpage',),
-                        'fields': ('template',)}),
+                        'fields': ('template_ref', 'template',)}),
     )
     list_display_links = ('name',)
     filter_horizontal = ('tags',)
