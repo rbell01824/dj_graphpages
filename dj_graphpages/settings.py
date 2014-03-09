@@ -146,7 +146,7 @@ SUIT_CONFIG = {
         # 'sites',
         # {'app': 'auth', 'icon':'icon-lock', 'models': ('user', 'group')},
         # {'label': 'Settings', 'icon':'icon-cog', 'models': ('auth.user', 'auth.group')},
-        {'label': 'Graphpages', 'icon': 'icon-signal', 'models': ('graphpages.graph3graph',)},
+        {'label': 'Graphpages', 'icon': 'icon-signal', 'models': ('graphpages.graphpagegraph',)},
         {'label': 'Support', 'icon': 'icon-question-sign', 'url': '/support/'},
     ),
 

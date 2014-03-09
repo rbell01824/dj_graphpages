@@ -7,13 +7,13 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.views.generic import TemplateView
 
 from .views import index
-from graphpages.views import Graph3GraphListView, CrispyView
+from graphpages.views import GraphPageGraphListView, CrispyView
 import forms_builder.forms.urls
 
 urlpatterns = patterns('',
     url(r'^test_data/', include('test_data.urls')),
     url(r'^display_graph_pages$',
-        Graph3GraphListView.as_view(), name=Graph3GraphListView),
+        GraphPageGraphListView.as_view(), name=GraphPageGraphListView),
     url(r'^graphpages/', include('graphpages.urls')),
     url(r'^demo/', include('chartkick_demo.urls')),
     url(r'^admin/', include(admin.site.urls)),

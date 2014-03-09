@@ -1,178 +1,6 @@
 [
 {
     "pk": 1, 
-    "model": "graphpages.graphtemplatetags", 
-    "fields": {
-        "tag": "Chartkick", 
-        "description": "Uses chartkick charts"
-    }
-},
-{
-    "pk": 2, 
-    "model": "graphpages.graphtemplatetags", 
-    "fields": {
-        "tag": "Highchart", 
-        "description": "Uses highchart charts"
-    }
-},
-{
-    "pk": 3, 
-    "model": "graphpages.graphtemplatetags", 
-    "fields": {
-        "tag": "Pie", 
-        "description": "Pie chart"
-    }
-},
-{
-    "pk": 4, 
-    "model": "graphpages.graphtemplatetags", 
-    "fields": {
-        "tag": "Line", 
-        "description": "Line chart"
-    }
-},
-{
-    "pk": 5, 
-    "model": "graphpages.graphtemplatetags", 
-    "fields": {
-        "tag": "Column", 
-        "description": "Column chart"
-    }
-},
-{
-    "pk": 6, 
-    "model": "graphpages.graphtemplatetags", 
-    "fields": {
-        "tag": "Bar", 
-        "description": "Bar chart"
-    }
-},
-{
-    "pk": 7, 
-    "model": "graphpages.graphtemplatetags", 
-    "fields": {
-        "tag": "Area", 
-        "description": "Area chart"
-    }
-},
-{
-    "pk": 8, 
-    "model": "graphpages.graphtemplatetags", 
-    "fields": {
-        "tag": "Combo", 
-        "description": "Combo chart"
-    }
-},
-{
-    "pk": 9, 
-    "model": "graphpages.graphtemplatetags", 
-    "fields": {
-        "tag": "2", 
-        "description": "2 charts in template"
-    }
-},
-{
-    "pk": 10, 
-    "model": "graphpages.graphtemplatetags", 
-    "fields": {
-        "tag": "Side by side", 
-        "description": "Charts appear side by side"
-    }
-},
-{
-    "pk": 1, 
-    "model": "graphpages.graphtemplates", 
-    "fields": {
-        "tags": [
-            1, 
-            4
-        ], 
-        "name": "Line", 
-        "template": "{% extends \"base.html\" %}\r\n{% load chartkick %}\r\n\r\n{% block content %}\r\n    <h3>{{ title }}</h3>\r\n    {% line_chart data %}\r\n{% endblock content %}", 
-        "description": "Chartkick single line chart with title & data"
-    }
-},
-{
-    "pk": 2, 
-    "model": "graphpages.graphtemplates", 
-    "fields": {
-        "tags": [
-            1, 
-            3
-        ], 
-        "name": "Pie", 
-        "template": "{% extends \"base.html\" %}\r\n{% load chartkick %}\r\n\r\n{% block content %}\r\n    <h3>{{ title }}</h3>\r\n    {% pie_chart data %}\r\n{% endblock content %}", 
-        "description": "Chartkick single pie chart with title & data"
-    }
-},
-{
-    "pk": 3, 
-    "model": "graphpages.graphtemplates", 
-    "fields": {
-        "tags": [
-            1, 
-            5
-        ], 
-        "name": "Column", 
-        "template": "{% extends \"base.html\" %}\r\n{% load chartkick %}\r\n\r\n{% block content %}\r\n    <h3>{{ title }}</h3>\r\n    {% column_chart data %}\r\n{% endblock content %}", 
-        "description": "Chartkick single column chart with title & data"
-    }
-},
-{
-    "pk": 4, 
-    "model": "graphpages.graphtemplates", 
-    "fields": {
-        "tags": [
-            1, 
-            6
-        ], 
-        "name": "Bar", 
-        "template": "{% extends \"base.html\" %}\r\n{% load chartkick %}\r\n\r\n{% block content %}\r\n    <h3>{{ title }}</h3>\r\n    {% bar_chart data %}\r\n{% endblock content %}", 
-        "description": "Chartkick single bar chart with title & data"
-    }
-},
-{
-    "pk": 5, 
-    "model": "graphpages.graphtemplates", 
-    "fields": {
-        "tags": [
-            1, 
-            7
-        ], 
-        "name": "Area", 
-        "template": "{% extends \"base.html\" %}\r\n{% load chartkick %}\r\n\r\n{% block content %}\r\n    <h3>{{ title }}</h3>\r\n    {% area_chart data %}\r\n{% endblock content %}", 
-        "description": "Chartkick single area chart with title & data"
-    }
-},
-{
-    "pk": 6, 
-    "model": "graphpages.graphtemplates", 
-    "fields": {
-        "tags": [
-            3, 
-            9
-        ], 
-        "name": "Pie 2", 
-        "template": "{% extends \"base.html\" %}\r\n{% load chartkick %}\r\n\r\n{% block content %}\r\n    <h3>{{ title1 }}</h3>\r\n    {% pie_chart data1 with id='chart-1' %}\r\n    <h3>{{ title2 }}</h3>\r\n    {% pie_chart data2 with id='chart-2' %}\r\n{% endblock content %}", 
-        "description": "Chartkick two pie charts with title1, data_1, title2, & data_2"
-    }
-},
-{
-    "pk": 7, 
-    "model": "graphpages.graphtemplates", 
-    "fields": {
-        "tags": [
-            1, 
-            9, 
-            10
-        ], 
-        "name": "Pie 2 Side by side", 
-        "template": "{% extends \"base.html\" %}\r\n{% load chartkick %}\r\n\r\n{% block content %}\r\n    <div class=\"container-fluid\">\r\n        <div class=\"jumbotron\">\r\n            <h3>Django Graph Pages</h3>\r\n\r\n            <p>This template displays two pie charts side by side in a fluid grid.</p>\r\n\r\n        </div>\r\n    </div>\r\n\r\n    <div class=\"container-fluid\">\r\n        <div class=\"row\">\r\n            <div class=\"col-md-6\">\r\n                <h3>{{ title1 }}</h3>\r\n                {% pie_chart data1 with id='chart-1' %}\r\n            </div>\r\n            <div class=\"col-md-6\">\r\n                <h3>{{ title2 }}</h3>\r\n                {% pie_chart data2 with id='chart-2' %}\r\n            </div>\r\n        </div>\r\n    </div>\r\n{% endblock content %}", 
-        "description": "Chartkick two pie charts side by side with title1, data_1, title2, & data_2"
-    }
-},
-{
-    "pk": 1, 
     "model": "graphpages.graphpagetags", 
     "fields": {
         "tag": "CIA", 
@@ -188,139 +16,39 @@
     }
 },
 {
-    "pk": 1, 
-    "model": "graphpages.graphpage", 
+    "pk": 1,
+    "model": "graphpages.graphpagegraph",
     "fields": {
-        "name": "Top 20 countries by land area column", 
-        "form": "", 
-        "tags": [
-            1
-        ], 
-        "page_format": "html", 
-        "template": 3, 
-        "query": "title = 'Top 20 countries by land area'\r\nr = CIA.objects.order_by('-land_area')[:20]\r\ndata = [[o.name, o.land_area] for o in r]\r\n", 
-        "page": "", 
-        "description": "Top 20 countries by land area"
-    }
-},
-{
-    "pk": 2, 
-    "model": "graphpages.graphpage", 
-    "fields": {
-        "name": "Top 20 countries by land area pie chart", 
-        "form": "", 
-        "tags": [
-            1
-        ], 
-        "page_format": "html", 
-        "template": 2, 
-        "query": "title = 'Top 10 countries by land area'\r\nr = CIA.objects.order_by('-land_area')[:10]\r\ndata = [[o.name, o.land_area] for o in r]\r\n", 
-        "page": "", 
-        "description": "Top 20 countries by land area"
-    }
-},
-{
-    "pk": 3, 
-    "model": "graphpages.graphpage", 
-    "fields": {
-        "name": "Top 10 countries by land area and population", 
-        "form": "", 
-        "tags": [
-            1
-        ], 
-        "page_format": "html", 
-        "template": 6, 
-        "query": "title1 = 'Top 10 countries by land area'\r\nr = CIA.objects.order_by('-land_area')[:10]\r\ndata1 = [[o.name, o.land_area] for o in r]\r\n\r\ntitle2 = 'Top 10 countries by population'\r\nr = CIA.objects.order_by('-population')[:10]\r\ndata2 = [[o.name, o.population] for o in r]\r\n\r\n", 
-        "page": "", 
+        "name": "Top 20 countries by land area and population",
+        "form": "",
+        "tags": [],
+        "template": "{% extends \"base.html\" %}\r\n{% load chartkick %}\r\n\r\n{% block content %}\r\n    <h3>{{ title1 }}</h3>\r\n    {% pie_chart data1 with id='chart-1' %}\r\n    <h3>{{ title2 }}</h3>\r\n    {% pie_chart data2 with id='chart-2' %}\r\n{% endblock content %}",
+        "query": "title1 = 'Top 10 countries by land area'\r\nr = CIA.objects.order_by('-land_area')[:10]\r\ndata1 = [[o.name, o.land_area] for o in r]\r\n\r\ntitle2 = 'Top 10 countries by population'\r\nr = CIA.objects.order_by('-population')[:10]\r\ndata2 = [[o.name, o.population] for o in r]\r\n\r\n",
         "description": "Top 20 countries by land area and population\r\n"
     }
 },
 {
-    "pk": 4, 
-    "model": "graphpages.graphpage", 
+    "pk": 2,
+    "model": "graphpages.graphpagegraph",
     "fields": {
-        "name": "Top 10 countries by land area and population 2", 
-        "form": "", 
-        "tags": [], 
-        "page_format": "html", 
-        "template": 7, 
-        "query": "title1 = 'Top 10 countries by land area'\r\nr = CIA.objects.order_by('-land_area')[:10]\r\ndata1 = [[o.name, o.land_area] for o in r]\r\n\r\ntitle2 = 'Top 10 countries by population'\r\nr = CIA.objects.order_by('-population')[:10]\r\ndata2 = [[o.name, o.population] for o in r]\r\n\r\n", 
-        "page": "", 
-        "description": "Top 20 countries by land area and population side by side\r\n"
+        "name": "Top 20 countries by land area and population 2",
+        "form": "",
+        "tags": [],
+        "template": "{% extends \"base.html\" %}\r\n{% load chartkick %}\r\n\r\n{% block content %}\r\n    <div class=\"container-fluid\">\r\n        <div class=\"jumbotron\">\r\n            <h3>Django Graph Pages</h3>\r\n            <p>This template displays two pie charts side by side in a fluid grid.</p>\r\n        </div>\r\n    </div>\r\n\r\n    <div class=\"container-fluid\">\r\n        <div class=\"row\">\r\n            <div class=\"col-md-6\">\r\n                <h3>{{ title1 }}</h3>\r\n                {% pie_chart data1 with id='chart-1' %}\r\n                <a class=\"btn btn-primary\" href=\"javascript:history.back()\">Back</a>\r\n\r\n            </div>\r\n            <div class=\"col-md-6\">\r\n                <h3>{{ title2 }}</h3>\r\n                {% pie_chart data2 with id='chart-2' %}\r\n                <a class=\"btn btn-primary\" href=\"javascript:history.back()\">Back</a>\r\n            </div>\r\n        </div>\r\n    </div>\r\n{% endblock content %}",
+        "query": "title1 = 'Top 10 countries by land area'\r\nr = CIA.objects.order_by('-land_area')[:10]\r\ndata1 = [[o.name, o.land_area] for o in r]\r\n\r\ntitle2 = 'Top 10 countries by population'\r\nr = CIA.objects.order_by('-population')[:10]\r\ndata2 = [[o.name, o.population] for o in r]\r\n\r\n",
+        "description": "Top 20 countries by land area and population\r\n"
     }
 },
 {
-    "pk": 1, 
-    "model": "graphpages.graph2tags", 
+    "pk": 3,
+    "model": "graphpages.graphpagegraph",
     "fields": {
-        "tag": "CIA", 
-        "description": "CIA World Factbook data"
-    }
-},
-{
-    "pk": 2, 
-    "model": "graphpages.graph2tags", 
-    "fields": {
-        "tag": "Countries", 
-        "description": "United Nations Country Data"
-    }
-},
-{
-    "pk": 1, 
-    "model": "graphpages.graph2template", 
-    "fields": {
-        "tags": [], 
-        "name": "Top 20 countries by land area column", 
-        "template": "{% extends \"base.html\" %}\r\n{% load chartkick %}\r\n\r\n{% block content %}\r\n    <h3>{{ title }}</h3>\r\n    {% column_chart data %}\r\n{% endblock content %}", 
-        "description": ""
-    }
-},
-{
-    "pk": 2, 
-    "model": "graphpages.graph2template", 
-    "fields": {
-        "tags": [
-            1
-        ], 
-        "name": "Top 30 countries by land area column with embeded calcs", 
-        "template": "{% extends \"base.html\" %}\r\n{% load chartkick %}\r\n{% load graphpage %}\r\n\r\n{% block content %}\r\n\r\n    {% expr map(list, CIA.objects.order_by('-land_area').values_list('name', 'land_area')[:30]) as data %}\r\n\r\n    <h3>Top 30 countries by land area</h3>\r\n    {% column_chart data %}\r\n\r\n{% endblock content %}",
-        "description": ""
-    }
-},
-{
-    "pk": 1, 
-    "model": "graphpages.graph2query", 
-    "fields": {
-        "query": "\r\ntitle = 'Top 20 countries by land area'\r\nr = CIA.objects.order_by('-land_area')[:20]\r\ndata = [[o.name, o.land_area] for o in r]", 
-        "tags": [], 
-        "name": "Top 20 countries by land area column", 
-        "description": ""
-    }
-},
-{
-    "pk": 1, 
-    "model": "graphpages.graph2graph", 
-    "fields": {
-        "name": "Top 20 countries by land area", 
-        "form": null, 
-        "tags": [
-            1
-        ], 
-        "template": 1, 
-        "query": 1, 
-        "description": ""
-    }
-},
-{
-    "pk": 2, 
-    "model": "graphpages.graph2graph", 
-    "fields": {
-        "name": "Top 30 countries by land area", 
-        "form": null, 
-        "tags": [], 
-        "template": 2, 
-        "query": null, 
-        "description": ""
+        "name": "Top N countries by land area and population with query form",
+        "form": "{% extends \"base.html\" %}\r\n{% load graphpage %}\r\n{% load crispy_forms_tags %}\r\n\r\n{% block content %}\r\n    <div class=\"container-fluid\">\r\n        <div class=\"row\">\r\n            <div class=\"col-md-6\">\r\n                <h3>This is a form page</h3>\r\n                <p>It contains one or more forms, like the one below.</p>\r\n                <p>You can put any explanation text above the form.</p>\r\n            </div>\r\n        </div>\r\n\r\n{% form no_countries %}\r\nclass GraphForm(forms.Form):\r\n    title = forms.CharField(min_length=3, max_length=80, label='Title')\r\n    number_countries = forms.IntegerField(max_value=50, min_value=5,\r\n                                          label='Number of countries')\r\n    helper = FormHelper()\r\n    helper.form_method = 'POST'\r\n    helper.form_action = 'graphpages/graphpage3/{{graph_pk}}'\r\n    helper.add_input(Submit('submit', 'Show graph', css_class='btn-primary'))\r\n{% endform no_countries %}\r\n\r\n        <div class=\"row\">\r\n            <div class=\"col-md-6\">\r\n               </br>\r\n               <p>Likewise you can put any instructions or whatever after the form.</p>\r\n               <p>Forms support django-crispy-forms and bootstrap3!</p>\r\n            </div>\r\n        </div>\r\n    </div>\r\n{% endblock content %}",
+        "tags": [],
+        "template": "{% extends \"base.html\" %}\r\n{% load chartkick %}\r\n\r\n{% query %}\r\ntitle1 = 'Top {{number_countries}} countries by land area'\r\nr = CIA.objects.order_by('-land_area')[:{{number_countries}}]\r\ndata1 = [[o.name, o.land_area] for o in r]\r\n\r\ntitle2 = 'Top {{number_countries}} countries by population'\r\nr = CIA.objects.order_by('-population')[:{{number_countries}}]\r\ndata2 = [[o.name, o.population] for o in r]\r\n{% endquery %}\r\n\r\n{% block content %}\r\n    <div class=\"container-fluid\">\r\n        <div class=\"jumbotron\">\r\n            <h3>Django Graph Pages</h3>\r\n            <p>This template displays two pie charts side by side in a fluid grid.</p>\r\n        </div>\r\n    </div>\r\n\r\n    <div class=\"container-fluid\">\r\n        <div class=\"row\">\r\n            <div class=\"col-md-6\">\r\n                <h3>{{ title1 }}</h3>\r\n                {% pie_chart data1 with id='chart-1' %}\r\n                <a class=\"btn btn-primary\" href=\"javascript:history.back()\">Back</a>\r\n\r\n            </div>\r\n            <div class=\"col-md-6\">\r\n                <h3>{{ title2 }}</h3>\r\n                {% pie_chart data2 with id='chart-2' %}\r\n                <a class=\"btn btn-primary\" href=\"javascript:history.back()\">Back</a>\r\n            </div>\r\n        </div>\r\n    </div>\r\n{% endblock content %}",
+        "query": "title1 = 'Top {{number_countries}} countries by land area'\r\nr = CIA.objects.order_by('-land_area')[:{{number_countries}}]\r\ndata1 = [[o.name, o.land_area] for o in r]\r\n\r\ntitle2 = 'Top {{number_countries}} countries by population'\r\nr = CIA.objects.order_by('-population')[:{{number_countries}}]\r\ndata2 = [[o.name, o.population] for o in r]\r\n\r\n",
+        "description": "Top N countries by land area and population with query form\r\n"
     }
 }
 ]
