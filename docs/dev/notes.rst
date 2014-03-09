@@ -196,4 +196,5 @@ I know it should be obvious but I had a hard time sorting this out.  Here's a sa
         template_name = 'crispy.html'
         form_class = SimpleForm
 
-The key is using the helper.layout.  I tried a number of other approaches but none worked.
+The key is using the helper.layout ans setting style=... as in **integer_input** above.
+I tried a number of other approaches but none worked.
