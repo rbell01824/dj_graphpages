@@ -48,13 +48,13 @@ class GraphPageGraph(models.Model):
                                   null=True)
     form = models.TextField(blank=True)
     form_ref = models.ForeignKey('self', related_name='fk_form',
-                                 default=None, null=True)
+                                 default=None, blank=True, null=True)
     query = models.TextField(blank=True)
     query_ref = models.ForeignKey('self', related_name='fk_query',
-                                  default=None, null=True)
+                                  default=None, blank=True, null=True)
     template = models.TextField(blank=True)
     template_ref = models.ForeignKey('self', related_name='fk_template',
-                                     default=None, null=True)
+                                     default=None, blank=True, null=True)
 
     class Meta:
         verbose_name = "GraphPage Graph"

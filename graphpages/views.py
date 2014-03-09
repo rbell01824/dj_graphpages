@@ -66,14 +66,16 @@ class GraphPageView(View):
 
         If no form, then build and display the graph here.
         """
-        GraphPageobj = get_object_or_404(GraphPageGraph, pk=graph_pk)
-        if GraphPageobj.form:                  # process form if present
-            # graph_form_response = self.build_graph_form_response(request, GraphPageobj)
-            t = Template(GraphPageobj.form)
-            c = Context({'graph_pk': GraphPageobj.pk})
+        gpg = get_object_or_404(GraphPageGraph, pk=graph_pk)
+        if gpg.form or (gpg.form and gpg.form_ref.form):        # process form if present
+            if gpg.form_ref:
+                t = Template(gpg.form_ref.form)
+            else:
+                t = Template(gpg.form)
+            c = Context({'graph_pk': gpg.pk})
             return HttpResponse(t.render(c))
         else:                               # no form, build and display the graph
-            graph_graph_response = self.build_graph_graph_response(request, GraphPageobj)
+            graph_graph_response = self.build_graph_graph_response(request, gpg)
             return HttpResponse(graph_graph_response)
 
     # noinspection PyMethodMayBeStatic,PyUnusedLocal
