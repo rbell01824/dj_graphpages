@@ -51,7 +51,7 @@ class GraphPageGraphAdmin(admin.ModelAdmin):
 
     # noinspection PyMethodMayBeStatic
     def display_graph(self, obj):
-        rtn = u"<div><a class='btn btn-primary btn-sm' href='/graphpages/GraphPage/%s'>Display</a></div>" % obj.id
+        rtn = u"<div><a class='btn btn-primary btn-sm' href='/graphpages/graphpage/%s'>Display</a></div>" % obj.id
         return rtn
     display_graph.short_description = ''
     display_graph.allow_tags = True

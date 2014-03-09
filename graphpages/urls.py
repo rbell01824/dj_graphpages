@@ -24,5 +24,5 @@ from django.conf.urls import patterns, url
 from graphpages.views import GraphPageView
 
 urlpatterns = patterns('',
-                       url(r'GraphPage/(?P<graph_pk>.+)$', GraphPageView.as_view(), name='GraphPage'),
+                       url(r'graphpage/(?P<graph_pk>.+)$', GraphPageView.as_view(), name='graphpage'),
                        )

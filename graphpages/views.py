@@ -69,9 +69,12 @@ class GraphPageView(View):
         gpg = get_object_or_404(GraphPageGraph, pk=graph_pk)
         if gpg.form or (gpg.form and gpg.form_ref.form):        # process form if present
             if gpg.form_ref:
-                t = Template(gpg.form_ref.form)
+                form = gpg.form_ref.form.strip()
             else:
-                t = Template(gpg.form)
+                form = gpg.form.strip()
+            if len(form) == 0:
+                raise ValidationError('Empty form')
+            t = Template(form)
             c = Context({'graph_pk': gpg.pk})
             return HttpResponse(t.render(c))
         else:                               # no form, build and display the graph
