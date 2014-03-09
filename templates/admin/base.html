@@ -37,7 +37,10 @@
             <div id="branding" style="border: none;">
               <a  class="navbar-brand active" href="{% url 'index' %}">
                   <h1 id="site-name" style="color: black; text-shadow: none;">
-                      {% block branding %}{{ 'ADMIN_NAME'|suit_conf }}{% endblock %}
+                      {% block branding %}
+                          <i class="icon-home"></i>
+                          {{ 'ADMIN_NAME'|suit_conf }}
+                      {% endblock %}
                   </h1>
               </a>
             </div>
@@ -55,14 +58,17 @@
             {% endblock %}
 
             {% block header_content %}
-              <!--<div class="header-content">
-                <div class="header-column icon">
-                  <i class="icon-comment"></i>
-                </div>
-                <div class="header-column">
-                  <a href="" class="grey"><b>2</b> new messages</a>
-                </div>
-              </div>-->
+                <div class="header-content">
+                  <a href="javascript:history.back()" style="color: white;"
+                          class="btn btn-small btn-primary" type="button">
+                    <i class="icon-arrow-left"></i>
+                      <strong style="font-size: 12px; ">Back</strong>
+                  </a>
+{#                <div class="header-column icon">#}
+{#                  <i class="icon-arrow-left"></i>#}
+{#                  <a href="javascript:history.back()">Back</a>#}
+{#                </div>#}
+              </div>
             {% endblock %}
 
             {% if user.is_active and user.is_staff %}

@@ -62,16 +62,23 @@ class GraphPageGraphAdmin(admin.ModelAdmin):
     list_display = ('display_graph', 'name', 'tags_slug', 'description',
                     'form_slug', 'query_slug', 'template_slug'
                     )
-    fieldsets = ((None, {'fields': ('name', 'description', 'tags',)}),
-                 ('Form', {
-                     'classes': ('full-width',),
-                     'fields': ('form',)}),
-                 ('Graph Page', {
-                     'classes': ('full-width',),
-                     'fields': ('template',)}),
-                 )
+    fieldsets = (
+        (None, {'classes': ('suit-tab suit-tab-general',),
+                'fields': ('name', 'description', 'tags',)}),
+        ('Form', {'classes': ('suit-tab suit-tab-form',),
+                  'fields': ('form',)}),
+        ('Query', {'classes': ('suit-tab suit-tab-query',),
+                   'fields': ('query',)}),
+        ('Graph Page', {'classes': ('suit-tab suit-tab-graphpage',),
+                        'fields': ('template',)}),
+    )
     list_display_links = ('name',)
     filter_horizontal = ('tags',)
+    suit_form_tabs = (('general', 'General'),
+                      ('form', 'Form'),
+                      ('query', 'Query'),
+                      ('graphpage', 'Graph Page')
+    )
     save_on_top = True
     ordering = ('name',)
     actions = ['delete_selected', 'duplicate_records', 'graph_admin_action']
@@ -109,11 +116,11 @@ class GraphPageGraphAdmin(admin.ModelAdmin):
         if db_field.name == 'description':
             kwargs['widget'] = Textarea(attrs={'class': 'span12', 'rows': '2', 'cols': '140'})
         if db_field.name == 'form':
-            kwargs['widget'] = Textarea(attrs={'class': 'span12', 'rows': '10', 'cols': '140'})
+            kwargs['widget'] = Textarea(attrs={'class': 'span12', 'rows': '30', 'cols': '140'})
         if db_field.name == 'query':
-            kwargs['widget'] = Textarea(attrs={'class': 'span12', 'rows': '3', 'cols': '140'})
+            kwargs['widget'] = Textarea(attrs={'class': 'span12', 'rows': '30', 'cols': '140'})
         if db_field.name == 'template':
-            kwargs['widget'] = Textarea(attrs={'class': 'span12', 'rows': '10', 'cols': '140'})
+            kwargs['widget'] = Textarea(attrs={'class': 'span12', 'rows': '30', 'cols': '140'})
         return super(GraphPageGraphAdmin, self).formfield_for_dbfield(db_field, **kwargs)
 
     # noinspection PyMethodMayBeStatic,PyUnusedLocal
