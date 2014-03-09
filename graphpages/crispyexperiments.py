@@ -20,6 +20,7 @@ __status__ = "dev"
 
 
 from django.views.generic import FormView
+from django.forms.extras.widgets import SelectDateWidget
 from django import forms
 
 
@@ -34,6 +35,12 @@ from crispy_forms.bootstrap import AppendedText, PrependedText, FormActions
 
 
 class SimpleForm(forms.Form):
+    integer_input = forms.IntegerField(max_value=99, min_value=2,
+                                       label='Integer field label(2 to 99)',
+                                       initial='30',
+                                       # widget=forms.NumberInput(attrs={'width': '50px;'})
+    )
+
     text_input = forms.CharField()
 
     textarea = forms.CharField(
@@ -77,6 +84,7 @@ class SimpleForm(forms.Form):
     helper = FormHelper()
     helper.form_class = 'form-horizontal'
     helper.layout = Layout(
+        Field('integer_input', style="width: 20%;"),
         Field('text_input', css_class='input-xlarge'),
         Field('textarea', rows="3", css_class='input-xlarge'),
         'radio_buttons',
