@@ -46,7 +46,15 @@
             </div>
 
             {% block header_time %}
-            <div class="header-content header-content-first" style="border: none;">
+            <div class="header-content header-content-first" style="border: none; padding: 7px 0px 0px 0px;">
+              <div class="header-content" style="padding: 3px 0px 0px 0px;">
+                <a href="javascript:history.back()" style="color: white;"
+                        class="btn btn-small btn-primary" type="button">
+                  <i class="icon-arrow-left"></i>
+                  <strong style="font-size: 12px; ">Back</strong>
+                </a>
+                &nbsp;
+              </div>
               <div class="header-column icon">
                 <i class="icon-time"></i>
               </div>
@@ -58,17 +66,13 @@
             {% endblock %}
 
             {% block header_content %}
-                <div class="header-content">
-                  <a href="javascript:history.back()" style="color: white;"
-                          class="btn btn-small btn-primary" type="button">
-                    <i class="icon-arrow-left"></i>
-                      <strong style="font-size: 12px; ">Back</strong>
-                  </a>
-{#                <div class="header-column icon">#}
+{#              <div class="header-content">#}
+{#                <a href="javascript:history.back()" style="color: white;"#}
+{#                        class="btn btn-small btn-primary" type="button">#}
 {#                  <i class="icon-arrow-left"></i>#}
-{#                  <a href="javascript:history.back()">Back</a>#}
-{#                </div>#}
-              </div>
+{#                  <strong style="font-size: 12px; ">Back</strong>#}
+{#                </a>#}
+{#              </div>#}
             {% endblock %}
 
             {% if user.is_active and user.is_staff %}
