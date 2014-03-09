@@ -195,4 +195,5 @@ I know it should be obvious but I had a hard time sorting this out.  Here's a sa
     class CrispyView(FormView):
         template_name = 'crispy.html'
         form_class = SimpleForm
+
 The key is using the helper.layout.  I tried a number of other approaches but none worked.
