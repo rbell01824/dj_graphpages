@@ -39,7 +39,7 @@ class SimpleForm(forms.Form):
                                        label='Integer field label(2 to 99)',
                                        initial='30',
                                        # widget=forms.NumberInput(attrs={'width': '50px;'})
-    )
+                                       )
 
     text_input = forms.CharField()
 
@@ -104,3 +104,19 @@ class SimpleForm(forms.Form):
 class CrispyView(FormView):
     template_name = 'crispy.html'
     form_class = SimpleForm
+
+
+class GraphForm(forms.Form):
+    title = forms.CharField(min_length=3, max_length=80, label='Title')
+    number_countries = forms.IntegerField(max_value=50, min_value=5,
+                                          label='Number of countries')
+    helper = FormHelper()
+    helper.form_method = 'POST'
+    helper.form_action = 'graphpages/graphpage3/{{graph_pk}}'
+    helper.layout = Layout(
+        Field('number_countries', style="width: 20%;"),
+        FormActions(
+            Submit('submit', 'Show graph', css_class='btn-primary'),
+            #Submit('cancel', 'Cancel'),
+        )
+    )

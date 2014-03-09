@@ -22,13 +22,16 @@ from django import template
 from django.utils.translation import gettext_lazy as _
 from django.template.base import Context, Node
 
-# These are needed inside the exec for the form tag
+# These are needed inside the exec for the form tag and crispy
 # noinspection PyUnresolvedReferences
 from django import forms
 # noinspection PyUnresolvedReferences
 from crispy_forms.helper import FormHelper
 # noinspection PyUnresolvedReferences
-from crispy_forms.layout import Submit
+from crispy_forms.layout import Layout, Div, Submit, HTML, Button, Row, Field
+# noinspection PyUnresolvedReferences
+from crispy_forms.bootstrap import AppendedText, PrependedText, FormActions
+
 from crispy_forms.utils import render_crispy_form
 
 import re
