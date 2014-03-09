@@ -7,7 +7,8 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.views.generic import TemplateView
 
 from .views import index
-from graphpages.views import GraphPageGraphListView, CrispyView
+from graphpages.views import GraphPageGraphListView
+from graphpages.crispyexperiments import CrispyView
 import forms_builder.forms.urls
 
 urlpatterns = patterns('',
