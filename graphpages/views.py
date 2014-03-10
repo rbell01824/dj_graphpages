@@ -75,7 +75,7 @@ class GraphPageView(View):
             if len(form) == 0:
                 raise ValidationError('Empty form')
             t = Template(form)
-            c = Context({'graph_pk': gpg.pk})
+            c = RequestContext(request, {'graph_pk': gpg.pk})
             return HttpResponse(t.render(c))
         else:                               # no form, build and display the graph
             graph_graph_response = self.build_graph_graph_response(request, gpg)
