@@ -136,61 +136,61 @@ class GraphPageView(View):
             raise ValidationError('Empty form page')
         return page
 
-    # noinspection PyMethodMayBeStatic
-    def build_graph_form_response(self, request, gpg_obj):
-        """
-        Here we build a form from the graph form and return it.
-        Subsequently, a post will return the form.
-        """
-        formclass = self.build_graph_form_class(gpg_obj)      # create the form class
-        form = formclass()                                      # create the unbound form
-        template = Template(gpg_obj.form)                     # create template object
-        context = RequestContext(request, {'graph_pk': gpg_obj.pk, 'form': form})
-        response = template.render(context)
-        return response
+    # # noinspection PyMethodMayBeStatic
+    # def build_graph_form_response(self, request, gpg_obj):
+    #     """
+    #     Here we build a form from the graph form and return it.
+    #     Subsequently, a post will return the form.
+    #     """
+    #     formclass = self.build_graph_form_class(gpg_obj)      # create the form class
+    #     form = formclass()                                      # create the unbound form
+    #     template = Template(gpg_obj.form)                     # create template object
+    #     context = RequestContext(request, {'graph_pk': gpg_obj.pk, 'form': form})
+    #     response = template.render(context)
+    #     return response
+    #
+    # # noinspection PyMethodMayBeStatic,PyUnusedLocal
+    # def build_graph_form_class(self, gpg_obj):
+    #     """
+    #     Create a form object from the form definition in a GraphPageobj.
+    #     """
+    #     match = re.match(r'.*{% form\s*[A-Za-z_0-9]*\s*%}(?P<THEFORM>.*){% endform\s*[A-Za-z_0-9]*\s*%}.*',
+    #                      gpg_obj.form, re.MULTILINE | re.DOTALL)
+    #     if not match:
+    #         raise ValidationError('Can not find form definition.')
+    #     form_text = match.group('THEFORM')
+    #     exec(form_text, globals(), locals())
+    #     # noinspection PyUnresolvedReferences
+    #     return GraphForm            # return the graphform class
 
     # noinspection PyMethodMayBeStatic,PyUnusedLocal
-    def build_graph_form_class(self, gpg_obj):
-        """
-        Create a form object from the form definition in a GraphPageobj.
-        """
-        match = re.match(r'.*{% form\s*[A-Za-z_0-9]*\s*%}(?P<THEFORM>.*){% endform\s*[A-Za-z_0-9]*\s*%}.*',
-                         gpg_obj.form, re.MULTILINE | re.DOTALL)
-        if not match:
-            raise ValidationError('Can not find form definition.')
-        form_text = match.group('THEFORM')
-        exec(form_text, globals(), locals())
-        # noinspection PyUnresolvedReferences
-        return GraphForm            # return the graphform class
-
-    # noinspection PyMethodMayBeStatic,PyUnusedLocal
-    def build_graph_graph_response(self, request, gpg_obj):
+    def build_graph_graph_response(self, request, gpg):
         """
         If there is a query, get it and exec.
         Otherwise just display the page.
 
         :param request:
         :type request:
-        :param gpg_obj:
-        :type gpg_obj: GraphPageGraph
+        :param gpg:
+        :type gpg: GraphPageGraph
         """
-        context = self.execute_query_to_build_context(request, gpg_obj)
-        template = self.get_graph_template(gpg_obj)
+        context = self.execute_query_to_build_context(request, gpg)
+        template = self.get_graph_template(gpg)
         response = template.render(context)
         return response
 
     # noinspection PyMethodMayBeStatic
-    def execute_query_to_build_context(self, request, gpg_obj):
+    def execute_query_to_build_context(self, request, gpg):
         """
-        :param gpg_obj:
-        :type gpg_obj: Graph2Graph
+        :param gpg:
+        :type gpg: Graph2Graph
         """
         # todo 2: make exec safe
         # todo 2: rewrite to use globals and locals properly
         # todo 1: if there is a request post context then we need to get that data into local() context
-        if not gpg_obj.query:
+        if not gpg.query:
             return Context({})
-        query_text = gpg_obj.query
+        query_text = gpg.query
         if len(query_text.strip()) <= 0:
             return Context({})
         # global_context = {}
@@ -203,14 +203,14 @@ class GraphPageView(View):
         return context
 
     # noinspection PyMethodMayBeStatic
-    def get_graph_template(self, gpg_obj):
+    def get_graph_template(self, gpg):
         """
-        :param gpg_obj:
-        :type gpg_obj: Graph2Graph
+        :param gpg:
+        :type gpg: Graph2Graph
         """
         template_text = ''
-        if gpg_obj.template:                      # use page if available
-            template_text = gpg_obj.template
+        if gpg.template:                      # use page if available
+            template_text = gpg.template
         # todo 2: other validations go here
         return Template(template_text)
 

@@ -16,38 +16,53 @@
     }
 },
 {
-    "pk": 1,
-    "model": "graphpages.graphpagegraph",
+    "pk": 1, 
+    "model": "graphpages.graphpagegraph", 
     "fields": {
-        "name": "Top 20 countries by land area and population",
-        "form": "",
-        "tags": [],
-        "template": "{% extends \"base.html\" %}\r\n{% load chartkick %}\r\n\r\n{% block content %}\r\n    <h3>{{ title1 }}</h3>\r\n    {% pie_chart data1 with id='chart-1' %}\r\n    <h3>{{ title2 }}</h3>\r\n    {% pie_chart data2 with id='chart-2' %}\r\n{% endblock content %}",
-        "query": "title1 = 'Top 10 countries by land area'\r\nr = CIA.objects.order_by('-land_area')[:10]\r\ndata1 = [[o.name, o.land_area] for o in r]\r\n\r\ntitle2 = 'Top 10 countries by population'\r\nr = CIA.objects.order_by('-population')[:10]\r\ndata2 = [[o.name, o.population] for o in r]\r\n\r\n",
+        "form_ref": null, 
+        "name": "Top 20 countries by land area and population", 
+        "form": "", 
+        "tags": [], 
+        "form_page": "", 
+        "form_page_ref": null, 
+        "template": "{% extends \"base.html\" %}\r\n{% load chartkick %}\r\n\r\n{% block content %}\r\n    <h3>{{ title1 }}</h3>\r\n    {% pie_chart data1 with id='chart-1' %}\r\n    <h3>{{ title2 }}</h3>\r\n    {% pie_chart data2 with id='chart-2' %}\r\n{% endblock content %}", 
+        "query": "title1 = 'Top 10 countries by land area'\r\nr = CIA.objects.order_by('-land_area')[:10]\r\ndata1 = [[o.name, o.land_area] for o in r]\r\n\r\ntitle2 = 'Top 10 countries by population'\r\nr = CIA.objects.order_by('-population')[:10]\r\ndata2 = [[o.name, o.population] for o in r]\r\n\r\n", 
+        "query_ref": null, 
+        "template_ref": null, 
         "description": "Top 20 countries by land area and population\r\n"
     }
 },
 {
-    "pk": 2,
-    "model": "graphpages.graphpagegraph",
+    "pk": 2, 
+    "model": "graphpages.graphpagegraph", 
     "fields": {
-        "name": "Top 20 countries by land area and population 2",
-        "form": "",
-        "tags": [],
-        "template": "{% extends \"base.html\" %}\r\n{% load chartkick %}\r\n\r\n{% block content %}\r\n    <div class=\"container-fluid\">\r\n        <div class=\"jumbotron\">\r\n            <h3>Django Graph Pages</h3>\r\n            <p>This template displays two pie charts side by side in a fluid grid.</p>\r\n        </div>\r\n    </div>\r\n\r\n    <div class=\"container-fluid\">\r\n        <div class=\"row\">\r\n            <div class=\"col-md-6\">\r\n                <h3>{{ title1 }}</h3>\r\n                {% pie_chart data1 with id='chart-1' %}\r\n                <a class=\"btn btn-primary\" href=\"javascript:history.back()\">Back</a>\r\n\r\n            </div>\r\n            <div class=\"col-md-6\">\r\n                <h3>{{ title2 }}</h3>\r\n                {% pie_chart data2 with id='chart-2' %}\r\n                <a class=\"btn btn-primary\" href=\"javascript:history.back()\">Back</a>\r\n            </div>\r\n        </div>\r\n    </div>\r\n{% endblock content %}",
-        "query": "title1 = 'Top 10 countries by land area'\r\nr = CIA.objects.order_by('-land_area')[:10]\r\ndata1 = [[o.name, o.land_area] for o in r]\r\n\r\ntitle2 = 'Top 10 countries by population'\r\nr = CIA.objects.order_by('-population')[:10]\r\ndata2 = [[o.name, o.population] for o in r]\r\n\r\n",
+        "form_ref": null, 
+        "name": "Top 20 countries by land area and population 2", 
+        "form": "", 
+        "tags": [], 
+        "form_page": "", 
+        "form_page_ref": null, 
+        "template": "{% extends \"base.html\" %}\r\n{% load chartkick %}\r\n\r\n{% block content %}\r\n    <div class=\"container-fluid\">\r\n        <div class=\"jumbotron\">\r\n            <h3>Django Graph Pages</h3>\r\n            <p>This template displays two pie charts side by side in a fluid grid.</p>\r\n        </div>\r\n    </div>\r\n\r\n    <div class=\"container-fluid\">\r\n        <div class=\"row\">\r\n            <div class=\"col-md-6\">\r\n                <h3>{{ title1 }}</h3>\r\n                {% pie_chart data1 with id='chart-1' %}\r\n                <a class=\"btn btn-primary\" href=\"javascript:history.back()\">Back</a>\r\n\r\n            </div>\r\n            <div class=\"col-md-6\">\r\n                <h3>{{ title2 }}</h3>\r\n                {% pie_chart data2 with id='chart-2' %}\r\n                <a class=\"btn btn-primary\" href=\"javascript:history.back()\">Back</a>\r\n            </div>\r\n        </div>\r\n    </div>\r\n{% endblock content %}", 
+        "query": "title1 = 'Top 10 countries by land area'\r\nr = CIA.objects.order_by('-land_area')[:10]\r\ndata1 = [[o.name, o.land_area] for o in r]\r\n\r\ntitle2 = 'Top 10 countries by population'\r\nr = CIA.objects.order_by('-population')[:10]\r\ndata2 = [[o.name, o.population] for o in r]\r\n\r\n", 
+        "query_ref": null, 
+        "template_ref": null, 
         "description": "Top 20 countries by land area and population\r\n"
     }
 },
 {
-    "pk": 3,
-    "model": "graphpages.graphpagegraph",
+    "pk": 3, 
+    "model": "graphpages.graphpagegraph", 
     "fields": {
-        "name": "Top N countries by land area and population with query form",
-        "form": "{% extends \"base.html\" %}\r\n{% load graphpage %}\r\n{% load crispy_forms_tags %}\r\n\r\n{% block content %}\r\n    <div class=\"container-fluid\">\r\n        <div class=\"row\">\r\n            <div class=\"col-md-6\">\r\n                <h3>This is a form page</h3>\r\n                <p>It contains one or more forms, like the one below.</p>\r\n                <p>You can put any explanation text above the form.</p>\r\n            </div>\r\n        </div>\r\n\r\n{% form no_countries %}\r\nclass GraphForm(forms.Form):\r\n    title = forms.CharField(min_length=3, max_length=80, label='Title')\r\n    number_countries = forms.IntegerField(max_value=50, min_value=5,\r\n                                          label='Number of countries')\r\n    helper = FormHelper()\r\n    helper.form_method = 'POST'\r\n    helper.form_action = 'graphpages/graphpage3/{{graph_pk}}'\r\n    helper.add_input(Submit('submit', 'Show graph', css_class='btn-primary'))\r\n{% endform no_countries %}\r\n\r\n        <div class=\"row\">\r\n            <div class=\"col-md-6\">\r\n               </br>\r\n               <p>Likewise you can put any instructions or whatever after the form.</p>\r\n               <p>Forms support django-crispy-forms and bootstrap3!</p>\r\n            </div>\r\n        </div>\r\n    </div>\r\n{% endblock content %}",
-        "tags": [],
-        "template": "{% extends \"base.html\" %}\r\n{% load chartkick %}\r\n\r\n{% query %}\r\ntitle1 = 'Top {{number_countries}} countries by land area'\r\nr = CIA.objects.order_by('-land_area')[:{{number_countries}}]\r\ndata1 = [[o.name, o.land_area] for o in r]\r\n\r\ntitle2 = 'Top {{number_countries}} countries by population'\r\nr = CIA.objects.order_by('-population')[:{{number_countries}}]\r\ndata2 = [[o.name, o.population] for o in r]\r\n{% endquery %}\r\n\r\n{% block content %}\r\n    <div class=\"container-fluid\">\r\n        <div class=\"jumbotron\">\r\n            <h3>Django Graph Pages</h3>\r\n            <p>This template displays two pie charts side by side in a fluid grid.</p>\r\n        </div>\r\n    </div>\r\n\r\n    <div class=\"container-fluid\">\r\n        <div class=\"row\">\r\n            <div class=\"col-md-6\">\r\n                <h3>{{ title1 }}</h3>\r\n                {% pie_chart data1 with id='chart-1' %}\r\n                <a class=\"btn btn-primary\" href=\"javascript:history.back()\">Back</a>\r\n\r\n            </div>\r\n            <div class=\"col-md-6\">\r\n                <h3>{{ title2 }}</h3>\r\n                {% pie_chart data2 with id='chart-2' %}\r\n                <a class=\"btn btn-primary\" href=\"javascript:history.back()\">Back</a>\r\n            </div>\r\n        </div>\r\n    </div>\r\n{% endblock content %}",
-        "query": "title1 = 'Top {{number_countries}} countries by land area'\r\nr = CIA.objects.order_by('-land_area')[:{{number_countries}}]\r\ndata1 = [[o.name, o.land_area] for o in r]\r\n\r\ntitle2 = 'Top {{number_countries}} countries by population'\r\nr = CIA.objects.order_by('-population')[:{{number_countries}}]\r\ndata2 = [[o.name, o.population] for o in r]\r\n\r\n",
+        "form_ref": null, 
+        "name": "Top N countries by land area and population with query form", 
+        "form": "class GraphForm(forms.Form):\r\n    title = forms.CharField(min_length=3, max_length=80, label='Title')\r\n    number_countries = forms.IntegerField(max_value=50, min_value=5,\r\n                                          label='Number of countries')\r\n", 
+        "tags": [], 
+        "form_page": "{% extends \"base.html\" %}\r\n\r\n{% block content %}\r\n    <div class=\"container-fluid\">\r\n        <div class=\"row\">\r\n            <div class=\"col-md-6\">\r\n                <h3>This is a form page</h3>\r\n                <p>It contains one or more forms, like the one below.</p>\r\n                <p>You can put any explanation text above the form.</p>\r\n            </div>\r\n        </div>\r\n\r\n<p>The PK is {{ graph_pk }}</p>\r\n\r\n<form method=\"post\" class=\"bootstrap3\" action=\"/graphpages/graphpage/{{graph_pk}}\"> {% csrf_token %}\r\n    {# Include the hidden fields #}\r\n    {% for hidden in graphform.hidden_fields %}\r\n    {{ hidden }}\r\n    {% endfor %}\r\n    {# Include the visible fields #}\r\n    {% for field in graphform.visible_fields %}\r\n        <div class=\"fieldWrapper\">\r\n            {{ field.errors }}\r\n            {{ field.label_tag }} {{ field }}\r\n        </div>\r\n    {% endfor %}\r\n    <p><input type=\"submit\" value=\"Send message\" /></p>\r\n</form>\r\n\r\n        <div class=\"row\">\r\n            <div class=\"col-md-6\">\r\n               </br>\r\n               <p>Likewise you can put any instructions or whatever after the form.</p>\r\n               <p>Forms support django-crispy-forms and bootstrap3!</p>\r\n            </div>\r\n        </div>\r\n    </div>\r\n{% endblock content %}", 
+        "form_page_ref": null, 
+        "template": "{% extends \"base.html\" %}\r\n{% load chartkick %}\r\n\r\n{% query %}\r\ntitle1 = 'Top {{number_countries}} countries by land area'\r\nr = CIA.objects.order_by('-land_area')[:{{number_countries}}]\r\ndata1 = [[o.name, o.land_area] for o in r]\r\n\r\ntitle2 = 'Top {{number_countries}} countries by population'\r\nr = CIA.objects.order_by('-population')[:{{number_countries}}]\r\ndata2 = [[o.name, o.population] for o in r]\r\n{% endquery %}\r\n\r\n{% block content %}\r\n    <div class=\"container-fluid\">\r\n        <div class=\"jumbotron\">\r\n            <h3>Django Graph Pages</h3>\r\n            <p>This template displays two pie charts side by side in a fluid grid.</p>\r\n        </div>\r\n    </div>\r\n\r\n    <div class=\"container-fluid\">\r\n        <div class=\"row\">\r\n            <div class=\"col-md-6\">\r\n                <h3>{{ title1 }}</h3>\r\n                {% pie_chart data1 with id='chart-1' %}\r\n                <a class=\"btn btn-primary\" href=\"javascript:history.back()\">Back</a>\r\n\r\n            </div>\r\n            <div class=\"col-md-6\">\r\n                <h3>{{ title2 }}</h3>\r\n                {% pie_chart data2 with id='chart-2' %}\r\n                <a class=\"btn btn-primary\" href=\"javascript:history.back()\">Back</a>\r\n            </div>\r\n        </div>\r\n    </div>\r\n{% endblock content %}", 
+        "query": "title1 = 'Top {{number_countries}} countries by land area'\r\nr = CIA.objects.order_by('-land_area')[:{{number_countries}}]\r\ndata1 = [[o.name, o.land_area] for o in r]\r\n\r\ntitle2 = 'Top {{number_countries}} countries by population'\r\nr = CIA.objects.order_by('-population')[:{{number_countries}}]\r\ndata2 = [[o.name, o.population] for o in r]\r\n\r\n", 
+        "query_ref": null, 
+        "template_ref": null, 
         "description": "Top N countries by land area and population with query form\r\n"
     }
 }
