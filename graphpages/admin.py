@@ -67,6 +67,8 @@ class GraphPageGraphAdmin(admin.ModelAdmin):
                 'fields': ('name', 'description', 'tags',)}),
         ('Form', {'classes': ('suit-tab suit-tab-form',),
                   'fields': ('form_ref', 'form',)}),
+        ('Form Page', {'classes': ('suit-tab suit-tab-formpage',),
+                  'fields': ('form_page_ref', 'form_page',)}),
         ('Query', {'classes': ('suit-tab suit-tab-query',),
                    'fields': ('query_ref', 'query',)}),
         ('Graph Page', {'classes': ('suit-tab suit-tab-graphpage',),
@@ -74,8 +76,10 @@ class GraphPageGraphAdmin(admin.ModelAdmin):
     )
     list_display_links = ('name',)
     filter_horizontal = ('tags',)
+    list_filter = ('tags',)
     suit_form_tabs = (('general', 'General'),
                       ('form', 'Form'),
+                      ('formpage', 'Form Page'),
                       ('query', 'Query'),
                       ('graphpage', 'Graph Page')
     )
@@ -116,6 +120,8 @@ class GraphPageGraphAdmin(admin.ModelAdmin):
         if db_field.name == 'description':
             kwargs['widget'] = Textarea(attrs={'class': 'span12', 'rows': '2', 'cols': '140'})
         if db_field.name == 'form':
+            kwargs['widget'] = Textarea(attrs={'class': 'span12', 'rows': '30', 'cols': '140'})
+        if db_field.name == 'form_page':
             kwargs['widget'] = Textarea(attrs={'class': 'span12', 'rows': '30', 'cols': '140'})
         if db_field.name == 'query':
             kwargs['widget'] = Textarea(attrs={'class': 'span12', 'rows': '30', 'cols': '140'})

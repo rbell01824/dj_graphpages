@@ -46,12 +46,19 @@ class GraphPageGraph(models.Model):
     tags = models.ManyToManyField(GraphPageTags,
                                   blank=True,
                                   null=True)
+    # The actual form
     form = models.TextField(blank=True)
     form_ref = models.ForeignKey('self', related_name='fk_form',
                                  default=None, blank=True, null=True)
+    # The page the form is on
+    form_page = models.TextField(blank=True)
+    form_page_ref = models.ForeignKey('self', related_name='fk_form_page',
+                                      default=None, blank=True, null=True)
+    # The Django/python to get the form data
     query = models.TextField(blank=True)
     query_ref = models.ForeignKey('self', related_name='fk_query',
                                   default=None, blank=True, null=True)
+    # The page the form data is displayed on
     template = models.TextField(blank=True)
     template_ref = models.ForeignKey('self', related_name='fk_template',
                                      default=None, blank=True, null=True)
