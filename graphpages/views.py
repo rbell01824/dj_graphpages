@@ -195,18 +195,18 @@ class GraphPageView(View):
         if len(query_text) <= 0:
             return Context({})
         # There is so we'll need to exec it.
-        # See if there is a form _context.  If there is, make it mutable so exec can work properly.
+        # See if there is a form _context.  If there is, get it into our local context.
         fc = {}
         if form_context:
-            fc = form_context.copy()
+            fc = form_context.dict()
         # There may be some template tags in the query so process them.
         t = Template(query_text)
         c = Context(fc)
         query_text = t.render(c)
 
-        # global_context = {}
         exec(query_text, None, locals())
-        context = Context(locals())
+        fc.update(locals())
+        context = Context(fc)
         return context
 
     # noinspection PyMethodMayBeStatic
