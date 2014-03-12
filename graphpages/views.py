@@ -85,7 +85,7 @@ class GraphPageView(View):
         form_class_obj, context = self.get_form_object(gpg)
         form = form_class_obj(request.POST)
         if form.is_valid():
-            return HttpResponse('good form value')
+            return HttpResponse(self.build_graph_graph_response(request, gpg, request.POST))
         # form not valid, so redisplay form with errors
         template = self.get_form_template(gpg)
         t = Template(template)
@@ -164,41 +164,48 @@ class GraphPageView(View):
     #     return GraphForm            # return the graphform class
 
     # noinspection PyMethodMayBeStatic,PyUnusedLocal
-    def build_graph_graph_response(self, request, gpg):
+    def build_graph_graph_response(self, request, gpg, form_context=None):
         """
         If there is a query, get it and exec.
         Otherwise just display the page.
 
         :param request:
-        :type request:
+        :type request: WSGIRequest
         :param gpg:
         :type gpg: GraphPageGraph
+        :param form_context: If there was a form, the request.POST value
+        :type form_context: QueryDict
         """
-        context = self.execute_query_to_build_context(request, gpg)
+        context = self.execute_query_to_build_context(request, gpg, form_context)
         template = self.get_graph_template(gpg)
         response = template.render(context)
         return response
 
     # noinspection PyMethodMayBeStatic
-    def execute_query_to_build_context(self, request, gpg):
+    def execute_query_to_build_context(self, request, gpg, form_context={}):
         """
         :param gpg:
         :type gpg: Graph2Graph
         """
         # todo 2: make exec safe
-        # todo 2: rewrite to use globals and locals properly
-        # todo 1: if there is a request post context then we need to get that data into local() context
+        # See if there is a query
         if not gpg.query:
             return Context({})
-        query_text = gpg.query
-        if len(query_text.strip()) <= 0:
+        query_text = gpg.query.strip()
+        if len(query_text) <= 0:
             return Context({})
+        # There is so we'll need to exec it.
+        # See if there is a form _context.  If there is, make it mutable so exec can work properly.
+        fc = {}
+        if form_context:
+            fc = form_context.copy()
+        # There may be some template tags in the query so process them.
+        t = Template(query_text)
+        c = Context(fc)
+        query_text = t.render(c)
+
         # global_context = {}
-        # local_context = {}
-        query_text = query_text.strip()
-        # todo: run the query_text through Template to expand macros
-        # todo: look into specifing locals and globals
-        exec(query_text, None, None)
+        exec(query_text, None, locals())
         context = Context(locals())
         return context
 
