@@ -68,7 +68,7 @@ class GraphPageGraphAdmin(admin.ModelAdmin):
         ('Form', {'classes': ('suit-tab suit-tab-form',),
                   'fields': ('form_ref', 'form',)}),
         ('Form Page', {'classes': ('suit-tab suit-tab-formpage',),
-                  'fields': ('form_page_ref', 'form_page',)}),
+                       'fields': ('form_page_ref', 'form_page',)}),
         ('Query', {'classes': ('suit-tab suit-tab-query',),
                    'fields': ('query_ref', 'query',)}),
         ('Graph Page', {'classes': ('suit-tab suit-tab-graphpage',),

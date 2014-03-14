@@ -32,16 +32,26 @@ from django.shortcuts import get_object_or_404
 from django.db.models import Count
 from django.db.models import Sum
 from django.template import Context, RequestContext, Template
+from django.views.generic.list import ListView
+from django.views.generic import View, FormView
+
+# Supress unresolvedreferences as these are actually needed inside
+# the form exec.
 # noinspection PyUnresolvedReferences
 from django import forms
-
+# noinspection PyUnresolvedReferences
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Submit
+# noinspection PyUnresolvedReferences
+from crispy_forms.layout import Submit, Layout, Field
+# noinspection PyUnresolvedReferences
+from crispy_forms.bootstrap import (PrependedAppendedText,
+                                    PrependedText,
+                                    FormActions)
 
 from .models import GraphPageTags, GraphPageGraph
 from test_data.models import Countries, CIA
-from django.views.generic.list import ListView
-from django.views.generic import View, FormView
+
+from django.conf import settings
 
 
 class GraphForm(forms.Form):
@@ -134,7 +144,8 @@ class GraphPageView(View):
             page = gpg.form_page.strip()
         if len(page) == 0:
             raise ValidationError('Empty form page')
-        return page
+        conf = settings.GRAPHPAGE_CONFIG
+        return conf['formpageheader'] + page + conf['formpagefooter']
 
     # # noinspection PyMethodMayBeStatic
     # def build_graph_form_response(self, request, gpg_obj):
@@ -182,11 +193,13 @@ class GraphPageView(View):
         return response
 
     # noinspection PyMethodMayBeStatic
-    def execute_query_to_build_context(self, request, gpg, form_context={}):
+    def execute_query_to_build_context(self, request, gpg, form_context=None):
         """
         :param gpg:
         :type gpg: Graph2Graph
         """
+        if not form_context:
+            form_context = {}
         # todo 2: make exec safe
         # See if there is a query
         if not gpg.query:
@@ -219,6 +232,8 @@ class GraphPageView(View):
         if gpg.template:                      # use page if available
             template_text = gpg.template
         # todo 2: other validations go here
+        conf = settings.GRAPHPAGE_CONFIG
+        template_text = conf['graphpageheader'] + template_text + conf['graphpagefooter']
         return Template(template_text)
 
 
@@ -227,3 +242,4 @@ class GraphPageView(View):
 
 class GraphPageGraphListView(ListView):
     model = GraphPageGraph
+

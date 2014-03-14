@@ -81,7 +81,6 @@ DATABASES = {
 # https://docs.djangoproject.com/en/1.6/topics/i18n/
 
 LANGUAGE_CODE = 'en-us'
-SITE_ID = 1
 TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_L10N = True
@@ -159,3 +158,18 @@ SUIT_CONFIG = {
 
 CRISPY_TEMPLATE_PACK = 'bootstrap3'
 CRISPY_FAIL_SILENTLY = not DEBUG
+
+GRAPHPAGE_CONFIG = {
+    'formpageheader': '{% extends "base.html" %}\n'
+                      '{% load crispy_forms_tags %}\n'
+                      '{% block content %}\n'
+                      '<div class="container-fluid">\n',
+    'formpagefooter': '</div>\n'
+                      '{% endblock content %}',
+    'graphpageheader': '{% extends "base.html" %}\n'
+                       '{% load chartkick %}\n'
+                       '{% block content %}\n'
+                       '<div class="container-fluid">\n',
+    'graphpagefooter': '</div>\n'
+                       '{% endblock content %}',
+}
