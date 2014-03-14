@@ -120,3 +120,14 @@ class GraphForm(forms.Form):
             #Submit('cancel', 'Cancel'),
         )
     )
+
+
+class GraphFormX2(forms.Form):
+    title = forms.CharField(min_length=3, max_length=80, label='Title')
+    number_countries = forms.IntegerField(max_value=50, min_value=5,
+                                          label='Number of countries')
+
+
+class GraphFormX2View(FormView):
+    template_name = 'graphformx2.html'
+    form_class = GraphFormX2

@@ -46,6 +46,7 @@ INSTALLED_APPS = (
     'chartkick',
     'chartkick_demo',
     'crispy_forms',
+    'bootstrap3',
     'test_data',
     'forms_builder.forms',
     'form_designer',
@@ -160,8 +161,11 @@ CRISPY_TEMPLATE_PACK = 'bootstrap3'
 CRISPY_FAIL_SILENTLY = not DEBUG
 
 GRAPHPAGE_CONFIG = {
+    # 'formpageheader': '{% extends "base.html" %}\n'
+    #                   '{% load crispy_forms_tags %}\n'
+    #                   '{% block content %}\n'
+    #                   '<div class="container-fluid">\n',
     'formpageheader': '{% extends "base.html" %}\n'
-                      '{% load crispy_forms_tags %}\n'
                       '{% block content %}\n'
                       '<div class="container-fluid">\n',
     'formpagefooter': '</div>\n'

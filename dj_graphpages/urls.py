@@ -8,7 +8,7 @@ from django.views.generic import TemplateView
 
 from .views import index
 from graphpages.views import GraphPageGraphListView
-from graphpages.crispyexperiments import CrispyView
+from graphpages.experiments import CrispyView, GraphFormX2View
 import forms_builder.forms.urls
 
 urlpatterns = patterns('',
@@ -21,6 +21,7 @@ urlpatterns = patterns('',
     url(r'^forms/', include(forms_builder.forms.urls)),
     url(r'^forms2/', include('form_designer.urls')),
     url(r'^crispy$', CrispyView.as_view(), name=CrispyView),
+    url(r'^djangoforms$', GraphFormX2View.as_view(), name=GraphFormX2View),
     url(r'^$', index, name='index'),
 )
 
