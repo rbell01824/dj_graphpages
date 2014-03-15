@@ -20,6 +20,7 @@ urlpatterns = patterns('',
     url(r'^crispy$', CrispyView.as_view(), name=CrispyView),
     url(r'^djangoforms$', GraphFormX2View.as_view(), name=GraphFormX2View),
     url(r'^$', index, name='index'),
+    url(r'^taggit_autosuggest/', include('taggit_autosuggest.urls')),
 )
 
 urlpatterns += staticfiles_urlpatterns()

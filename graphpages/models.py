@@ -25,7 +25,12 @@ __status__ = "dev"
 
 from django.db import models
 
-from taggit.managers import TaggableManager
+# Basic taggit manager
+# from taggit.managers import TaggableManager
+
+# Autosuggest from existing tag list
+# see https://bitbucket.org/fabian/django-taggit-autosuggest
+from taggit_autosuggest.managers import TaggableManager
 
 
 class GraphPageTags(models.Model):

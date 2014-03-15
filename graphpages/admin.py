@@ -37,6 +37,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.contrib.admin import SimpleListFilter
 
 from taggit.models import TaggedItem
+from taggit_suggest.utils import suggest_tags
 
 
 class TaggitListFilter(SimpleListFilter):
@@ -95,15 +96,22 @@ class GraphPageGraphAdmin(admin.ModelAdmin):
     display_graph.short_description = ''
     display_graph.allow_tags = True
 
+    # noinspection PyMethodMayBeStatic
+    def tags_suggest(self, obj):
+        """
+        Suggest tags based on description
+        """
+        return suggest_tags(content=obj.description)
+
     model = GraphPageGraph
     search_fields = ('name', 'description')
-    readonly_fields = ('form_slug', 'query_slug', 'template_slug')
+    readonly_fields = ('form_slug', 'query_slug', 'template_slug', 'tags_suggest')
     list_display = ('display_graph', 'name', 'tags_slug', 'description',
                     'form_slug', 'query_slug', 'template_slug'
                     )
     fieldsets = (
         (None, {'classes': ('suit-tab suit-tab-general',),
-                'fields': ('name', 'description', 'my_tags', 'tags')}),
+                'fields': ('name', 'description', 'my_tags', ('tags', 'tags_suggest'))}),
         ('Form', {'classes': ('suit-tab suit-tab-form',),
                   'fields': ('form_ref', 'form',)}),
         ('Form Page', {'classes': ('suit-tab suit-tab-formpage',),
