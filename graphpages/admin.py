@@ -26,14 +26,53 @@ import copy
 
 # from django.contrib.contenttypes.models import ContentType
 from django.http import HttpResponseRedirect
-from django.forms import SelectMultiple
-from django.db import models
 # from django.utils.text import slugify
 from django.forms import Textarea, TextInput
 from django.contrib import admin
 
 # from .models import GraphPageTags, GraphPage
 from .models import GraphPageGraph, GraphPageTags
+
+from django.utils.translation import ugettext_lazy as _
+from django.contrib.admin import SimpleListFilter
+
+from taggit.models import TaggedItem
+
+
+class TaggitListFilter(SimpleListFilter):
+    """
+    A custom filter class that can be used to filter by taggit tags in the admin.
+
+    code from https://djangosnippets.org/snippets/2807/
+    """
+
+    # Human-readable title which will be displayed in the
+    # right admin sidebar just above the filter options.
+    title = _('tags')
+
+    # Parameter for the filter that will be used in the URL query.
+    parameter_name = 'tag'
+
+    # noinspection PyUnusedLocal,PyShadowingBuiltins
+    def lookups(self, request, model_admin):
+        """
+        Returns a list of tuples. The first element in each tuple is the coded value
+        for the option that will appear in the URL query. The second element is the
+        human-readable name for the option that will appear in the right sidebar.
+        """
+        list = []
+        tags = TaggedItem.tags_for(model_admin.model)
+        for tag in tags:
+            list.append((tag.name, _(tag.name)), )
+        return list
+
+    def queryset(self, request, queryset):
+        """
+        Returns the filtered queryset based on the value provided in the query
+        string and retrievable via `self.value()`.
+        """
+        if self.value():
+            return queryset.filter(tags__name__in=[self.value()])
 
 
 class GraphPageTagsAdmin(admin.ModelAdmin):
@@ -64,7 +103,7 @@ class GraphPageGraphAdmin(admin.ModelAdmin):
                     )
     fieldsets = (
         (None, {'classes': ('suit-tab suit-tab-general',),
-                'fields': ('name', 'description', 'tags',)}),
+                'fields': ('name', 'description', 'my_tags', 'tags')}),
         ('Form', {'classes': ('suit-tab suit-tab-form',),
                   'fields': ('form_ref', 'form',)}),
         ('Form Page', {'classes': ('suit-tab suit-tab-formpage',),
@@ -75,14 +114,14 @@ class GraphPageGraphAdmin(admin.ModelAdmin):
                         'fields': ('template_ref', 'template',)}),
     )
     list_display_links = ('name',)
-    filter_horizontal = ('tags',)
-    list_filter = ('tags',)
+    filter_horizontal = ('my_tags',)
+    list_filter = ('my_tags', TaggitListFilter)
     suit_form_tabs = (('general', 'General'),
                       ('form', 'Form'),
                       ('formpage', 'Form Page'),
                       ('query', 'Query'),
                       ('graphpage', 'Graph Page')
-    )
+                      )
     save_on_top = True
     ordering = ('name',)
     actions = ['delete_selected', 'duplicate_records', 'graph_admin_action']
@@ -90,13 +129,23 @@ class GraphPageGraphAdmin(admin.ModelAdmin):
     pass
 
     # noinspection PyMethodMayBeStatic
+    def my_tags_slug(self, obj):
+        """
+        Make list of my_tags seperated by ';'
+        """
+        rtn = ''
+        for tag in obj.my_tags.all():
+            rtn += '; ' + tag.tag
+        return rtn[1:]
+
+    # noinspection PyMethodMayBeStatic
     def tags_slug(self, obj):
         """
         Make list of tags seperated by ';'
         """
         rtn = ''
-        for tag in obj.tags.all():
-            rtn += '; ' + tag.tag
+        for tag in obj.tags.names():
+            rtn += '; ' + tag
         return rtn[1:]
 
     # noinspection PyMethodMayBeStatic
@@ -140,7 +189,7 @@ class GraphPageGraphAdmin(admin.ModelAdmin):
             newobj.name += uuid.uuid1().hex
             newobj.save()
             # noinspection PyStatementEffect
-            newobj.tags.add(*obj.tags.all())
+            newobj.my_tags.add(*obj.my_tags.all())
     duplicate_records.short_description = "Duplicate selected records"
 
     # noinspection PyMethodMayBeStatic,PyUnusedLocal

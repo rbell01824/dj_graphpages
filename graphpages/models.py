@@ -25,6 +25,8 @@ __status__ = "dev"
 
 from django.db import models
 
+from taggit.managers import TaggableManager
+
 
 class GraphPageTags(models.Model):
     tag = models.CharField(max_length=20, unique=True)
@@ -43,9 +45,10 @@ class GraphPageGraph(models.Model):
                             blank=False,
                             unique=True)
     description = models.TextField(blank=True)
-    tags = models.ManyToManyField(GraphPageTags,
-                                  blank=True,
-                                  null=True)
+    my_tags = models.ManyToManyField(GraphPageTags,
+                                     blank=True,
+                                     null=True)
+    tags = TaggableManager()
     # The actual form
     form = models.TextField(blank=True)
     form_ref = models.ForeignKey('self', related_name='fk_form',

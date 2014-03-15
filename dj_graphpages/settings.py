@@ -48,8 +48,7 @@ INSTALLED_APPS = (
     'crispy_forms',
     'bootstrap3',
     'test_data',
-    'forms_builder.forms',
-    'form_designer',
+    'taggit',
 )
 
 SITE_ID = 1
@@ -144,14 +143,14 @@ SUIT_CONFIG = {
     },
     'MENU_OPEN_FIRST_CHILD': True,      # Default True
     'MENU_EXCLUDE': ('auth', 'sites'),
-    'MENU': (
-        # 'sites',
-        # {'app': 'auth', 'icon':'icon-lock', 'models': ('user', 'group')},
-        # {'label': 'Settings', 'icon':'icon-cog', 'models': ('auth.user', 'auth.group')},
-        {'label': 'Graph Pages', 'icon': 'icon-signal', 'models': ('graphpages.graphpagegraph',)},
-        {'label': 'Graph Tags', 'icon': 'icon-tags', 'models': ('graphpages.graphpagetags',)},
-        {'label': 'Support', 'icon': 'icon-question-sign', 'url': '/support/'},
-    ),
+    # 'MENU': (
+    #     #'sites',
+    #     # {'app': 'auth', 'icon':'icon-lock', 'models': ('user', 'group')},
+    #     # {'label': 'Settings', 'icon':'icon-cog', 'models': ('auth.user', 'auth.group')},
+    #     {'label': 'Graph Pages', 'icon': 'icon-signal', 'models': ('graphpages.graphpagegraph',)},
+    #     {'label': 'Graph Tags', 'icon': 'icon-tags', 'models': ('graphpages.graphpagetags',)},
+    #     {'label': 'Support', 'icon': 'icon-question-sign', 'url': '/support/'},
+    # ),
 
     # misc
     # 'LIST_PER_PAGE': 15
