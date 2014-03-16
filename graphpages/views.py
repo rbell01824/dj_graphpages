@@ -129,6 +129,8 @@ class GraphPageView(View):
             form = gpg.form.strip()
         if len(form) == 0:
             raise ValidationError('Empty form')
+        # deal with any markup
+        # todo 1: here deal with markup in form
         # create the form object
         exec(form, globals(), locals())
         return GraphForm, locals()
@@ -145,6 +147,8 @@ class GraphPageView(View):
             page = gpg.form_page.strip()
         if len(page) == 0:
             raise ValidationError('Empty form page')
+        # deal with any markup
+        # todo 1: here deal with markup in form
         conf = settings.GRAPHPAGE_CONFIG
         return conf['formpageheader'] + page + conf['formpagefooter']
 
@@ -213,6 +217,8 @@ class GraphPageView(View):
         fc = {}
         if form_context:
             fc = form_context.dict()
+        # deal with any markup
+        # todo 1: here deal with markup in query
         # There may be some template tags in the query so process them.
         t = Template(query_text)
         c = Context(fc)
@@ -232,6 +238,8 @@ class GraphPageView(View):
         template_text = ''
         if gpg.template:                      # use page if available
             template_text = gpg.template
+        # deal with any markup
+        # todo 1: here deal with markup in graph themplate
         # todo 2: other validations go here
         conf = settings.GRAPHPAGE_CONFIG
         template_text = conf['graphpageheader'] + template_text + conf['graphpagefooter']
