@@ -53,6 +53,7 @@ from test_data.models import Countries, CIA
 
 from django.conf import settings
 
+# todo 1: install and user python-markdown2 from https://github.com/trentm/python-markdown2
 
 class GraphForm(forms.Form):
     title = forms.CharField(min_length=3, max_length=80, label='Title')
