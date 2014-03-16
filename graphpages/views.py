@@ -76,6 +76,7 @@ class GraphPageView(View):
 
         If no form, then build and display the graph here.
         """
+        # todo 1: modify graphpage to use graph slug instead of PK
         gpg = get_object_or_404(GraphPageGraph, pk=graph_pk)
         if gpg.form or (gpg.form and gpg.form_ref.form):        # process form if present
             return HttpResponse(self.display_form(request, gpg))
