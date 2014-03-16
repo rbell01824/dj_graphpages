@@ -18,6 +18,9 @@ __license__ = "All rights reserved"
 __version__ = "0.1"
 __status__ = "dev"
 
+# todo 1: add markdown support to form, formpage, query, and graphpage. See https://docs.djangoproject.com/en/1.4/ref/contrib/markup/
+# todo 1: See https://github.com/klen/django_markdown
+# todo 1: markdown see https://godjango.com/14-using-djangocontribmarkup/, 
 # todo 1: look into macros for graph page, see https://github.com/twidi/django-templates-macros
 # todo 1: look into hosting services - python anywhere https://www.pythonanywhere.com/
 # todo 1: look into https://github.com/jezdez/django-dbtemplates
