@@ -18,6 +18,7 @@ __license__ = "All rights reserved"
 __version__ = "0.1"
 __status__ = "dev"
 
+# todo 1: look into https://github.com/jezdez/django-dbtemplates
 # todo 1: extend model to allow dj template for form and graph page
 # todo 1: write universal template for form and graphpage
 # todo 1: remove old tag system in favor of taggit
