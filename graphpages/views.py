@@ -48,7 +48,11 @@ from crispy_forms.bootstrap import (PrependedAppendedText,
                                     PrependedText,
                                     FormActions)
 
-from .models import GraphPageTags, GraphPageGraph
+from .models import GraphPageGraph
+
+# Supress unresolvedreferences as these are actually needed inside
+# the exec for the graph query.
+# noinspection PyUnresolvedReferences
 from test_data.models import Countries, CIA
 
 from django.conf import settings
@@ -201,8 +205,14 @@ class GraphPageView(View):
     # noinspection PyMethodMayBeStatic
     def execute_query_to_build_context(self, request, gpg, form_context=None):
         """
+        Execute a grasph form query.  This creates a context that is used by the graph page
+        to actually display the form.
+        :param request:
+        :type request:
         :param gpg:
         :type gpg: Graph2Graph
+        :param form_context:
+        :type form_context: dict
         """
         if not form_context:
             form_context = {}

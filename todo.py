@@ -18,6 +18,17 @@ __license__ = "All rights reserved"
 __version__ = "0.1"
 __status__ = "dev"
 
+# work list
+"""
+Define tests
+Set sort order on listview for graphpages
+Set login required everywhere (current scheme only applies to a few urls, not all and there are issues with class views)
+Define default form template
+Define default graph page template
+Add tag view page
+Finish tag experiment
+"""
+# todo 1: look into fixme_login.html and try to resolve issues
 # todo 1: add markdown support to form, formpage, query, and graphpage. See https://docs.djangoproject.com/en/1.4/ref/contrib/markup/
 # todo 1: See https://github.com/klen/django_markdown
 # todo 1: markdown see https://godjango.com/14-using-djangocontribmarkup/, 

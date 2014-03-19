@@ -18,8 +18,8 @@ __license__ = "All rights reserved"
 __version__ = "0.1"
 __status__ = "dev"
 
-from django.http import HttpResponse
 from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
 
 
 def index(request):

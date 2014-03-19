@@ -129,7 +129,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 # Django Suit configuration example
 SUIT_CONFIG = {
     # header
-    'ADMIN_NAME': 'Graph Pages',
+    'ADMIN_NAME': 'Graph Pages - demo/demo',
     'HEADER_DATE_FORMAT': 'l, jS F Y',
     'HEADER_TIME_FORMAT': 'H:i',
 
@@ -178,3 +178,6 @@ GRAPHPAGE_CONFIG = {
     'graphpagefooter': '</div>\n'
                        '{% endblock content %}',
 }
+
+LOGIN_URL = '/login/'
+LOGIN_REDIRECT_URL = '/'

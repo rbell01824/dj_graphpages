@@ -4,7 +4,8 @@ from django.contrib import admin
 admin.autodiscover()
 
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
-from django.views.generic import TemplateView
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.views import login
 
 from .views import index
 from graphpages.views import GraphPageGraphListView
@@ -19,8 +20,9 @@ urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
     url(r'^crispy$', CrispyView.as_view(), name=CrispyView),
     url(r'^djangoforms$', GraphFormX2View.as_view(), name=GraphFormX2View),
-    url(r'^$', index, name='index'),
+    url(r'^$', login_required(index), name='index'),
     url(r'^taggit_autosuggest/', include('taggit_autosuggest.urls')),
+    url(r'^login/$', login, {'template_name': 'admin/login.html'})
 )
 
 urlpatterns += staticfiles_urlpatterns()
