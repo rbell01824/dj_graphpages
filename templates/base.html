@@ -1,3 +1,4 @@
+{%  load staticfiles %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -49,18 +50,19 @@
             <ul class="nav navbar-nav">
                 <li>
                     <a href="/display_graph_pages">
-                        <i class="fa fa-magic fa-2x"></i>
+                        <img src="{% static "img/graphs.png" %}" />
                         Graph Pages
                     </a>
                 </li>
                 {#                <li><a href=""><i class="fa fa-plus fa-2x"></i>Add</a></li>#}
-                {#                <li><a href=""><i class="fa fa-pencil-square-o fa-2x"></i>Edit</a></li>#}
-                <li><a href="/demo/chartkick"><span class="fa fa-bar-chart-o fa-2x"></span>Chartkick Demo</a></li>
-                <li><a href="/crispy"><span class="glyphicon glyphicon-asterisk fa-2x"></span>Crispy Demo</a></li>
-                <li><a href="/djangoforms"><span class="glyphicon glyphicon-asterisk fa-2x"></span>Django Forms Demo</a></li>
+                {#                <li><a href=""><i class="fa fa-pencil-square-o fa-2x"></i>Edit</a></li>#}s
+                <li><a href="/demo/chartkick"><img src="{% static "img/column_chart.png" %}" />Chartkick Demo</a></li>
+                {# <li><img src="{% static "img/forms.png" %}" /> </li>#}
+                <li><a href="/crispy"><img src="{% static "img/forms.png" %}" />Crispy Demo</a></li>
+                <li><a href="/djangoforms"><img src="{% static "img/forms.png" %}" />Django Forms Demo</a></li>
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                        <i class="fa fa-table fa-2x"></i>Data List <b class="caret"></b>
+                        <img src="{% static "img/datatable.png" %}" />Data List <b class="caret"></b>
                     </a>
                     <ul class="dropdown-menu">
                         <li><a href="/admin/test_data/cia/">CIA World Factbook</a></li>
@@ -69,9 +71,10 @@
                         {# <li class="dropdown-header">Nav header</li>#}
                     </ul>
                 </li>
-                <li><a href="/admin"><i class="fa fa-cogs fa-2x"></i>Admin</a></li>
+                <li><a href="/admin"><img src="{% static "img/gears.png" %}" />Admin</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
+                <li><a href="/admin/logout"><i class="glyphicon glyphicon-log-out fa-2x"></i>Logout {{ request.user }}</a></li>
                 {# <li class="active"><a href="./">Default</a></li>#}
                 {# <li><a href="../navbar-static-top/">Static top</a></li>#}
                 {# <li><a href="../navbar-fixed-top/">Fixed top</a></li>#}
