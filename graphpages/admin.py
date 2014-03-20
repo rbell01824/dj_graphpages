@@ -111,7 +111,7 @@ class GraphPageGraphAdmin(admin.ModelAdmin):
                     )
     fieldsets = (
         (None, {'classes': ('suit-tab suit-tab-general',),
-                'fields': ('name', 'description', 'my_tags', ('tags', 'tags_suggest'))}),
+                'fields': ('name', 'description', ('tags', 'tags_suggest'))}),
         ('Form', {'classes': ('suit-tab suit-tab-form',),
                   'fields': ('form_ref', 'form',)}),
         ('Form Page', {'classes': ('suit-tab suit-tab-formpage',),
@@ -122,8 +122,7 @@ class GraphPageGraphAdmin(admin.ModelAdmin):
                         'fields': ('template_ref', 'template',)}),
     )
     list_display_links = ('name',)
-    filter_horizontal = ('my_tags',)
-    list_filter = ('my_tags', TaggitListFilter)
+    list_filter = (TaggitListFilter,)
     suit_form_tabs = (('general', 'General'),
                       ('form', 'Form'),
                       ('formpage', 'Form Page'),
@@ -135,16 +134,6 @@ class GraphPageGraphAdmin(admin.ModelAdmin):
     actions = ['delete_selected', 'duplicate_records', 'graph_admin_action']
     SLUG_LEN = 20
     pass
-
-    # noinspection PyMethodMayBeStatic
-    def my_tags_slug(self, obj):
-        """
-        Make list of my_tags seperated by ';'
-        """
-        rtn = ''
-        for tag in obj.my_tags.all():
-            rtn += '; ' + tag.tag
-        return rtn[1:]
 
     # noinspection PyMethodMayBeStatic
     def tags_slug(self, obj):
@@ -197,7 +186,7 @@ class GraphPageGraphAdmin(admin.ModelAdmin):
             newobj.name += uuid.uuid1().hex
             newobj.save()
             # noinspection PyStatementEffect
-            newobj.my_tags.add(*obj.my_tags.all())
+            newobj.tags.add(*obj.my_tags.all())
     duplicate_records.short_description = "Duplicate selected records"
 
     # noinspection PyMethodMayBeStatic,PyUnusedLocal

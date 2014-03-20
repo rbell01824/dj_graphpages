@@ -33,26 +33,11 @@ from django.db import models
 from taggit_autosuggest.managers import TaggableManager
 
 
-class GraphPageTags(models.Model):
-    tag = models.CharField(max_length=20, unique=True)
-    description = models.TextField()
-
-    class Meta:
-        verbose_name = "Graph Page Tags"
-        verbose_name_plural = "Graph Page Tags"
-
-    def __unicode__(self):
-        return u'{}'.format(self.tag)
-
-
 class GraphPageGraph(models.Model):
     name = models.CharField(max_length=200,
                             blank=False,
                             unique=True)
     description = models.TextField(blank=True)
-    my_tags = models.ManyToManyField(GraphPageTags,
-                                     blank=True,
-                                     null=True)
     tags = TaggableManager()
     # The actual form
     form = models.TextField(blank=True)
