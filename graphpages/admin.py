@@ -30,8 +30,7 @@ from django.http import HttpResponseRedirect
 from django.forms import Textarea, TextInput
 from django.contrib import admin
 
-# from .models import GraphPageTags, GraphPage
-from .models import GraphPageGraph, GraphPageTags
+from .models import GraphPageGraph
 
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.admin import SimpleListFilter
@@ -74,17 +73,6 @@ class TaggitListFilter(SimpleListFilter):
         """
         if self.value():
             return queryset.filter(tags__name__in=[self.value()])
-
-
-class GraphPageTagsAdmin(admin.ModelAdmin):
-    model = GraphPageTags
-    search_fields = ('tag', 'description')
-    list_display = ('tag', 'description',)
-    fields = ('tag', 'description')
-    # list_editable = ('description',)
-    save_on_top = True
-    pass
-admin.site.register(GraphPageTags, GraphPageTagsAdmin)
 
 
 class GraphPageGraphAdmin(admin.ModelAdmin):

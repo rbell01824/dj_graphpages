@@ -46,7 +46,7 @@ INSTALLED_APPS = (
     'graphpages',
     'chartkick',
     'chartkick_demo',
-    'crispy_forms',
+    # 'crispy_forms',
     'bootstrap3',
     'test_data',
     'taggit',

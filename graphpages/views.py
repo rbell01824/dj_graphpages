@@ -39,14 +39,6 @@ from django.views.generic import View, FormView
 # the form exec.
 # noinspection PyUnresolvedReferences
 from django import forms
-# noinspection PyUnresolvedReferences
-from crispy_forms.helper import FormHelper
-# noinspection PyUnresolvedReferences
-from crispy_forms.layout import Submit, Layout, Field
-# noinspection PyUnresolvedReferences
-from crispy_forms.bootstrap import (PrependedAppendedText,
-                                    PrependedText,
-                                    FormActions)
 
 from .models import GraphPageGraph
 
@@ -58,17 +50,6 @@ from test_data.models import Countries, CIA
 from django.conf import settings
 
 # todo 1: install and user python-markdown2 from https://github.com/trentm/python-markdown2
-
-class GraphForm(forms.Form):
-    title = forms.CharField(min_length=3, max_length=80, label='Title')
-    number_countries = forms.IntegerField(max_value=50, min_value=5,
-                                          label='Number of countries')
-    helper = FormHelper()
-    helper.form_method = 'POST'
-    helper.add_input(Submit('submit', 'Show graph', css_class='btn-primary'))
-
-
-###############################################################################
 
 
 class GraphPageView(View):
