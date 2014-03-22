@@ -217,3 +217,6 @@ class GraphPageView(View):
 class GraphPageListView(ListView):
     model = GraphPage
 
+    def get_queryset(self):
+        return GraphPage.objects.all().order_by('title')
+
