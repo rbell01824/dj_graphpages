@@ -32,18 +32,24 @@ def _suggest_keywords(content):
     """
     suggested_keywords = set()
     keywords = TagKeyword.objects.all()
+    # noinspection PyStatementEffect
+    content_lower = content.lower()
 
     for k in keywords:
         # Use the stem if available, otherwise use the whole keyword
-        # todo 2: rewrite to be case conscious
-        # if k has uppercase, then match with case
-        # if k nas no uppercase, then match case insensitive
+        # if k has uppercase match with case, otherwise match everything lowercase
         if k.stem:
-            if k.stem in content:
+            # noinspection PyStatementEffect
+            kstr = k.stem
+        else:
+            # noinspection PyStatementEffect
+            kstr = k.keyword
+        if kstr.lower() == kstr:
+            if kstr in content_lower:
                 suggested_keywords.add(k.tag_id)
-        elif k.keyword in content:
-            suggested_keywords.add(k.tag_id)
-
+        else:
+            if kstr in content:
+                suggested_keywords.add(k.tag_id)
     return suggested_keywords
 
 
