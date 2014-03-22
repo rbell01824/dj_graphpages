@@ -20,7 +20,6 @@ urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
     url(r'^djangoforms$', GraphFormX2View.as_view(), name=GraphFormX2View),
     url(r'^$', login_required(index), name='index'),
-    url(r'^taggit_autosuggest/', include('taggit_autosuggest.urls')),
     url(r'^login/$', login, {'template_name': 'admin/login.html'})
 )
 

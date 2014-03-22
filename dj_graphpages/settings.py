@@ -50,7 +50,6 @@ INSTALLED_APPS = (
     'bootstrap3',
     'test_data',
     'taggit',
-    'taggit_autosuggest',
     'taggit_suggest',
 )
 

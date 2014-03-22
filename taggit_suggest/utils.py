@@ -27,13 +27,15 @@ from taggit.models import Tag
 def _suggest_keywords(content):
     """
     Suggest by keywords
+    :type content: unicode, content to check
+    :rtype: set of tag id's for keywords that match content
     """
     suggested_keywords = set()
     keywords = TagKeyword.objects.all()
 
     for k in keywords:
         # Use the stem if available, otherwise use the whole keyword
-        # todo 2: rewrite to be case concious
+        # todo 2: rewrite to be case conscious
         # if k has uppercase, then match with case
         # if k nas no uppercase, then match case insensitive
         if k.stem:
@@ -48,6 +50,8 @@ def _suggest_keywords(content):
 def _suggest_regexes(content):
     """
     Suggest by regular expressions
+    :type content: unicode, content to check
+    :rtype: set of tag id's for regexs that match content
     """
     # Grab all regular expressions and compile them
     suggested_regexes = set()
@@ -64,6 +68,8 @@ def _suggest_regexes(content):
 def suggest_tags(content):
     """
     Suggest tags based on text content
+    :type content: unicode, content to check
+    :rtype: queryset of tag ids that match keywords or regexes
     """
     suggested_keywords = _suggest_keywords(content)
     suggested_regexes = _suggest_regexes(content)

@@ -59,6 +59,8 @@ class TaggitListFilter(SimpleListFilter):
         Returns a list of tuples. The first element in each tuple is the coded value
         for the option that will appear in the URL query. The second element is the
         human-readable name for the option that will appear in the right sidebar.
+        :param model_admin:
+        :param request:
         """
         list = []
         tags = TaggedItem.tags_for(model_admin.model)
@@ -70,6 +72,8 @@ class TaggitListFilter(SimpleListFilter):
         """
         Returns the filtered queryset based on the value provided in the query
         string and retrievable via `self.value()`.
+        :param queryset:
+        :param request:
         """
         if self.value():
             return queryset.filter(tags__name__in=[self.value()])
@@ -144,9 +148,16 @@ class GraphPageAdmin(admin.ModelAdmin):
         :return: suggested tags
         :rtype: unicode
         """
-        return suggest_tags(content=obj.description)
+        rtn = suggest_tags(obj.description).values_list('name', flat=True)
+        return '; '.join(rtn)
 
     def formfield_for_dbfield(self, db_field, **kwargs):
+        """
+        Set widgets for the form fields.
+        :type db_field: CharField or TextField or ForeignKey or TaggableManager or unknown
+        :param kwargs:
+        :return: modified formfield widget list
+        """
         if db_field.name == 'title':
             kwargs['widget'] = TextInput(attrs={'class': 'span12', 'size': '140'})
         if db_field.name == 'description':
@@ -165,6 +176,9 @@ class GraphPageAdmin(admin.ModelAdmin):
     def duplicate_records(self, request, queryset):
         """
         Duplicate the selected records
+        :param queryset: Queryset of records to duplicate
+        :param request: Request object.  Unused.
+        :return: None
         """
         for obj in queryset:
             newobj = copy.deepcopy(obj)
@@ -173,6 +187,7 @@ class GraphPageAdmin(admin.ModelAdmin):
             newobj.save()
             # noinspection PyStatementEffect
             newobj.tags.add(*obj.my_tags.all())
+        return
     duplicate_records.short_description = "Duplicate selected records"
 
 admin.site.register(GraphPage, GraphPageAdmin)

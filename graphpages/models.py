@@ -27,12 +27,7 @@ from django.db import models
 from django_extensions.db.models import TimeStampedModel, TitleSlugDescriptionModel
 
 # Basic taggit manager
-# from taggit.managers import TaggableManager
-
-# Autosuggest from existing tag list
-# see https://bitbucket.org/fabian/django-taggit-autosuggest
-from taggit_autosuggest.managers import TaggableManager
-
+from taggit.managers import TaggableManager
 
 class GraphPage(TitleSlugDescriptionModel, TimeStampedModel):
     """

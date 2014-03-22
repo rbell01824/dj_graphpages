@@ -25,25 +25,22 @@ from taggit_suggest.models import TagKeyword, TagRegex
 from taggit.models import Tag
 
 
+# noinspection PyDocstring
 class TagKeywordInline(admin.StackedInline):
     model = TagKeyword
 
 
+# noinspection PyDocstring
 class TagRegxInline(admin.StackedInline):
     model = TagRegex
 
 
+# noinspection PyDocstring
 class TagSuggestAdmin(admin.ModelAdmin):
     inlines = [
         TaggedItemInline,
         TagKeywordInline,
         TagRegxInline,
     ]
-    # suit_form_tabs = (('general', 'General'),
-    #                   ('form', 'Form'),
-    #                   ('formpage', 'Form Page'),
-    #                   ('query', 'Query'),
-    #                   ('graphpage', 'Graph Page')
-    #                   )
-# admin.site.unregister(Tag)
+admin.site.unregister(Tag)
 admin.site.register(Tag, TagSuggestAdmin)

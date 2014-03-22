@@ -38,7 +38,7 @@ class TagKeyword(models.Model):
     """
     tag = models.ForeignKey(Tag, related_name='tkeywords')
     keyword = models.CharField(max_length=30)
-    stem = models.CharField(max_length=30)
+    stem = models.CharField(max_length=30, blank=True)
 
     def __unicode__(self):
         return "Keyword '%s' for Tag '%s'" % (self.keyword, self.tag.name)
