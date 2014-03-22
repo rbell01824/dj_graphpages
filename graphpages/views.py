@@ -53,6 +53,9 @@ from django.conf import settings
 
 
 class GraphPageView(View):
+    """
+    View class for graph pages
+    """
 
     # noinspection PyMethodMayBeStatic
     def get(self, request, graph_pk):
@@ -61,6 +64,8 @@ class GraphPageView(View):
         There we will build and display the graph.
 
         If no form, then build and display the graph here.
+        :param request:
+        :param graph_pk: Primary key for graphpage
         """
         # todo 1: modify graphpage to use graph slug instead of PK
         gpg = get_object_or_404(GraphPage, pk=graph_pk)
@@ -74,9 +79,7 @@ class GraphPageView(View):
         """
         There was a form.  Process it and if valid build and display the graph.
         :param request:
-        :type request:
-        :param graph_pk:
-        :type graph_pk:
+        :param graph_pk: Primary key for graphpage
         """
         gpg = GraphPage.objects.get(pk=graph_pk)
         form_class_obj, context = self.get_form_object_and_context(gpg)
@@ -92,6 +95,8 @@ class GraphPageView(View):
     def display_form(self, request, gpg):
         """
         Display the graphpage form page.
+        :param request:
+        :param gpg: graphpage object
         """
         # get the form and form_page
         form_class_obj, context = self.get_form_object_and_context(gpg)
@@ -107,6 +112,7 @@ class GraphPageView(View):
     def get_form_object_and_context(self, gpg):
         """
         Get the forms.form object
+        :param gpg: graphpage object
         """
         # get the form definition
         if gpg.form_ref:
@@ -125,6 +131,7 @@ class GraphPageView(View):
     def get_form_page(self, gpg):
         """
         Get the form page
+        :param gpg: graphpage object
         """
         # get the form page definition
         if gpg.form_page_ref:
@@ -144,12 +151,9 @@ class GraphPageView(View):
         If there is a query, get it and exec.
         Otherwise just display the page.
 
-        :param request:
         :type request: WSGIRequest
-        :param gpg:
-        :type gpg: GraphPage
-        :param form_context: If there was a form, the request.POST value
-        :type form_context: QueryDict
+        :type gpg: GraphPage oject
+        :type form_context: QueryDict, If there was a form the request.POST value
         """
         context = self.execute_query_to_build_context(request, gpg, form_context)
         template = self.get_graph_page_template(gpg)
@@ -161,12 +165,9 @@ class GraphPageView(View):
         """
         Execute a grasph form query.  This creates a context that is used by the graph page
         to actually display the form.
-        :param request:
-        :type request:
-        :param gpg:
-        :type gpg: Graph2Graph
-        :param form_context:
-        :type form_context: dict
+        :type request: WSGIRequest
+        :type gpg: GraphPage object
+        :type form_context: dict, if there was a form the POST dictionary
         """
         if not form_context:
             form_context = {}
@@ -197,8 +198,7 @@ class GraphPageView(View):
     # noinspection PyMethodMayBeStatic
     def get_graph_page_template(self, gpg):
         """
-        :param gpg:
-        :type gpg: Graph2Graph
+        :type gpg: graphpage object
         """
         graph_page_text = ''
         if gpg.graph_page:                      # use page if available
@@ -215,8 +215,13 @@ class GraphPageView(View):
 
 
 class GraphPageListView(ListView):
+    """
+    ListView for graphpages
+    """
     model = GraphPage
 
     def get_queryset(self):
+        """
+        Force queryset sort order.
+        """
         return GraphPage.objects.all().order_by('title')
-
