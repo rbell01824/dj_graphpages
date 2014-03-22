@@ -40,7 +40,7 @@ from django.views.generic import View, FormView
 # noinspection PyUnresolvedReferences
 from django import forms
 
-from .models import GraphPageGraph
+from .models import GraphPage
 
 # Supress unresolvedreferences as these are actually needed inside
 # the exec for the graph query.
@@ -63,7 +63,7 @@ class GraphPageView(View):
         If no form, then build and display the graph here.
         """
         # todo 1: modify graphpage to use graph slug instead of PK
-        gpg = get_object_or_404(GraphPageGraph, pk=graph_pk)
+        gpg = get_object_or_404(GraphPage, pk=graph_pk)
         if gpg.form or (gpg.form and gpg.form_ref.form):        # process form if present
             return HttpResponse(self.display_form(request, gpg))
         else:                                                   # no form, build and display the graph
@@ -78,14 +78,14 @@ class GraphPageView(View):
         :param graph_pk:
         :type graph_pk:
         """
-        gpg = GraphPageGraph.objects.get(pk=graph_pk)
-        form_class_obj, context = self.get_form_object(gpg)
+        gpg = GraphPage.objects.get(pk=graph_pk)
+        form_class_obj, context = self.get_form_object_and_context(gpg)
         form = form_class_obj(request.POST)
         if form.is_valid():
             return HttpResponse(self.build_graph_graph_response(request, gpg, request.POST))
         # form not valid, so redisplay form with errors
-        template = self.get_form_template(gpg)
-        t = Template(template)
+        form_page = self.get_form_page(gpg)
+        t = Template(form_page)
         c = RequestContext(request, {'graph_pk': str(gpg.pk), 'graphform': form})
         return HttpResponse(t.render(c))
 
@@ -93,18 +93,18 @@ class GraphPageView(View):
         """
         Display the graphpage form page.
         """
-        # get the form and template
-        form_class_obj, context = self.get_form_object(gpg)
-        template = self.get_form_template(gpg)
+        # get the form and form_page
+        form_class_obj, context = self.get_form_object_and_context(gpg)
+        form_page = self.get_form_page(gpg)
         # create unbound form object
         graphform = form_class_obj()
         # render response
-        t = Template(template)
+        t = Template(form_page)
         c = RequestContext(request, {'graph_pk': str(gpg.pk), 'graphform': graphform})
         return t.render(c)
 
     # noinspection PyUnresolvedReferences,PyMethodMayBeStatic
-    def get_form_object(self, gpg):
+    def get_form_object_and_context(self, gpg):
         """
         Get the forms.form object
         """
@@ -122,11 +122,11 @@ class GraphPageView(View):
         return GraphForm, locals()
 
     # noinspection PyMethodMayBeStatic
-    def get_form_template(self, gpg):
+    def get_form_page(self, gpg):
         """
-        Get the form template
+        Get the form page
         """
-        # get the form template definition
+        # get the form page definition
         if gpg.form_page_ref:
             page = gpg.form_page_ref.form.strip()
         else:
@@ -138,33 +138,6 @@ class GraphPageView(View):
         conf = settings.GRAPHPAGE_CONFIG
         return conf['formpageheader'] + page + conf['formpagefooter']
 
-    # # noinspection PyMethodMayBeStatic
-    # def build_graph_form_response(self, request, gpg_obj):
-    #     """
-    #     Here we build a form from the graph form and return it.
-    #     Subsequently, a post will return the form.
-    #     """
-    #     formclass = self.build_graph_form_class(gpg_obj)      # create the form class
-    #     form = formclass()                                      # create the unbound form
-    #     template = Template(gpg_obj.form)                     # create template object
-    #     context = RequestContext(request, {'graph_pk': gpg_obj.pk, 'form': form})
-    #     response = template.render(context)
-    #     return response
-    #
-    # # noinspection PyMethodMayBeStatic,PyUnusedLocal
-    # def build_graph_form_class(self, gpg_obj):
-    #     """
-    #     Create a form object from the form definition in a GraphPageobj.
-    #     """
-    #     match = re.match(r'.*{% form\s*[A-Za-z_0-9]*\s*%}(?P<THEFORM>.*){% endform\s*[A-Za-z_0-9]*\s*%}.*',
-    #                      gpg_obj.form, re.MULTILINE | re.DOTALL)
-    #     if not match:
-    #         raise ValidationError('Can not find form definition.')
-    #     form_text = match.group('THEFORM')
-    #     exec(form_text, globals(), locals())
-    #     # noinspection PyUnresolvedReferences
-    #     return GraphForm            # return the graphform class
-
     # noinspection PyMethodMayBeStatic,PyUnusedLocal
     def build_graph_graph_response(self, request, gpg, form_context=None):
         """
@@ -174,12 +147,12 @@ class GraphPageView(View):
         :param request:
         :type request: WSGIRequest
         :param gpg:
-        :type gpg: GraphPageGraph
+        :type gpg: GraphPage
         :param form_context: If there was a form, the request.POST value
         :type form_context: QueryDict
         """
         context = self.execute_query_to_build_context(request, gpg, form_context)
-        template = self.get_graph_template(gpg)
+        template = self.get_graph_page_template(gpg)
         response = template.render(context)
         return response
 
@@ -222,25 +195,25 @@ class GraphPageView(View):
         return context
 
     # noinspection PyMethodMayBeStatic
-    def get_graph_template(self, gpg):
+    def get_graph_page_template(self, gpg):
         """
         :param gpg:
         :type gpg: Graph2Graph
         """
-        template_text = ''
-        if gpg.template:                      # use page if available
-            template_text = gpg.template
+        graph_page_text = ''
+        if gpg.graph_page:                      # use page if available
+            graph_page_text = gpg.graph_page
         # deal with any markup
         # todo 1: here deal with markup in graph themplate
         # todo 2: other validations go here
         conf = settings.GRAPHPAGE_CONFIG
-        template_text = conf['graphpageheader'] + template_text + conf['graphpagefooter']
-        return Template(template_text)
+        graph_page_text = conf['graphpageheader'] + graph_page_text + conf['graphpagefooter']
+        return Template(graph_page_text)
 
 
 ###############################################################################
 
 
-class GraphPageGraphListView(ListView):
-    model = GraphPageGraph
+class GraphPageListView(ListView):
+    model = GraphPage
 

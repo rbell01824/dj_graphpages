@@ -39,6 +39,11 @@ class TagSuggestAdmin(admin.ModelAdmin):
         TagKeywordInline,
         TagRegxInline,
     ]
-
-admin.site.unregister(Tag)
+    # suit_form_tabs = (('general', 'General'),
+    #                   ('form', 'Form'),
+    #                   ('formpage', 'Form Page'),
+    #                   ('query', 'Query'),
+    #                   ('graphpage', 'Graph Page')
+    #                   )
+# admin.site.unregister(Tag)
 admin.site.register(Tag, TagSuggestAdmin)

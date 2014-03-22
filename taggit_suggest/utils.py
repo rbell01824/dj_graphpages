@@ -33,6 +33,9 @@ def _suggest_keywords(content):
 
     for k in keywords:
         # Use the stem if available, otherwise use the whole keyword
+        # todo 2: rewrite to be case concious
+        # if k has uppercase, then match with case
+        # if k nas no uppercase, then match case insensitive
         if k.stem:
             if k.stem in content:
                 suggested_keywords.add(k.tag_id)

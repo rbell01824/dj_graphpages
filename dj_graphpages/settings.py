@@ -76,7 +76,7 @@ WSGI_APPLICATION = 'dj_graphpages.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db_graphpages.sqlite3'),
+        'NAME': os.path.join(BASE_DIR, 'db.db'),
     }
 }
 
@@ -150,7 +150,7 @@ SUIT_CONFIG = {
     #     #'sites',
     #     # {'app': 'auth', 'icon':'icon-lock', 'models': ('user', 'group')},
     #     # {'label': 'Settings', 'icon':'icon-cog', 'models': ('auth.user', 'auth.group')},
-    #     {'label': 'Graph Pages', 'icon': 'icon-signal', 'models': ('graphpages.graphpagegraph',)},
+    #     {'label': 'Graph Pages', 'icon': 'icon-signal', 'models': ('graphpages.graphpage',)},
     #     {'label': 'Graph Tags', 'icon': 'icon-tags', 'models': ('graphpages.graphpagetags',)},
     #     {'label': 'Support', 'icon': 'icon-question-sign', 'url': '/support/'},
     # ),
@@ -158,9 +158,6 @@ SUIT_CONFIG = {
     # misc
     # 'LIST_PER_PAGE': 15
 }
-
-CRISPY_TEMPLATE_PACK = 'bootstrap3'
-CRISPY_FAIL_SILENTLY = not DEBUG
 
 GRAPHPAGE_CONFIG = {
     # 'formpageheader': '{% extends "base.html" %}\n'

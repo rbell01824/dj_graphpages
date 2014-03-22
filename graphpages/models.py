@@ -24,6 +24,7 @@ __email__ = "rbell01824@gmail.com"
 __status__ = "dev"
 
 from django.db import models
+from django_extensions.db.models import TimeStampedModel, TitleSlugDescriptionModel
 
 # Basic taggit manager
 # from taggit.managers import TaggableManager
@@ -33,11 +34,14 @@ from django.db import models
 from taggit_autosuggest.managers import TaggableManager
 
 
-class GraphPageGraph(models.Model):
-    name = models.CharField(max_length=200,
-                            blank=False,
-                            unique=True)
-    description = models.TextField(blank=True)
+class GraphPage(TitleSlugDescriptionModel, TimeStampedModel):
+    """
+    Title
+    Slug
+    Description
+    Created
+    Modified
+    """
     tags = TaggableManager()
     # The actual form
     form = models.TextField(blank=True)
@@ -47,19 +51,21 @@ class GraphPageGraph(models.Model):
     form_page = models.TextField(blank=True)
     form_page_ref = models.ForeignKey('self', related_name='fk_form_page',
                                       default=None, blank=True, null=True)
+
     # The Django/python to get the form data
     query = models.TextField(blank=True)
     query_ref = models.ForeignKey('self', related_name='fk_query',
                                   default=None, blank=True, null=True)
+
     # The page the form data is displayed on
-    template = models.TextField(blank=True)
-    template_ref = models.ForeignKey('self', related_name='fk_template',
-                                     default=None, blank=True, null=True)
+    graph_page = models.TextField(blank=True)
+    graph_page_ref = models.ForeignKey('self', related_name='fk_graph_page',
+                                       default=None, blank=True, null=True)
 
     class Meta:
-        verbose_name = "GraphPage Graph"
-        verbose_name_plural = "GraphPage Graph"
+        verbose_name = "GraphPage"
+        verbose_name_plural = "GraphPage"
 
     def __unicode__(self):
-        return u'{}'.format(self.name)
+        return u'{}'.format(self.title)
     pass

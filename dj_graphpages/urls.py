@@ -8,13 +8,13 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import login
 
 from .views import index
-from graphpages.views import GraphPageGraphListView
+from graphpages.views import GraphPageListView
 from graphpages.experiments import GraphFormX2View
 
 urlpatterns = patterns('',
     url(r'^test_data/', include('test_data.urls')),
     url(r'^display_graph_pages$',
-        GraphPageGraphListView.as_view(), name=GraphPageGraphListView),
+        GraphPageListView.as_view(), name=GraphPageListView),
     url(r'^graphpages/', include('graphpages.urls')),
     url(r'^demo/', include('chartkick_demo.urls')),
     url(r'^admin/', include(admin.site.urls)),

@@ -30,7 +30,7 @@ from django.http import HttpResponseRedirect
 from django.forms import Textarea, TextInput
 from django.contrib import admin
 
-from .models import GraphPageGraph
+from .models import GraphPage
 
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.admin import SimpleListFilter
@@ -75,31 +75,18 @@ class TaggitListFilter(SimpleListFilter):
             return queryset.filter(tags__name__in=[self.value()])
 
 
-class GraphPageGraphAdmin(admin.ModelAdmin):
-
-    # noinspection PyMethodMayBeStatic
-    def display_graph(self, obj):
-        rtn = u"<div><a class='btn btn-primary btn-sm' href='/graphpages/graphpage/%s'>Display</a></div>" % obj.id
-        return rtn
-    display_graph.short_description = ''
-    display_graph.allow_tags = True
-
-    # noinspection PyMethodMayBeStatic
-    def tags_suggest(self, obj):
-        """
-        Suggest tags based on description
-        """
-        return suggest_tags(content=obj.description)
-
-    model = GraphPageGraph
-    search_fields = ('name', 'description')
-    readonly_fields = ('form_slug', 'query_slug', 'template_slug', 'tags_suggest')
-    list_display = ('display_graph', 'name', 'tags_slug', 'description',
-                    'form_slug', 'query_slug', 'template_slug'
-                    )
+class GraphPageAdmin(admin.ModelAdmin):
+    """
+    Graphpage admin
+    """
+    model = GraphPage
+    search_fields = ('title', 'description',)
+    list_display_links = ('title',)
+    list_display = ('display_graph', 'title', 'tags_slug', 'description', )
+    readonly_fields = ('tags_suggest',)
     fieldsets = (
         (None, {'classes': ('suit-tab suit-tab-general',),
-                'fields': ('name', 'description', ('tags', 'tags_suggest'))}),
+                'fields': ('title', 'description', ('tags', 'tags_suggest'))}),
         ('Form', {'classes': ('suit-tab suit-tab-form',),
                   'fields': ('form_ref', 'form',)}),
         ('Form Page', {'classes': ('suit-tab suit-tab-formpage',),
@@ -107,9 +94,8 @@ class GraphPageGraphAdmin(admin.ModelAdmin):
         ('Query', {'classes': ('suit-tab suit-tab-query',),
                    'fields': ('query_ref', 'query',)}),
         ('Graph Page', {'classes': ('suit-tab suit-tab-graphpage',),
-                        'fields': ('template_ref', 'template',)}),
+                        'fields': ('graph_page_ref', 'graph_page',)}),
     )
-    list_display_links = ('name',)
     list_filter = (TaggitListFilter,)
     suit_form_tabs = (('general', 'General'),
                       ('form', 'Form'),
@@ -118,38 +104,50 @@ class GraphPageGraphAdmin(admin.ModelAdmin):
                       ('graphpage', 'Graph Page')
                       )
     save_on_top = True
-    ordering = ('name',)
-    actions = ['delete_selected', 'duplicate_records', 'graph_admin_action']
-    SLUG_LEN = 20
+    ordering = ('title',)
+    actions = ['delete_selected', 'duplicate_records']
     pass
+
+    # noinspection PyMethodMayBeStatic
+    def display_graph(self, obj):
+        """
+        Create display graph button.
+        :type obj: graphpages.models.GraphPage
+        :return: HTML for button
+        :rtype: unicode
+        """
+        rtn = u"<div><a class='btn btn-primary btn-sm' href='/graphpages/graphpage/%s'>Display</a></div>" % obj.id
+        return rtn
+    display_graph.short_description = ''
+    display_graph.allow_tags = True
 
     # noinspection PyMethodMayBeStatic
     def tags_slug(self, obj):
         """
         Make list of tags seperated by ';'
+        :type obj: graphpages.models.GraphPage
+        :return: list of tags
+        :rtype: unicode
         """
+        if len(obj.tags.names()) == 0:
+            return '--'
         rtn = ''
         for tag in obj.tags.names():
             rtn += '; ' + tag
         return rtn[1:]
 
     # noinspection PyMethodMayBeStatic
-    def form_slug(self, obj):
+    def tags_suggest(self, obj):
         """
-        Generate form text for list display
+        Suggest tags based on description
+        :type obj: graphpages.models.GraphPage
+        :return: suggested tags
+        :rtype: unicode
         """
-        return obj.form[:min(self.SLUG_LEN, len(obj.form))]
-
-    # noinspection PyMethodMayBeStatic
-    def query_slug(self, obj):
-        return obj.query[:min(self.SLUG_LEN, len(obj.query))]
-
-    # noinspection PyMethodMayBeStatic
-    def template_slug(self, obj):
-        return obj.template[:min(self.SLUG_LEN, len(obj.template))]
+        return suggest_tags(content=obj.description)
 
     def formfield_for_dbfield(self, db_field, **kwargs):
-        if db_field.name == 'name':
+        if db_field.name == 'title':
             kwargs['widget'] = TextInput(attrs={'class': 'span12', 'size': '140'})
         if db_field.name == 'description':
             kwargs['widget'] = Textarea(attrs={'class': 'span12', 'rows': '2', 'cols': '140'})
@@ -159,9 +157,9 @@ class GraphPageGraphAdmin(admin.ModelAdmin):
             kwargs['widget'] = Textarea(attrs={'class': 'span12', 'rows': '30', 'cols': '140'})
         if db_field.name == 'query':
             kwargs['widget'] = Textarea(attrs={'class': 'span12', 'rows': '30', 'cols': '140'})
-        if db_field.name == 'template':
+        if db_field.name == 'graph_page':
             kwargs['widget'] = Textarea(attrs={'class': 'span12', 'rows': '30', 'cols': '140'})
-        return super(GraphPageGraphAdmin, self).formfield_for_dbfield(db_field, **kwargs)
+        return super(GraphPageAdmin, self).formfield_for_dbfield(db_field, **kwargs)
 
     # noinspection PyMethodMayBeStatic,PyUnusedLocal
     def duplicate_records(self, request, queryset):
@@ -171,21 +169,10 @@ class GraphPageGraphAdmin(admin.ModelAdmin):
         for obj in queryset:
             newobj = copy.deepcopy(obj)
             newobj.id = None
-            newobj.name += uuid.uuid1().hex
+            newobj.title += uuid.uuid1().hex
             newobj.save()
             # noinspection PyStatementEffect
             newobj.tags.add(*obj.my_tags.all())
     duplicate_records.short_description = "Duplicate selected records"
 
-    # noinspection PyMethodMayBeStatic,PyUnusedLocal
-    def graph_admin_action(self, request, queryset):
-        """
-        Display this graph
-        """
-        selected = request.POST.getlist(admin.ACTION_CHECKBOX_NAME)
-        # r = selected[0]
-        #noinspection PyUnusedLocal
-        # ct = ContentType.objects.get_for_model(queryset.model)
-        return HttpResponseRedirect("/graphpages/3raph3/%s" % (selected[0]))
-    graph_admin_action.short_description = 'Display graph'
-admin.site.register(GraphPageGraph, GraphPageGraphAdmin)
+admin.site.register(GraphPage, GraphPageAdmin)
