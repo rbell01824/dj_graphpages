@@ -105,7 +105,7 @@ class GraphPageView(View):
         graphform = form_class_obj()
         # render response
         t = Template(form_page)
-        c = RequestContext(request, {'graph_pk': str(gpg.pk), 'graphform': graphform})
+        c = RequestContext(request, {'graph_pk': str(gpg.pk), 'graphform': graphform, 'form_context': context})
         return t.render(c)
 
     # noinspection PyUnresolvedReferences,PyMethodMayBeStatic
@@ -139,11 +139,8 @@ class GraphPageView(View):
         else:
             page = gpg.form_page.strip()
         if len(page) == 0:
-            raise ValidationError('Empty form page')
-        # deal with any markup
-        # todo 1: here deal with markup in form
-        conf = settings.GRAPHPAGE_CONFIG
-        return conf['formpageheader'] + page + conf['formpagefooter']
+            page = '{% include "default_form_page.html" %}'
+        return settings.GRAPHPAGE_FORMPAGEHEADER + page + settings.GRAPHPAGE_FORMPAGEFOOTER
 
     # noinspection PyMethodMayBeStatic,PyUnusedLocal
     def build_graph_graph_response(self, request, gpg, form_context=None):

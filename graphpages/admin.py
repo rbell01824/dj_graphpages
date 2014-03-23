@@ -186,7 +186,7 @@ class GraphPageAdmin(admin.ModelAdmin):
             newobj.title += uuid.uuid1().hex
             newobj.save()
             # noinspection PyStatementEffect
-            newobj.tags.add(*obj.my_tags.all())
+            newobj.tags.add(*obj.tags.all())
         return
     duplicate_records.short_description = "Duplicate selected records"
 

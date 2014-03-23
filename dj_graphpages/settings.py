@@ -47,6 +47,7 @@ INSTALLED_APPS = (
     'chartkick',
     'chartkick_demo',
     'bootstrap3',
+    # 'bootstrapform',
     'test_data',
     'taggit',
     'taggit_suggest',
@@ -157,16 +158,12 @@ SUIT_CONFIG = {
     # 'LIST_PER_PAGE': 15
 }
 
+GRAPHPAGE_FORMPAGEHEADER ='{% extends "base.html" %}\n' \
+                          '{% block content %}\n' \
+                          '<div class="container-fluid">\n'
+GRAPHPAGE_FORMPAGEFOOTER = '</div>\n' \
+                           '{% endblock content %}'
 GRAPHPAGE_CONFIG = {
-    # 'formpageheader': '{% extends "base.html" %}\n'
-    #                   '{% load crispy_forms_tags %}\n'
-    #                   '{% block content %}\n'
-    #                   '<div class="container-fluid">\n',
-    'formpageheader': '{% extends "base.html" %}\n'
-                      '{% block content %}\n'
-                      '<div class="container-fluid">\n',
-    'formpagefooter': '</div>\n'
-                      '{% endblock content %}',
     'graphpageheader': '{% extends "base.html" %}\n'
                        '{% load chartkick %}\n'
                        '{% block content %}\n'
