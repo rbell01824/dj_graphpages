@@ -19,21 +19,12 @@ __license__ = "All rights reserved"
 __version__ = "0.1"
 __status__ = "dev"
 
-import re
-
-from django.contrib.auth.decorators import login_required
-from django.views.decorators.http import require_POST
 from django.core.exceptions import ValidationError
 from django.http import HttpResponse
-from django.http import Http404
-from django.shortcuts import render
-from django.shortcuts import render_to_response
 from django.shortcuts import get_object_or_404
-from django.db.models import Count
-from django.db.models import Sum
 from django.template import Context, RequestContext, Template
 from django.views.generic.list import ListView
-from django.views.generic import View, FormView
+from django.views.generic import View
 
 # Supress unresolvedreferences as these are actually needed inside
 # the form exec.
@@ -45,7 +36,14 @@ from .models import GraphPage
 # Supress unresolvedreferences as these are actually needed inside
 # the exec for the graph query.
 # noinspection PyUnresolvedReferences
-from test_data.models import Countries, CIA
+# from test_data.models import Countries, CIA
+# todo 2: workout scheme to automagically import models that might be needed for query
+# todo 2: django-extensions might be useful
+
+# hack that may be a partial solution
+# from django.db.models.loading import get_models
+# for m in get_models():
+#     exec "from %s import %s" % (m.__module__, m.__name__)
 
 from django.conf import settings
 
@@ -155,7 +153,7 @@ class GraphPageView(View):
         response = template.render(context)
         return response
 
-    # noinspection PyMethodMayBeStatic
+    # noinspection PyMethodMayBeStatic,PyUnusedLocal
     def execute_query_to_build_context(self, request, gpg, form_context=None):
         """
         Execute a grasph form query.  This creates a context that is used by the graph page
@@ -164,6 +162,7 @@ class GraphPageView(View):
         :type gpg: GraphPage object
         :type form_context: dict, if there was a form the POST dictionary
         """
+        global_context = dict(globals())
         if not form_context:
             form_context = {}
         # todo 2: make exec safe
@@ -177,16 +176,15 @@ class GraphPageView(View):
         # See if there is a form _context.  If there is, get it into our local context.
         fc = {}
         if form_context:
+            # noinspection PyUnresolvedReferences
             fc = form_context.dict()
-        # deal with any markup
-        # todo 1: here deal with markup in query
+        # It it ever becomes necessary to support template tags the following code may be useful
         # There may be some template tags in the query so process them.
-        t = Template(query_text)
-        c = Context(fc)
-        query_text = t.render(c)
+        # t = Template(query_text)
+        # c = Context(fc)
+        # query_text = t.render(c)
 
-        exec(query_text, None, locals())
-        fc.update(locals())
+        exec(query_text, global_context, fc)
         context = Context(fc)
         return context
 
