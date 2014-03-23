@@ -1,0 +1,50 @@
+{% load markup %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+</head>
+<body>
+{% for obj in object_list %}
+    <h2>Raw text</h2>
+    {{ obj.form_title }}
+    <h2>Markdown text</h2>
+    {{ obj.form_title | markdown:"safe" }}
+    <h2>End</h2>
+    <h2>=== Form ===</h2>
+    <!-- form title -->
+    {% if obj.form_title|length > 0 %}
+        <h3>{{ obj.form_title | markdown:"safe" }}</h3>
+    {% endif %}
+    <!-- form pre-text -->
+    {% if obj.form_pre_text|length > 0 %}
+        {{ obj.form_pre_text | markdown }}
+    {% endif %}
+    <!-- form -->
+    ===
+    <code>
+        <pre>{{ obj.form }}</pre>
+    </code>
+    ===
+    <form action="/contact/" method="post">
+        {# Include the hidden fields #}
+        {% for hidden in form.hidden_fields %}
+            {{ hidden }}
+        {% endfor %}
+        {# Include the visible fields #}
+        {% for field in form.visible_fields %}
+            <div class="fieldWrapper">
+                {{ field.errors }}
+                {{ field.label_tag }} {{ field }}
+            </div>
+        {% endfor %}
+        <p><input type="submit" value="Send message"/></p>
+    </form>
+    <!-- form post text -->
+    {% if obj.form_post_text|length > 0 %}
+        {{ obj.form_post_text | markdown:"safe" }}
+    {% endif %}
+    <h2>=== End Form ===</h2>
+{% endfor %}
+</body>
+</html>
