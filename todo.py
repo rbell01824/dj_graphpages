@@ -28,6 +28,8 @@ Define default graph page template
 Add tag view page
 Finish tag experiment
 """
+# fixme: modify default form html to use bootstrap 3 for before and after text
+
 # todo 1: write universal template for graphpage
 # todo 1: add markdown support to form, formpage, query, and graphpage. See https://docs.djangoproject.com/en/1.4/ref/contrib/markup/
 # todo 1: write tests
