@@ -49,7 +49,7 @@ from test_data.models import Countries, CIA
 
 from django.conf import settings
 
-# todo 1: install and user python-markdown2 from https://github.com/trentm/python-markdown2
+# todo 3: install and use python-markdown2 from https://github.com/trentm/python-markdown2
 
 
 class GraphPageView(View):
@@ -121,8 +121,6 @@ class GraphPageView(View):
             form = gpg.form.strip()
         if len(form) == 0:
             raise ValidationError('Empty form')
-        # deal with any markup
-        # todo 1: here deal with markup in form
         # create the form object
         exec(form, globals(), locals())
         return GraphForm, locals()

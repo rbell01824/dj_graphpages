@@ -28,25 +28,16 @@ Define default graph page template
 Add tag view page
 Finish tag experiment
 """
-# todo 1: look into fixme_login.html and try to resolve issues
+# todo 1: write universal template for graphpage
 # todo 1: add markdown support to form, formpage, query, and graphpage. See https://docs.djangoproject.com/en/1.4/ref/contrib/markup/
-# todo 1: See https://github.com/klen/django_markdown
-# todo 1: markdown see https://godjango.com/14-using-djangocontribmarkup/, 
-# todo 1: look into macros for graph page, see https://github.com/twidi/django-templates-macros
-# todo 1: look into hosting services - python anywhere https://www.pythonanywhere.com/
-# todo 1: look into https://github.com/jezdez/django-dbtemplates
-# todo 1: extend model to allow dj template for form and graph page
-# todo 1: write universal template for form and graphpage
-# todo 1: remove old tag system in favor of taggit
-# todo 1: fixup admin for taggit to use tabs
-# todo 1: figure out haw taggit suggest really works and how it should be configured
-# todo 1: add ipython and pdb and experiment with django extensions
-# todo 1: add title, slug, dates to graph model
-# todo 1: add Werkzeug to system
-# todo 1: get local versions of jquery and ALL the bootstrap cruft
 # todo 1: write tests
-# todo 1: look into django-taggit-templattags
+# todo 1: look into fixme_login.html and try to resolve issues
 
+# todo 2: get local versions of jquery and ALL the bootstrap cruft
+# todo 2: look into macros for graph page, see https://github.com/twidi/django-templates-macros
+# todo 2: look into hosting services - python anywhere https://www.pythonanywhere.com/
+# todo 2: look into https://github.com/jezdez/django-dbtemplates
+# todo 2: look into django-taggit-templattags
 # todo 2: put jquery.min.js into static
 # todo 2: put highcharts.js into static
 # todo 2: put chartkick.js into static
