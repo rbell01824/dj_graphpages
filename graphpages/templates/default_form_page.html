@@ -16,6 +16,10 @@ text_after_form
 {% bootstrap_css %}
 {% bootstrap_messages %}
 
+{% comment %}
+This section holds any content to appear before the form.  The content is passed by the context variable
+"text_before_form".  It may contain markdown and/or of raw HTML.
+{%  endcomment %}
 {% if form_context.text_before_form %}
     <div class="row">
         <div class="col-md-12">
@@ -24,6 +28,9 @@ text_after_form
     </div>
 {% endif %}
 
+{% comment %}
+This section holds the form.  The form must be named graphform.
+{%  endcomment %}
 <div class="row">
     <div class="col-md-12">
         <form method="post" class="bootstrap3 form-horizontal" role="form"
@@ -39,6 +46,10 @@ text_after_form
     </div>
 </div>
 
+{% comment %}
+This section holds any content to appear after the form.  The content is passed by the context variable
+"text_before_form".  It may contain markdown and/or of raw HTML.
+{%  endcomment %}
 {% if form_context.text_after_form %}
     <div class="row">
         <div class="col-md-12">
