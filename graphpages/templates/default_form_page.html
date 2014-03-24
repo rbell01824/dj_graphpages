@@ -17,20 +17,34 @@ text_after_form
 {% bootstrap_messages %}
 
 {% if form_context.text_before_form %}
-    {{ form_context.text_before_form | graphpage_markdown }}
+    <div class="row">
+        <div class="col-md-12">
+            {{ form_context.text_before_form | graphpage_markdown }}
+        </div>
+    </div>
 {% endif %}
 
-<form method="post" class="bootstrap3 form-horizontal" role="form"
-      action="/graphpages/graphpage/{{graph_pk}}">
-    {% csrf_token %}
-    {% bootstrap_form graphform layout='horizontal' label_class="col-sm-2" field_class="col-sm-8"%}
-    {% buttons layout='horizontal' %}
-        <button type="submit" class="btn btn-primary">
-            {% bootstrap_icon "star" %} Display Graph
-        </button>
-    {% endbuttons %}
-</form>
+<div class="row">
+    <div class="col-md-12">
+        <form method="post" class="bootstrap3 form-horizontal" role="form"
+              action="/graphpages/graphpage/{{graph_pk}}">
+            {% csrf_token %}
+            {% bootstrap_form graphform layout='horizontal' label_class="col-sm-2" field_class="col-sm-8"%}
+            {% buttons layout='horizontal' %}
+                <button type="submit" class="btn btn-primary">
+                    {% bootstrap_icon "star" %} Display Graph
+                </button>
+            {% endbuttons %}
+        </form>
+    </div>
+</div>
+
+
 
 {% if form_context.text_after_form %}
-    {{ form_context.text_after_form | graphpage_markdown }}
+    <div class="row">
+        <div class="col-md-12">
+            {{ form_context.text_after_form | graphpage_markdown }}
+        </div>
+    </div>
 {% endif %}
