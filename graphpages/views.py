@@ -193,15 +193,16 @@ class GraphPageView(View):
         """
         :type gpg: graphpage object
         """
-        graph_page_text = ''
-        if gpg.graph_page:                      # use page if available
-            graph_page_text = gpg.graph_page
-        # deal with any markup
-        # todo 1: here deal with markup in graph themplate
-        # todo 2: other validations go here
+        # get the graph page definition
+        if gpg.graph_page_ref:
+            page = gpg.graph_page_ref.form.strip()
+        else:
+            page = gpg.graph_page.strip()
+        if len(page) == 0:
+            page = '{% include "default_graph_page.html" %}'
         conf = settings.GRAPHPAGE_CONFIG
-        graph_page_text = conf['graphpageheader'] + graph_page_text + conf['graphpagefooter']
-        return Template(graph_page_text)
+        page = conf['graphpageheader'] + page + conf['graphpagefooter']
+        return Template(page)
 
 
 ###############################################################################

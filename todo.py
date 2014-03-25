@@ -21,15 +21,13 @@ __status__ = "dev"
 # work list
 """
 Define tests
-Set sort order on listview for graphpages
 Set login required everywhere (current scheme only applies to a few urls, not all and there are issues with class views)
-Define default form template
 Define default graph page template
 Add tag view page
-Finish tag experiment
 """
-# fixme: modify default form html to use bootstrap 3 for before and after text
+# fixme: make tags optional
 
+# todo 1: include css and js in the project
 # todo 1: write universal template for graphpage
 # todo 1: add markdown support to form, formpage, query, and graphpage. See https://docs.djangoproject.com/en/1.4/ref/contrib/markup/
 # todo 1: write tests
