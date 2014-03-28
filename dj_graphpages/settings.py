@@ -174,3 +174,5 @@ GRAPHPAGE_CONFIG = {
 
 LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/'
+
+# fixme: set TEMPLATE_TAGS HERE AND finish per https://djangosnippets.org/snippets/342/
