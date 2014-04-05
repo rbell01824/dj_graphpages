@@ -9,7 +9,6 @@ from django.contrib.auth.views import login
 
 from .views import index
 from graphpages.views import GraphPageListView
-from graphpages.experiments import GraphFormX2View
 
 urlpatterns = patterns('',
     url(r'^test_data/', include('test_data.urls')),
@@ -18,7 +17,6 @@ urlpatterns = patterns('',
     url(r'^graphpages/', include('graphpages.urls')),
     url(r'^demo/', include('chartkick_demo.urls')),
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^djangoforms$', GraphFormX2View.as_view(), name=GraphFormX2View),
     url(r'^$', login_required(index), name='index'),
     url(r'^login/$', login, {'template_name': 'admin/login.html'})
 )

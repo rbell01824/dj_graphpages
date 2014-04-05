@@ -25,7 +25,6 @@ Set login required everywhere (current scheme only applies to a few urls, not al
 Define default graph page template
 Add tag view page
 """
-# fixme: make tags optional
 
 # todo 1: include css and js in the project
 # todo 1: write universal template for graphpage

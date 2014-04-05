@@ -40,7 +40,7 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'debug_toolbar',
+    # 'debug_toolbar',
     'django_extensions',
     'dj_graphpages',
     'graphpages',
@@ -175,4 +175,7 @@ GRAPHPAGE_CONFIG = {
 LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/'
 
-# fixme: set TEMPLATE_TAGS HERE AND finish per https://djangosnippets.org/snippets/342/
+# Define template tags to include by default.
+# The tag must be <application>.templatetags.<template tag lib>
+# See https://djangosnippets.org/snippets/342/
+TEMPLATE_TAGS = ('chartkick.templatetags.chartkick',)
