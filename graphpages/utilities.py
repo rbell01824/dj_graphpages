@@ -20,9 +20,18 @@ __status__ = "dev"
 
 from django.conf import settings
 from django.template import add_to_builtins
+from django.template.loader import render_to_string
+from django.template import Context, Template
 
 LEGAL_GRAPH_TYPES = ['line', 'pie', 'column', 'bar', 'area']
 
+# This templte is used to render markdown text full width in a col div.
+MARKDOWN_TEXT_TEMPLATE = Template("""<div class="row">
+                                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                             {{ markdown_text | graphpage_markdown }}
+                                         </div>
+                                     </div>
+                                  """)
 
 def load_templatetags():
     """
@@ -57,8 +66,6 @@ def load_templatetags():
     # any of the templatetags it registers.
     #
 
-    from django.template.loader import add_to_builtins
-
     #
     # Note: For reasons I don't understand this code gets ececuted twice when
     # Django starts.  Nothing bad seems to happen so I'll use the technique.
@@ -79,116 +86,103 @@ class GraphPage(object):
     """
 
     def __init__(self, text_before=None, text_after=None, rows=list):
-        self.text_before = None             # markdown text to output before all the graphs on the page
-        self.text_after = None              # markdown text to output after all the graphs on the page
-        self.rows = []                      # rows of graphs on the page
-        # self.graphs = {}                    # graphs on the page
+        self.text_before = text_before  # markdown text to output before all the graphs on the page
+        self.text_after = text_after  # markdown text to output after all the graphs on the page
+        self.rows = rows  # rows of graphs on the page
         pass
 
-    def text_top(self, text):
+    def render(self):
         """
-        Save markdown text to output before any graphs on the page.
-
-        :param text: Markdown text to output before any graphs on the page.
-        :type text: unicode
-        :return: Nothing
-        :rtype: None
+        Generate the html for this graph page
         """
-        self.text_top = text
-        return
-
-    def text_bottom(self, text):
-        """
-        Save markdown text to output after last graph on the page.
-
-        :param text: Markdown text to output after last graph on the page.
-        :type text: unicode
-        :return: Nothing
-        :rtype: None
-        """
-        self.text_bottom = text
-        return
-
-    def graph_create(self, graph_name, graph_type='column', graph_with_options=''):
-        """
-        Create a graph object on the page.
-
-        :param graph_name: The name of the graph.  Must be unique within the graphpage.
-        :type graph_name: unicode
-        :param graph_type: The type of this graph.  Must be line, pie, column, bar, or area.
-        :type graph_type: unicode
-        :param graph_with_options: 'with' options for the chartkick graph.
-        :type graph_with_options: unicode
-        :return: Graph object created
-        :rtype: Graph
-        """
-        # Create the graph object
-        graph_object = Graph(graph_name, graph_type, graph_with_options)
-
-        # Save if possible
-        return graph_object
-
-    def graph_add(self, graph_object):
-        """
-        Add a graph object to the page.
-
-        :param graph_object: The graph object to add to the page.
-        :type graph_object: Graph
-        :return: Graph object
-        :rtype: Graph
-        """
-        # check if one already exists
-        if graph_object.graph_name in self.graphs:
-            raise ValueError('In graph_add duplicate graph name {}.'.format(graph_object.graph_name))
-
-        # save it
-        self.graphs[graph_object.graph_name] = graph_object
-        return graph_object
+        # fixme: generate html for graph page
+        output = ''
+        if self.text_before:
+            output += self.text_before
+        for r in self.rows:
+            output += r.render()
+        if self.text_after:
+            output += self.text_after
+        return output
 
 
 class Graph(object):
     """
     Class that holds a single graph definition.
     """
-    def __init__(self, graph_name, graph_type, graph_with_options=''):
+
+    def __init__(self, graph_type, graph_options=''):
         """
         Create a graph object
 
-        :param graph_name: The name of the graph.  Must be unique within the graphpage.
-        :type graph_name: unicode
         :param graph_type: The type of this graph.  Must be line, pie, column, bar, or area.
         :type graph_type: unicode
-        :param graph_with_options: 'with' options for the chartkick graph.
-        :type graph_with_options: unicode
+        :param graph_options: 'with' options for the chartkick graph.
+        :type graph_options: unicode
         """
-
-        self.graph_name = graph_name
         if not graph_type in LEGAL_GRAPH_TYPES:
             raise ValueError('In Graph illegal graph type {}'.format(graph_type))
         self.graph_type = graph_type
-        self.graph_with_options = graph_with_options
+        self.graph_options = graph_options
         pass
+
+    def render(self, data):
+        """
+        Generate the html to render this graph with this data.
+        """
+        if self.graph_options:
+            output = "{% {} {} width {}".format(self.graph_type, data, self.graph_options)
+        else:
+            output = '{% {}_chart {} %}'.format(self.graph_type, data)
+        return output
 
 
 class GraphRow(object):
     """
-    Holds a graph row.
+    Holds a graph row, ie. a list of GraphInstance objects
     """
-    def __init__(self):
-        self.row = []                       # graphs in the row
-        self.text_before = None             # text to output before the row
-        self.text_after = None              # text to output after the row
+
+    def __init__(self, text_before=None, text_after=None, row=list()):
+        self.text_before = text_before  # markdown text to output before the row
+        self.text_after = text_after  # markdown text to output after the row
+        self.row = row  # graphs in the row
         pass
+
+    def render(self):
+        """
+        Generate the HTML to display this graph row.
+        """
+        output = ''
+        if self.text_before:
+            output += MARKDOWN_TEXT_TEMPLATE.render(Context({'markdown_text': self.text_before}))
+            pass
+        for graph_instance in self.row:
+            output += graph_instance.render()
+        if self.text_after:
+            output += MARKDOWN_TEXT_TEMPLATE.render(Context({'markdown_text': self.text_after}))
+        return output
 
 
 class GraphInstance(object):
     """
     Bound instance of a graph.  That is a graph with its data, width, etc.
     """
+
     def __init__(self, graph_object, data, width=12, text_before=None, text_after=None):
-        self.graph = graph_object               # the graph object to display
-        self.data = data                        # the data to display
-        self.width = width                      # the width of the graph to display
-        self.text_before = text_before          # markdown text to display before the graph
-        self.text_after = text_after            # markdown text to display after the graph
+        self.graph = graph_object  # the graph object to display
+        self.data = data  # the data to display
+        # set the width of the graph to display
+        self.width = 'col-xs-xxx col-sm-xxx col-md-xxx col-lg-xxx'
+        self.width.replace('xxx', str(width))
+        self.text_before = text_before  # markdown text to display before the graph
+        self.text_after = text_after  # markdown text to display after the graph
+        self.rendered = graph_object.render(data)
         pass
+
+    def render(self):
+        """
+        Generate the HTML needed to display this graph.
+        """
+        # fixme: rewrite to work like graph row
+        output = render_to_string('graph_instance.html', {'obj': self})
+        return output
