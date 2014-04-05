@@ -27,8 +27,6 @@ Add tag view page
 """
 
 # todo 1: include css and js in the project
-# todo 1: write universal template for graphpage
-# todo 1: add markdown support to form, formpage, query, and graphpage. See https://docs.djangoproject.com/en/1.4/ref/contrib/markup/
 # todo 1: write tests
 # todo 1: look into fixme_login.html and try to resolve issues
 

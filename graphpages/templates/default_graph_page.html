@@ -16,7 +16,6 @@ Graphs consists of a series of rows that may contain 1 to 12 graphs in a bootstr
 {% load render_as_template %}
 {% load markdown_tags %}
 {% load bootstrap3 %}
-{% load chartkick %}
 {% bootstrap_css %}
 {% bootstrap_messages %}
 
@@ -39,7 +38,6 @@ This section holds the graphs.
     <div class="row">
         {% for graph in graph_row %}
             <div class="col-md-{{ graph.width }}">
-                {{ graph.graph }}
                 {% render_as_template graph.graph %}
             </div>
         {% endfor %}
