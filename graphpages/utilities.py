@@ -137,6 +137,8 @@ def load_templatetags():
 # todo 1: add extension to allow include from db models
 # todo 1: add convenience menthod for add row, add graph, insert row/graph, delete row/graph etc.
 # todo 1: need test methods for utilities XGraph...
+# todo 1: add link button(s) to each class type
+
 
 class XGraphPage(object):
     """
