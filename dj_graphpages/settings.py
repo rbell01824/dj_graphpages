@@ -178,4 +178,5 @@ LOGIN_REDIRECT_URL = '/'
 # Define template tags to include by default.
 # The tag must be <application>.templatetags.<template tag lib>
 # See https://djangosnippets.org/snippets/342/
-TEMPLATE_TAGS = ('chartkick.templatetags.chartkick',)
+TEMPLATE_TAGS = ('chartkick.templatetags.chartkick',
+                 'graphpages.templatetags.markdown_tags')

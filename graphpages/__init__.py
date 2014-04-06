@@ -22,7 +22,7 @@ __email__ = "rbell01824@gmail.com"
 __status__ = "dev"
 
 # Load the default template tags.
-# This insures that custom teplate tags are always available to Django's
+# This insures that custom template tags are always available to Django's
 # template render process.
 
 from .utilities import load_templatetags

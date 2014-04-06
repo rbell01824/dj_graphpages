@@ -183,7 +183,7 @@ class GraphPageAdmin(admin.ModelAdmin):
         for obj in queryset:
             newobj = copy.deepcopy(obj)
             newobj.id = None
-            newobj.title += uuid.uuid1().hex
+            newobj.title += ' duplicate ' + uuid.uuid1().hex
             newobj.save()
             # noinspection PyStatementEffect
             newobj.tags.add(*obj.tags.all())

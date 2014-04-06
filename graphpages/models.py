@@ -29,6 +29,10 @@ from django_extensions.db.models import TimeStampedModel, TitleSlugDescriptionMo
 # Basic taggit manager
 from taggit.managers import TaggableManager
 
+# todo 1: form_ref etc is broken, fix it.as
+# todo 1: make sure form, form_page, query, query_page are run through template
+
+
 class GraphPage(TitleSlugDescriptionModel, TimeStampedModel):
     """
     Title

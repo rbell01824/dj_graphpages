@@ -58,6 +58,7 @@ register = template.Library()
 # use _() to translate a string. Expr tag also can used context variables.
 #
 
+# todo 2: clean up this code, it's not actually used right now but may come in handy so save for a bit
 
 class ExprNode(template.Node):
     def __init__(self, expr_string, var_name):
