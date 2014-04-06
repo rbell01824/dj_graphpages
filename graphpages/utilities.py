@@ -29,24 +29,61 @@ from django.utils.encoding import force_unicode
 LEGAL_GRAPH_TYPES = ['line', 'pie', 'column', 'bar', 'area']
 
 # This template is used to render markdown text full width in a col div.
-# todo 1: replace with with a direct string substitution in a method
 MARKDOWN_TEMPLATE_TEXT = """
+<!-- Start of textbefore/after -->
 <div class="row">
     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
         {{ markdown_text|safe }}
     </div>
 </div>
+<!-- End of textbefore/after -->
 """
 MARKDOWN_TEXT_TEMPLATE = Template(MARKDOWN_TEMPLATE_TEXT)
 
+# This text is used as a wrapper for a graphpage
+GRAPHPAGE_BEFORE_TEXT = """
+<!-- Start of graphpage -->
+<div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+"""
+GRAPHPAGE_AFTER_TEXT = """
+    </div>
+</div>
+<!-- End of graphpage -->
+"""
+
+# This text is used as a wrapper for a graphpage row
+GRAPHROW_BEFORE_TEXT = """
+<!-- Start of row -->
+<div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+"""
+GRAPHROW_AFTER_TEXT = """
+    </div>
+</div>
+<!-- End of row -->
+"""
+
+# This text is used as a wrapper for a graphpage row graph cell
+GRAPH_BEFORE_TEXT = """
+<!-- Start of graph -->
+<div class="{}">
+"""
+GRAPH_AFTER_TEXT = """
+</div>
+<!-- End of graph -->
+"""
+
 # This text is used as a wrapper for chartkick template tags
 CHARTKICK_BEFORE_TEXT = """
+<!-- Start of chartkick graph -->
 <div class="row">
     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 """
 CHARTKICK_AFTER_TEXT = """
     </div>
 </div>
+<!-- End of chartkick graph -->
 """
 
 
@@ -98,7 +135,8 @@ def load_templatetags():
 
 # todo 1: run text_... through Template with a {} context to deal with any template tags in it
 # todo 1: add extension to allow include from db models
-
+# todo 1: add convenience menthod for add row, add graph, insert row/graph, delete row/graph etc.
+# todo 1: need test methods for utilities XGraph...
 
 class XGraphPage(object):
     """
@@ -122,9 +160,9 @@ class XGraphPage(object):
 
     def render(self):
         """
-        Generate the html for this graph page
+        Generate the html for this graph page.
         """
-        output = ''
+        output = GRAPHPAGE_BEFORE_TEXT
         if self.text_before:
             output += MARKDOWN_TEXT_TEMPLATE.render(Context({'markdown_text': process_markdown(self.text_before)}))
             pass
@@ -133,6 +171,7 @@ class XGraphPage(object):
             output += r.render()
         if self.text_after:
             output += MARKDOWN_TEXT_TEMPLATE.render(Context({'markdown_text': process_markdown(self.text_after)}))
+        output += GRAPHPAGE_AFTER_TEXT
         return output
 
 
@@ -161,7 +200,7 @@ class XGraphRow(object):
         """
         Generate the HTML to display this graph row.
         """
-        output = ''
+        output = GRAPHROW_BEFORE_TEXT
         if self.text_before:
             output += MARKDOWN_TEXT_TEMPLATE.render(Context({'markdown_text': process_markdown(self.text_before)}))
             pass
@@ -169,6 +208,7 @@ class XGraphRow(object):
             output += graph_instance.output
         if self.text_after:
             output += MARKDOWN_TEXT_TEMPLATE.render(Context({'markdown_text': process_markdown(self.text_after)}))
+        output += GRAPHROW_AFTER_TEXT
         return output
 
 
@@ -201,8 +241,8 @@ class XGraph(object):
         self.data = data                                # the data to display
         self.options = options                          # chartkick with otions
         # set the width of the graph to display
-        self.width = 'col-xs-xxx col-sm-xxx col-md-xxx col-lg-xxx'
-        self.width.replace('xxx', str(width))
+        width_ = 'col-xs-xxx col-sm-xxx col-md-xxx col-lg-xxx'
+        self.width = width_.replace('xxx', str(width))
         self.text_before = text_before                  # markdown text to display before the graph
         self.text_after = text_after                    # markdown text to display after the graph
 
@@ -211,7 +251,7 @@ class XGraph(object):
         #
         # Output text_before if there is any
         #
-        output = ''
+        output = GRAPH_BEFORE_TEXT.format(self.width)
         # todo 1: markdown text must be safe
         if text_before:
             output += MARKDOWN_TEXT_TEMPLATE.render(Context({'markdown_text': process_markdown(text_before)}))
@@ -221,7 +261,7 @@ class XGraph(object):
         # Output the chartkick graph
         #
         if options:
-            chart = '{} {} width {}'.format(graph_type, data, options)
+            chart = '{}_chart {} with {}'.format(graph_type, data, options)
             pass
         else:
             chart = '{}_chart {}'.format(graph_type, data)
@@ -236,6 +276,8 @@ class XGraph(object):
         #
         if text_after:
             output += MARKDOWN_TEXT_TEMPLATE.render(Context({'markdown_text': process_markdown(text_after)}))
+
+        output += GRAPH_AFTER_TEXT
         self.output = output
         pass
 
