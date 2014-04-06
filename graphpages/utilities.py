@@ -28,13 +28,26 @@ from django.utils.encoding import force_unicode
 
 LEGAL_GRAPH_TYPES = ['line', 'pie', 'column', 'bar', 'area']
 
-# This templte is used to render markdown text full width in a col div.
-MARKDOWN_TEXT_TEMPLATE = Template("""<div class="row">
-                                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                                             {{ markdown_text }}
-                                         </div>
-                                     </div>
-                                  """)
+# This template is used to render markdown text full width in a col div.
+# todo 1: replace with with a direct string substitution in a method
+MARKDOWN_TEMPLATE_TEXT = """
+<div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        {{ markdown_text|safe }}
+    </div>
+</div>
+"""
+MARKDOWN_TEXT_TEMPLATE = Template(MARKDOWN_TEMPLATE_TEXT)
+
+# This text is used as a wrapper for chartkick template tags
+CHARTKICK_BEFORE_TEXT = """
+<div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+"""
+CHARTKICK_AFTER_TEXT = """
+    </div>
+</div>
+"""
 
 
 def load_templatetags():
@@ -83,16 +96,28 @@ def load_templatetags():
     except AttributeError:
         pass
 
+# todo 1: run text_... through Template with a {} context to deal with any template tags in it
+# todo 1: add extension to allow include from db models
 
-class GraphPage(object):
+
+class XGraphPage(object):
     """
     Graphpage class.  This allows use of class methods to create a graphpage.
     """
 
-    def __init__(self, text_before=None, text_after=None, rows=list):
+    def __init__(self, rows=list(), text_before=None, text_after=None):
+        """
+        Initialize graphpage.
+        :param rows: The rows in this graph.
+        :type rows: list
+        :param text_before: Markdown text to display before the graphs on this page.
+        :type text_before: unicode
+        :param text_after: Markdown text to display after the graphs on this page.
+        :type text_after: unicode
+        """
+        self.rows = rows                        # rows of graphs on the page
         self.text_before = text_before          # markdown text to output before all the graphs on the page
         self.text_after = text_after            # markdown text to output after all the graphs on the page
-        self.rows = rows                        # rows of graphs on the page
         pass
 
     def render(self):
@@ -111,15 +136,25 @@ class GraphPage(object):
         return output
 
 
-class GraphRow(object):
+class XGraphRow(object):
     """
     Holds a graph row, ie. a list of GraphInstance objects
     """
 
-    def __init__(self, text_before=None, text_after=None, row=list()):
-        self.text_before = text_before  # markdown text to output before the row
-        self.text_after = text_after  # markdown text to output after the row
-        self.row = row  # graphs in the row
+    def __init__(self, row=list(), text_before=None, text_after=None):
+        """
+        Create graph row object to hold graphs in this row.
+
+        :param row: List of Graph objects in this row.
+        :type row: list
+        :param text_before: Markdown text to display before the row.
+        :type text_before: unicode
+        :param text_after: Markdown text to display after the row.
+        :type text_after: unicode
+        """
+        self.row = row                          # graphs in the row
+        self.text_before = text_before          # markdown text to output before the row
+        self.text_after = text_after            # markdown text to output after the row
         pass
 
     def render(self):
@@ -137,7 +172,7 @@ class GraphRow(object):
         return output
 
 
-class Graph(object):
+class XGraph(object):
     """
     Class that holds a single graph definition.
     """
@@ -148,8 +183,8 @@ class Graph(object):
 
         :param graph_type: The type of this graph.  Must be line, pie, column, bar, or area.
         :type graph_type: unicode
-        :param data: The graph's data
-        :type data: list
+        :param data: The name of the context variable holding the graph's data
+        :type data: unicode
         :param options: 'with' options for the chartkick graph.
         :type options: unicode
         :param width: Bootstrap3 grid width for graph
@@ -171,20 +206,34 @@ class Graph(object):
         self.text_before = text_before                  # markdown text to display before the graph
         self.text_after = text_after                    # markdown text to display after the graph
 
-        # Generate the html to render this graph with this data
+        #
+        #  Generate the html to render this graph with this data
+        #
         # Output text_before if there is any
+        #
         output = ''
+        # todo 1: markdown text must be safe
         if text_before:
             output += MARKDOWN_TEXT_TEMPLATE.render(Context({'markdown_text': process_markdown(text_before)}))
             pass
-        # Output the chartkick template tag
+
+        #
+        # Output the chartkick graph
+        #
         if options:
-            output += "{% {} {} width {} %}".format(graph_type, data, options)
+            chart = '{} {} width {}'.format(graph_type, data, options)
             pass
         else:
-            output += '{% {}_chart {} %}'.format(graph_type, data)
+            chart = '{}_chart {}'.format(graph_type, data)
             pass
+        chart = '{% ' + chart + ' %}'
+        chart = CHARTKICK_BEFORE_TEXT + chart + CHARTKICK_AFTER_TEXT
+
+        output += chart
+
+        #
         # Output text_after if there is any
+        #
         if text_after:
             output += MARKDOWN_TEXT_TEMPLATE.render(Context({'markdown_text': process_markdown(text_after)}))
         self.output = output
@@ -200,6 +249,7 @@ def process_markdown(value):
     :rtype: unicode, html result from markdown processing
     """
     extensions = ["nl2br", ]                    # enable new line to break extension
+    # todo 1: review other markdown extensions and enable as appropriate
 
     return markdown.markdown(force_unicode(value),
                              extensions,

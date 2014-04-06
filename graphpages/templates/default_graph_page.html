@@ -2,6 +2,8 @@
 
 This is the default template for graphpage graphs.
 
+# todo 1: update this comment
+
 It has the following overall structure:
 
 text_before_graph
@@ -13,11 +15,43 @@ text_after_graph
 Graphs consists of a series of rows that may contain 1 to 12 graphs in a bootstrap3 layout.
 
 {% endcomment %}
-{% load render_as_template %}
-{% load markdown_tags %}
+{% load render_as_template %}       {# # todo 1: put render as template in default template tags, also bootstrap3 #}
 {% load bootstrap3 %}
 {% bootstrap_css %}
 {% bootstrap_messages %}
+
+{% comment %}
+This section holds any content defined in graphpage (GraphPage) class interface.
+
+As a general proposition, there should ONLY be either a graphpage or the traditional row style interface.
+{% endcomment %}
+{% if graphpage %}
+    <div class="row">
+        <div class="col-md-12" id="id_graphpage">
+            {% render_as_template graphpage.render %}
+        </div>
+    </div>
+{% endif %}
+
+{#<div class="row">#}
+{#    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">#}
+{#        <p>Top 22 countries by land area</p>#}
+{#    </div>#}
+{#</div>#}
+{#pie_chart data1{% pie_chart data1 %}#}
+{#<div class="row">#}
+{#<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">#}
+{#    <p><strong>This markdown text shold be bold</strong></p>#}
+{#</div>#}
+{#</div>#}
+{#<div class="row">#}
+{#    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">#}
+{#        <h1>This is a markdown title</h1>#}
+{##}
+{#        <p>Top 22 countries by population</p>#}
+{#    </div>#}
+{#</div>#}
+{#column_chart data1{% column_chart data1 %}#}
 
 {% comment %}
 This section holds any content to appear before the graphs.  The content is passed by the context variable
