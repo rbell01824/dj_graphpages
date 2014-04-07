@@ -40,7 +40,7 @@ class GraphPage(TitleSlugDescriptionModel, TimeStampedModel):
     Created
     Modified
     """
-    tags = TaggableManager()
+    tags = TaggableManager(blank=True)
     # The actual form
     form = models.TextField(blank=True)
     form_ref = models.ForeignKey('self', related_name='fk_form',
