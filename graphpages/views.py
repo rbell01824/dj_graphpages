@@ -73,10 +73,12 @@ class GraphPageView(View):
         :param request:
         :param graph_pk: Primary key for graphpage
         """
+
         gpg = get_object_or_404(GraphPage, pk=graph_pk)
-        if self.page_has_form(gpg):  # process form if present
+
+        if self.page_has_form(gpg):         # process form if present
             return HttpResponse(self.build_display_form_response(request, gpg))
-        else:  # no form, build and display the graph
+        else:                               # no form, build and display the graph
             return HttpResponse(self.build_graph_graph_response(request, gpg))
 
     # noinspection PyMethodMayBeStatic,PyUnusedLocal
@@ -95,7 +97,7 @@ class GraphPageView(View):
             return HttpResponse(self.build_graph_graph_response(request, gpg, request.POST))
 
         # form not valid, so redisplay form with errors
-        form_page = self.get_form_page(gpg)
+        form_page = self.get_form_page_text(gpg)
         t = Template(form_page)
         c = RequestContext(request, {'graph_pk': str(gpg.pk), 'graphform': form})
         return HttpResponse(t.render(c))
@@ -120,7 +122,7 @@ class GraphPageView(View):
 
         # get the form and form_page
         form_class_obj, context = self.get_form_object_and_context(gpg)
-        form_page = self.get_form_page(gpg)
+        form_page = self.get_form_page_text(gpg)
 
         # create unbound form object
         graphform = form_class_obj()
@@ -145,23 +147,43 @@ class GraphPageView(View):
         """
 
         # get the form definition
-        if gpg.form_ref:
-            form = gpg.form_ref.form.strip()
-        else:
-            form = gpg.form.strip()
-        if len(form) == 0:
-            raise ValidationError('Empty form')
+        form_text = self.get_form_text(gpg)
 
         # create the form object
         exec (form, globals(), locals())
         return GraphForm, locals()
 
     @staticmethod
-    def get_form_page(gpg):
+    def get_form_text(gpg):
+        """
+        Get the form text.
+
+        :param gpg: graphpage object
+        :type gpg: GraphPage
+        :return: text of for
+        :rtype: unicode
+        """
+        if gpg.form_ref:
+            form = gpg.form_ref.form.strip()
+        else:
+            form = gpg.form.strip()
+
+        # todo: here could run through template processor
+
+        if len(form) == 0:
+            raise ValidationError('Empty form')
+
+        return form
+
+    @staticmethod
+    def get_form_page_text(gpg):
         """
         Get the form page.
 
         :param gpg: graphpage object
+        :type gpg: GraphPage
+        :return: text of graph page
+        :rtype: unicode
         """
 
         # get the form page definition
@@ -171,6 +193,8 @@ class GraphPageView(View):
             page = gpg.form_page_ref.form.strip()
         else:
             page = gpg.form_page.strip()
+
+        # todo: here could run through template processor
 
         # Check to make sure we have a form page.  If not fallback to the default form page.
         if len(page) == 0:
@@ -232,9 +256,10 @@ class GraphPageView(View):
         :return: context dictionary with the results of the query
         :rtype: dict
         """
+
         # todo 2: make exec safe
 
-        #
+        # Save the global context before it gets altered.
         global_context = dict(globals())
 
         # get the query if there is one, otherwise just return an empty list
@@ -253,7 +278,8 @@ class GraphPageView(View):
 
         return local_context
 
-    def get_query_text(self, gpg):
+    @staticmethod
+    def get_query_text(gpg):
         """
         Get the graphpage query text.
 
@@ -281,10 +307,13 @@ class GraphPageView(View):
         else:
             page = gpg.query
 
+        # todo: here could run through template processor
+
         page = page.strip()
         return page
 
-    def get_graph_page_text(self, gpg):
+    @staticmethod
+    def get_graph_page_text(gpg):
         """
         Get the graphpage for this graph.  If there is no graphpage page, use the default page template.
 
@@ -300,6 +329,8 @@ class GraphPageView(View):
         else:
             page = gpg.graph_page
         page = page.strip()
+
+        # todo: here could run through template processor
 
         # if there is no graphpage page text, fall back to the default
         if len(page) == 0:

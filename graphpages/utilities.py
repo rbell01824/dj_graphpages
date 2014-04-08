@@ -133,12 +133,14 @@ def load_templatetags():
     except AttributeError:
         pass
 
-# todo 1: run text_... through Template with a {} context to deal with any template tags in it
 # todo 1: add extension to allow include from db models
 # todo 1: add convenience menthod for add row, add graph, insert row/graph, delete row/graph etc.
 # todo 1: need test methods for utilities XGraph...
 # todo 1: add link button(s) to each class type
-
+# todo 1: add support for direct highchart interface
+# todo 1: add support for ajax interface for highcharts
+# todo 1: get large timebase data set to demo with
+# todo 1: add popup window feature to all graph pages and for graph objects
 
 class XGraphPage(object):
     """
@@ -236,6 +238,7 @@ class XGraph(object):
         :param text_after: Markdown text to display after the graph.
         :type text_after: unicode
         """
+
         if not graph_type in LEGAL_GRAPH_TYPES:
             raise ValueError('In Graph illegal graph type {}'.format(graph_type))
         # todo 2: when this is working, remove the unneeded class attributes since all that's really needed is self.output
@@ -293,7 +296,7 @@ def process_markdown(value):
     :rtype: unicode, html result from markdown processing
     """
     extensions = ["nl2br", ]                    # enable new line to break extension
-    # todo 1: review other markdown extensions and enable as appropriate
+    # todo 2: review other markdown extensions and enable as appropriate
 
     return markdown.markdown(force_unicode(value),
                              extensions,
