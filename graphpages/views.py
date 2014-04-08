@@ -32,22 +32,24 @@ from django.views.generic import View
 from django import forms
 
 from graphpages.models import GraphPage
+
+# noinspection PyUnresolvedReferences
 from graphpages.utilities import XGraphPage, XGraphRow, XGraph
 
 # Supress unresolvedreferences as these are actually needed inside
 # the exec for the graph query.
 # noinspection PyUnresolvedReferences
 # from test_data.models import Countries, CIA
-# todo 2: workout scheme to automagically import models that might be needed for query
-# todo 2: django-extensions might be useful
-# fixme: revise all doc strings
-# fixme: make sure ref works everywhere
-# fixme: ref should support multilevel indirection
-
+#
 # hack that may be a partial solution
 # from django.db.models.loading import get_models
 # for m in get_models():
 #     exec "from %s import %s" % (m.__module__, m.__name__)
+
+# todo 3: workout scheme to automagically import models that might be needed for query
+# see https://github.com/django-extensions/django-extensions/blob/master/django_extensions/management/shells.py
+# see ... /management/commands/shell_plus.py
+
 
 from django.conf import settings
 
@@ -56,7 +58,8 @@ from django.conf import settings
 
 class GraphPageView(View):
     """
-    View class for graph pages
+    View class for graph pages.  Class has methods to process get/post, build and display graphpage form,
+    process form response, run graphpage query, and display resulting graphapage graphs.
     """
 
     # noinspection PyMethodMayBeStatic
@@ -66,22 +69,25 @@ class GraphPageView(View):
         There we will build and display the graph.
 
         If no form, then build and display the graph here.
+
         :param request:
         :param graph_pk: Primary key for graphpage
         """
         gpg = get_object_or_404(GraphPage, pk=graph_pk)
-        if self.page_has_form(gpg):                             # process form if present
+        if self.page_has_form(gpg):  # process form if present
             return HttpResponse(self.build_display_form_response(request, gpg))
-        else:                                                   # no form, build and display the graph
+        else:  # no form, build and display the graph
             return HttpResponse(self.build_graph_graph_response(request, gpg))
 
     # noinspection PyMethodMayBeStatic,PyUnusedLocal
     def post(self, request, graph_pk):
         """
         There was a form.  Process it and if valid build and display the graph.
+
         :param request:
         :param graph_pk: Primary key for graphpage
         """
+        # validate the form
         gpg = GraphPage.objects.get(pk=graph_pk)
         form_class_obj, context = self.get_form_object_and_context(gpg)
         form = form_class_obj(request.POST)
@@ -98,6 +104,7 @@ class GraphPageView(View):
     def page_has_form(self, gpg):
         """
         Return true if page has form.
+
         :param gpg: Graph page object
         :type gpg: GraphPage
         """
@@ -106,14 +113,18 @@ class GraphPageView(View):
     def build_display_form_response(self, request, gpg):
         """
         Display the graphpage form page.
+
         :param request:
         :param gpg: graphpage object
         """
+
         # get the form and form_page
         form_class_obj, context = self.get_form_object_and_context(gpg)
         form_page = self.get_form_page(gpg)
+
         # create unbound form object
         graphform = form_class_obj()
+
         # render response
         t = Template(form_page)
         c = RequestContext(request, {'graph_pk': str(gpg.pk), 'graphform': graphform, 'form_context': context})
@@ -123,12 +134,16 @@ class GraphPageView(View):
     @staticmethod
     def get_form_object_and_context(gpg):
         """
-        Get the forms.form object
+        Get the forms.form object and any context defined with the form.
+        Note, a graphpage form may contain arbitrary python code.  This code is execed and available
+        as context when the graphpage query is run and the graphpage graphs displayed.
+
         :param gpg: graphpage object
         :type gpg: GraphPage
         :return:  # fixme
         :rtype:
         """
+
         # get the form definition
         if gpg.form_ref:
             form = gpg.form_ref.form.strip()
@@ -136,29 +151,36 @@ class GraphPageView(View):
             form = gpg.form.strip()
         if len(form) == 0:
             raise ValidationError('Empty form')
+
         # create the form object
-        exec(form, globals(), locals())
+        exec (form, globals(), locals())
         return GraphForm, locals()
 
     @staticmethod
     def get_form_page(gpg):
         """
-        Get the form page
+        Get the form page.
+
         :param gpg: graphpage object
         """
+
         # get the form page definition
         if gpg.form_page_ref:
+            # Note: here is where multiple indirections would need to be dealt with for forms.
+            # For the moment just 1 level.
             page = gpg.form_page_ref.form.strip()
         else:
             page = gpg.form_page.strip()
+
+        # Check to make sure we have a form page.  If not fallback to the default form page.
         if len(page) == 0:
             page = '{% include "default_form_page.html" %}'
+
         return settings.GRAPHPAGE_FORMPAGEHEADER + page + settings.GRAPHPAGE_FORMPAGEFOOTER
 
     def build_graph_graph_response(self, request, gpg, form_context=None):
         """
-        If there is a query, get it and exec.
-        Otherwise just display the page.
+        If there is a query, get it and exec.  Otherwise just display the page.
 
         :param request: The django request object
         :type request: WSGIRequest
@@ -169,11 +191,17 @@ class GraphPageView(View):
         :return: Response object
         :rtype : object
         """
+
+        # build a render context
         if self.page_has_query(gpg):
             context = self.execute_graphpage_query(request, gpg, form_context)
         else:
-            context = Context({})
-        template = self.get_graph_page_template(gpg)
+            context = form_context if form_context else {}
+        context = Context(context)
+
+        # get the template and render
+        gp_text = self.get_graph_page_text(gpg)
+        template = Template(gp_text)
         response = template.render(context)
         return response
 
@@ -181,6 +209,7 @@ class GraphPageView(View):
     def page_has_query(gpg):
         """
         Return true if the graphpage has a query.
+
         :param gpg: GraphPage object
         :type gpg: GraphPage
         :return: True if the graphpage has a query
@@ -188,67 +217,98 @@ class GraphPageView(View):
         """
         return gpg.query or gpg.query_ref
 
+    # noinspection PyUnusedLocal
     def execute_graphpage_query(self, request, gpg, form_context=None):
         """
         Execute a grasph form query.  This creates a context that is used by the graph page
-        to actually display the form.
-        :type request: WSGIRequest
-        :type gpg: GraphPage object
-        :type form_context: dict, if there was a form the POST dictionary
-        """
-        # fixme: resume work here on execute query
-        return ''
+        to actually display the graph.
 
-    # noinspection PyMethodMayBeStatic,PyUnusedLocal
-    def execute_query_to_build_context(self, request, gpg, form_context=None):
-        """
-        Execute a grasph form query.  This creates a context that is used by the graph page
-        to actually display the form.
+        :param request: The request object.
         :type request: WSGIRequest
+        :param gpg: Graphpage object
         :type gpg: GraphPage object
+        :param form_context: Form context if there was a form.
         :type form_context: dict, if there was a form the POST dictionary
+        :return: context dictionary with the results of the query
+        :rtype: dict
         """
-        global_context = dict(globals())
-        if not form_context:
-            form_context = {}
         # todo 2: make exec safe
-        # See if there is a query
-        if not (gpg.query or gpg.query_ref):
-            return Context({})
-        query_text = gpg.query.strip()
+
+        #
+        global_context = dict(globals())
+
+        # get the query if there is one, otherwise just return an empty list
+        query_text = self.get_query_text(gpg)
         if len(query_text) <= 0:
-            return Context({})
-        # There is so we'll need to exec it.
-        # See if there is a form _context.  If there is, get it into our local context.
-        fc = {}
+            return {}
+
+        # See if there is a form _context.  If there is, get it into our local context for exec.
+        local_context = {}
         if form_context:
             # noinspection PyUnresolvedReferences
-            fc = form_context.dict()
+            local_context = form_context.dict()
+
+        # Execute the query.
+        exec (query_text, global_context, local_context)
+
+        return local_context
+
+    def get_query_text(self, gpg):
+        """
+        Get the graphpage query text.
+
+        :param gpg: GraphPage object.
+        :type gpg: GraphPage
+        :return: Query text or ''
+        :rtype: str
+        """
+        # Note:
         # It it ever becomes necessary to support template tags the following code may be useful
         # There may be some template tags in the query so process them.
         # t = Template(query_text)
         # c = Context(fc)
         # query_text = t.render(c)
+        #
+        # Note:
+        # If it becomes necessary to support markdown this is where it shold be processed.
+        #
 
-        exec(query_text, global_context, fc)
-        context = Context(fc)
-        return context
-
-    # noinspection PyMethodMayBeStatic
-    def get_graph_page_template(self, gpg):
-        """
-        :type gpg: graphpage object
-        """
-        # get the graph page definition
-        if gpg.graph_page_ref:
-            page = gpg.graph_page_ref.form.strip()
+        # get the query text
+        if gpg.query_ref:
+            # Note: here is where multiple indirections would need to be dealt with for query.
+            # For the moment just 1 level.
+            page = gpg.query_ref.query
         else:
-            page = gpg.graph_page.strip()
+            page = gpg.query
+
+        page = page.strip()
+        return page
+
+    def get_graph_page_text(self, gpg):
+        """
+        Get the graphpage for this graph.  If there is no graphpage page, use the default page template.
+
+        :param gpg: Graphpage object
+        :type gpg: GraphPage
+        :return: graphpage page text for this graphpage
+        :rtype: unicode
+        """
+
+        # get the graph page text
+        if gpg.graph_page_ref:
+            page = gpg.graph_page_ref.graph_page
+        else:
+            page = gpg.graph_page
+        page = page.strip()
+
+        # if there is no graphpage page text, fall back to the default
         if len(page) == 0:
             page = '{% include "default_graph_page.html" %}'
+
+        # build the page text
         conf = settings.GRAPHPAGE_CONFIG
         page = conf['graphpageheader'] + page + conf['graphpagefooter']
-        return Template(page)
+        return page
 
 
 ###############################################################################
