@@ -93,5 +93,81 @@
         "query_ref": null, 
         "slug": "top-n-countries-by-land-area-and-population-with-2"
     }
+},
+{
+    "pk": 9, 
+    "model": "graphpages.graphpage", 
+    "fields": {
+        "form_ref": null, 
+        "description": "This page contains defaults that can be used by other examples.", 
+        "form": "class GraphForm(forms.Form):\r\n    title = forms.CharField(min_length=3, max_length=80, label='Title')\r\n    number_countries = forms.IntegerField(max_value=50, min_value=5,\r\n                                          label='Number of countries')\r\n\r\ntext_before_form = \"\"\"\r\nText before form\r\n============\r\n\r\nThis is some text before the form.\r\n\r\nIt is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).\r\n\"\"\"\r\n\r\n\r\ntext_after_form = \"\"\"\r\nLorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.\r\n\"\"\"", 
+        "title": "Example defaults", 
+        "form_page": "", 
+        "created": "2014-03-25T12:45:46.185Z", 
+        "graph_page": "", 
+        "modified": "2014-04-05T15:25:24.848Z", 
+        "graph_page_ref": null, 
+        "form_page_ref": null, 
+        "query": "from test_data.models import CIA\r\n\r\ntitle1 = 'Top {} countries by land area'.format(number_countries)\r\ndata1 = map(list, CIA.objects.order_by('-land_area').values_list('name', 'land_area')[:number_countries])\r\n\r\ntitle2 = 'Top {} countries by population'.format(number_countries)\r\ndata2 = map(list, CIA.objects.order_by('-population').values_list('name', 'population')[:number_countries])\r\n\r\ngraph1 = {'graph':\"{% pie_chart data1 %}\", 'width': 6}\r\ngraph2 = {'graph':\"{% pie_chart data2 %}\", 'width': 6}\r\ngraph3 = {'graph':\"{% column_chart data2 %}\", 'width': 3}\r\ngraph41 = {'graph':\"{% bar_chart data2 %}\", 'width': 4}\r\ngraph42 = {'graph':\"{% pie_chart data2 %}\", 'width': 4}\r\ngraph43 = {'graph':\"{% column_chart data2 %}\", 'width': 4}\r\n\r\nrow1 = (graph1,)\r\nrow2 = (graph2,)\r\nrow3 = (graph3, graph3,  graph3, graph3)\r\nrow4 = (graph1, graph2)\r\nrow5 = (graph41, graph42, graph43)\r\n\r\ngraph_rows = (row1, row2, row3, row4, row5)", 
+        "query_ref": null, 
+        "slug": "example-defaults"
+    }
+},
+{
+    "pk": 10, 
+    "model": "graphpages.graphpage", 
+    "fields": {
+        "form_ref": 12, 
+        "description": "Test ref links for form and query", 
+        "form": "", 
+        "title": "Test ref links", 
+        "form_page": "", 
+        "created": "2014-03-25T12:45:46.185Z", 
+        "graph_page": "", 
+        "modified": "2014-04-07T12:53:37.281Z", 
+        "graph_page_ref": null, 
+        "form_page_ref": null, 
+        "query": "", 
+        "query_ref": 12, 
+        "slug": "example-defaults7b1bc55ab79311e380b3080027e16af0"
+    }
+},
+{
+    "pk": 11, 
+    "model": "graphpages.graphpage", 
+    "fields": {
+        "form_ref": null, 
+        "description": "This page contains defaults that can be used by other examples.", 
+        "form": "class GraphForm(forms.Form):\r\n    title = forms.CharField(min_length=3, max_length=80, label='Title')\r\n    number_countries = forms.IntegerField(max_value=50, min_value=5,\r\n                                          label='Number of countries')\r\n\r\ntext_before_form = \"\"\"\r\nText before form\r\n============\r\n\r\nThis is some text before the form.\r\n\r\nIt is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).\r\n\"\"\"\r\n\r\n\r\ntext_after_form = \"\"\"\r\nLorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.\r\n\"\"\"", 
+        "title": "Example class based graphpage", 
+        "form_page": "", 
+        "created": "2014-03-25T12:45:46.185Z", 
+        "graph_page": "", 
+        "modified": "2014-04-06T20:10:44.076Z", 
+        "graph_page_ref": null, 
+        "form_page_ref": null, 
+        "query": "from test_data.models import CIA\r\n\r\ntitle1 = 'Top {} countries by land area'.format(number_countries)\r\ndata1 = map(list, CIA.objects.order_by('-land_area').values_list('name', 'land_area')[:number_countries])\r\n\r\ntitle2 = 'Top {} countries by population'.format(number_countries)\r\ntitlex=\"\"\"\r\nThis is a markdown title\r\n==================\r\n\"\"\" \r\ntitle2 = titlex + title2\r\ndata2 = map(list, CIA.objects.order_by('-population').values_list('name', 'population')[:number_countries])\r\n\r\ndata3 = map(list, CIA.objects.order_by('-population').values_list('name', 'population')[:number_countries])\r\n# data3 = {c[0]:c[1] for c in data3}\r\n# data3 = {'name':'xxxxx', 'data': data3 }\r\n\r\n\r\nexchange = {'2001-01-31': 1.064, '2002-01-31': 1.1305,\r\n                '2003-01-31': 0.9417, '2004-01-31': 0.7937,\r\n                '2005-01-31': 0.7609, '2006-01-31': 0.827,\r\n                '2007-01-31': 0.7692, '2008-01-31': 0.6801,\r\n                '2009-01-31': 0.7491, '2010-01-31': 0.7002,\r\n                '2011-01-31': 0.7489, '2012-01-31': 0.7755,\r\n                '2013-01-31': 0.7531,\r\n                }\r\n\r\ngraph1 = XGraph('pie', 'data1', width=6, text_before=title1, text_after='**Markdown bold after text**')\r\ngraph2 = XGraph('column', 'data1', width=6, text_before='Graph2 text before')\r\n#graph1 = XGraph('pie', 'data1', width=6)\r\n#graph2 = XGraph('column', 'data1', width=6)\r\n\r\nrow1 = XGraphRow([graph1, graph2])\r\nrow2 = XGraphRow([XGraph('bar', 'data2', text_before='Line chart defined within the graph row')])\r\nrow3 = XGraphRow([XGraph('line', 'exchange', width=4, text_after = 'This is line graph'),\r\n                                      XGraph('line', 'data3', width=4, text_after = 'This is line graph', \r\n                                                      options=\"height='500px' discrete=True \"),\r\n                                      XGraph('column', 'data3', width=4, text_after = 'Same data as column graph.', \r\n                                                      options=\"height='500px' \"),])\r\n\r\ngraphpage = XGraphPage([row1, row2, row3])", 
+        "query_ref": null, 
+        "slug": "example-defaults25e50582bd9811e39577080027e16af0"
+    }
+},
+{
+    "pk": 12, 
+    "model": "graphpages.graphpage", 
+    "fields": {
+        "form_ref": null, 
+        "description": "The graphpage contains test content for ref links", 
+        "form": "class GraphForm(forms.Form):\r\n    title = forms.CharField(min_length=3, max_length=80, label='Title')\r\n    number_countries = forms.IntegerField(max_value=50, min_value=5,\r\n                                          label='Number of countries')\r\n\r\ntext_before_form = \"\"\"\r\nText before form\r\n============\r\n\r\nThis is some text before the form.\r\n\r\nIt is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).\r\n\"\"\"\r\n\r\n\r\ntext_after_form = \"\"\"\r\nLorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.\r\n\"\"\"", 
+        "title": "__ source for ref link test", 
+        "form_page": "", 
+        "created": "2014-03-25T12:45:46.185Z", 
+        "graph_page": "", 
+        "modified": "2014-04-07T12:52:50.588Z", 
+        "graph_page_ref": null, 
+        "form_page_ref": null, 
+        "query": "from test_data.models import CIA\r\n\r\ntitle1 = 'Top {} countries by land area'.format(number_countries)\r\ndata1 = map(list, CIA.objects.order_by('-land_area').values_list('name', 'land_area')[:number_countries])\r\n\r\ntitle2 = 'Top {} countries by population'.format(number_countries)\r\ndata2 = map(list, CIA.objects.order_by('-population').values_list('name', 'population')[:number_countries])\r\n\r\ngraph1 = {'graph':\"{% pie_chart data1 %}\", 'width': 6}\r\ngraph2 = {'graph':\"{% pie_chart data2 %}\", 'width': 6}\r\ngraph3 = {'graph':\"{% column_chart data2 %}\", 'width': 3}\r\ngraph41 = {'graph':\"{% bar_chart data2 %}\", 'width': 4}\r\ngraph42 = {'graph':\"{% pie_chart data2 %}\", 'width': 4}\r\ngraph43 = {'graph':\"{% column_chart data2 %}\", 'width': 4}\r\n\r\nrow1 = (graph1,)\r\nrow2 = (graph2,)\r\nrow3 = (graph3, graph3,  graph3, graph3)\r\nrow4 = (graph1, graph2)\r\nrow5 = (graph41, graph42, graph43)\r\n\r\ngraph_rows = (row1, row2, row3, row4, row5)", 
+        "query_ref": null, 
+        "slug": "example-defaults-duplicate-1abf6b98be5111e39f2c080"
+    }
 }
 ]
