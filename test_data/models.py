@@ -75,3 +75,22 @@ class Countries(models.Model):
 
     def __unicode__(self):
         return u'{}'.format(self.country_name)
+
+
+class Syslog(models.Model):
+    """
+    Syslog data
+    """
+    host = models.CharField(max_length=20)
+    time = models.DateTimeField()
+    text = models.CharField(max_length=128)
+    type = models.CharField(max_length=50)
+    error = models.CharField(max_length=50)
+
+    class Meta:
+        verbose_name = 'Syslog'
+        verbose_name_plural = 'Syslog'
+
+    def __unicode__(self):
+        return u'{}:{}:{}:{}:{}'.format(self.host, self.time, self.text, self.type, self.error)
+

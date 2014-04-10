@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# coding=utf-8
 
 """
 
@@ -22,9 +23,10 @@ __status__ = "dev"
 
 
 from django.contrib import admin
-from .models import CIA, Countries
+from .models import CIA, Countries, Syslog
 
 
+# noinspection PyDocstring
 class CIAAdmin(admin.ModelAdmin):
     model = CIA
     search_fields = ('name', 'country_code')
@@ -48,6 +50,7 @@ class CIAAdmin(admin.ModelAdmin):
 admin.site.register(CIA, CIAAdmin)
 
 
+# noinspection PyDocstring
 class CountriesAdmin(admin.ModelAdmin):
     model = Countries
     search_fields = ('country_name', 'a2', 'a3')
@@ -66,3 +69,15 @@ class CountriesAdmin(admin.ModelAdmin):
     save_on_top = True
     pass
 admin.site.register(Countries, CountriesAdmin)
+
+
+# noinspection PyDocstring
+class SyslogAdmin(admin.ModelAdmin):
+    model = Syslog
+    search_fields = ('host', 'text', 'type', 'error',)
+    list_filter = ('host', 'type', 'error')
+    list_display = ('host', 'time', 'text', 'type', 'error')
+    fields = ('host', 'time', 'text', 'type', 'error')
+    save_on_top = True
+    pass
+admin.site.register(Syslog, SyslogAdmin)
