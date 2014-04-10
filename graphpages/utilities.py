@@ -147,7 +147,7 @@ class XGraphPage(object):
     Graphpage class.  This allows use of class methods to create a graphpage.
     """
 
-    def __init__(self, rows=list(), text_before=None, text_after=None):
+    def __init__(self, rows=None, text_before=None, text_after=None):
         """
         Initialize graphpage.
         :param rows: The rows in this graph.
@@ -157,7 +157,9 @@ class XGraphPage(object):
         :param text_after: Markdown text to display after the graphs on this page.
         :type text_after: unicode
         """
-        self.rows = rows                        # rows of graphs on the page
+        self.rows = []
+        if rows:
+            self.rows = rows                    # rows of graphs on the page
         self.text_before = text_before          # markdown text to output before all the graphs on the page
         self.text_after = text_after            # markdown text to output after all the graphs on the page
         pass
@@ -184,7 +186,7 @@ class XGraphRow(object):
     Holds a graph row, ie. a list of GraphInstance objects
     """
 
-    def __init__(self, row=list(), text_before=None, text_after=None):
+    def __init__(self, row=None, text_before=None, text_after=None):
         """
         Create graph row object to hold graphs in this row.
 
@@ -195,7 +197,9 @@ class XGraphRow(object):
         :param text_after: Markdown text to display after the row.
         :type text_after: unicode
         """
-        self.row = row                          # graphs in the row
+        self.row = []
+        if row:
+            self.row = row                      # graphs in the row
         self.text_before = text_before          # markdown text to output before the row
         self.text_after = text_after            # markdown text to output after the row
         pass
@@ -295,11 +299,12 @@ def process_markdown(value):
     :return: HTML version of the markdown text.
     :rtype: unicode, html result from markdown processing
     """
+    # extensions = []
     extensions = ["nl2br", ]                    # enable new line to break extension
     # todo 2: review other markdown extensions and enable as appropriate
 
     return markdown.markdown(force_unicode(value),
                              extensions,
                              output_format='html5',
-                             safe_mode=True,
+                             safe_mode=False,
                              enable_attributes=False)
