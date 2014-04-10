@@ -133,14 +133,17 @@ def load_templatetags():
     except AttributeError:
         pass
 
+# fixme: finish syslog cruft.  add iterator on nodes.  add the last 2 things JZ did, build as a method
+# todo 1: add syslog example with form for selecting node and dt range
 # todo 1: add extension to allow include from db models
 # todo 1: add convenience menthod for add row, add graph, insert row/graph, delete row/graph etc.
 # todo 1: need test methods for utilities XGraph...
 # todo 1: add link button(s) to each class type
+# todo 1: add accordion option to row definition with optional expansion
 # todo 1: add support for direct highchart interface
 # todo 1: add support for ajax interface for highcharts
-# todo 1: get large timebase data set to demo with
 # todo 1: add popup window feature to all graph pages and for graph objects
+
 
 class XGraphPage(object):
     """
