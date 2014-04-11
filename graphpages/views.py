@@ -34,7 +34,7 @@ from django import forms
 from graphpages.models import GraphPage
 
 # noinspection PyUnresolvedReferences
-from graphpages.utilities import XGraphPage, XGraphRow, XGraph
+from graphpages.utilities import XGraphPage, XGraphRow, XGraphCK
 
 # Supress unresolvedreferences as these are actually needed inside
 # the exec for the graph query.

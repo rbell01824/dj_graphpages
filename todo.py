@@ -30,6 +30,10 @@ Add tag view page
 # todo 1: write tests
 # todo 1: look into fixme_login.html and try to resolve issues
 
+# todo 1: add GraphColumn to classes
+# todo 1: modify Graph... classes to accommodate type() to decide how to render objects
+# todo 1: create class for forms creation
+
 # todo 2: get local versions of jquery and ALL the bootstrap cruft
 # todo 2: look into macros for graph page, see https://github.com/twidi/django-templates-macros
 # todo 2: look into hosting services - python anywhere https://www.pythonanywhere.com/
