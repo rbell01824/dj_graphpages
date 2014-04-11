@@ -51,6 +51,7 @@ INSTALLED_APPS = (
     'test_data',
     'taggit',
     'taggit_suggest',
+    'django_ace',
 )
 
 SITE_ID = 1

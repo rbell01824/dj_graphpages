@@ -29,11 +29,12 @@ from django.http import HttpResponseRedirect
 # from django.utils.text import slugify
 from django.forms import Textarea, TextInput
 from django.contrib import admin
-
-from .models import GraphPage
-
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.admin import SimpleListFilter
+
+from django_ace import AceWidget
+
+from .models import GraphPage
 
 from taggit.models import TaggedItem
 from taggit_suggest.utils import suggest_tags
@@ -163,13 +164,21 @@ class GraphPageAdmin(admin.ModelAdmin):
         if db_field.name == 'description':
             kwargs['widget'] = Textarea(attrs={'class': 'span12', 'rows': '2', 'cols': '140'})
         if db_field.name == 'form':
-            kwargs['widget'] = Textarea(attrs={'class': 'span12', 'rows': '30', 'cols': '140'})
+            # kwargs['widget'] = Textarea(attrs={'class': 'span12', 'rows': '30', 'cols': '140'})
+            kwargs['widget'] = AceWidget(mode='python', theme='chrome', width='100%', height='500px',
+                                         attrs={'class': 'span12', 'rows': '30', 'cols': '140'})
         if db_field.name == 'form_page':
-            kwargs['widget'] = Textarea(attrs={'class': 'span12', 'rows': '30', 'cols': '140'})
+            # kwargs['widget'] = Textarea(attrs={'class': 'span12', 'rows': '30', 'cols': '140'})
+            kwargs['widget'] = AceWidget(mode='html', theme='chrome', width='100%', height='500px',
+                                         attrs={'class': 'span12', 'rows': '30', 'cols': '140'})
         if db_field.name == 'query':
-            kwargs['widget'] = Textarea(attrs={'class': 'span12', 'rows': '30', 'cols': '140'})
+            # kwargs['widget'] = Textarea(attrs={'class': 'span12', 'rows': '30', 'cols': '140'})
+            kwargs['widget'] = AceWidget(mode='python', theme='chrome', width='100%', height='500px',
+                                         attrs={'class': 'span12', 'rows': '30', 'cols': '140'})
         if db_field.name == 'graph_page':
-            kwargs['widget'] = Textarea(attrs={'class': 'span12', 'rows': '30', 'cols': '140'})
+            # kwargs['widget'] = Textarea(attrs={'class': 'span12', 'rows': '30', 'cols': '140'})
+            kwargs['widget'] = AceWidget(mode='html', theme='chrome', width='100%', height='500px',
+                                         attrs={'class': 'span12', 'rows': '30', 'cols': '140'})
         return super(GraphPageAdmin, self).formfield_for_dbfield(db_field, **kwargs)
 
     # noinspection PyMethodMayBeStatic,PyUnusedLocal
