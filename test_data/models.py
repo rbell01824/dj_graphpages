@@ -140,3 +140,49 @@ class Syslog(models.Model):
     def __unicode__(self):
         return u'{}:{}:{}:{}:{}'.format(self.node, self.time, self.text, self.type, self.error)
 
+########################################################################################################################
+
+from django.db.models import Q
+
+
+def syslog_query(company, node, start_time=None, end_time=None):
+    """
+    Method to build a syslog query set of records in the specified company(s) and node(s).
+    :param company: A company
+    :param node: A node
+    :param start_time: start time for syslog records
+    :param end_time: end time for syslog records
+    """
+
+    # Company.objects.all()                 qs of Company objects
+    # Node.objects.all()                    qs of Node objects
+    # Syslog.objects.all()                  qs for syslog objects
+    #
+    # valuesqs of host_names for TestCo_1
+    # Node.objects.filter(company__company_name='TestCo_1').values('host_name').distinct()
+    #
+    # valuesqs of node pks for all nodes with syslog records
+    # Syslog.objects.all().order_by('node').values('node').distinct()
+    #
+    # values qs of pk(s) for nodes for TestCo1
+    # Node.objects.filter(company__company_name='TestCo_1').values('pk').distinct()
+    #
+    # qs of syslog objects for TestCo_1
+    # Syslog.objects.filter(node__company__company_name='TestCo_1')
+    #
+    # qs of syslog objects for TestCo_1 host_name A0040CnBEPC1
+    # Syslog.objects.filter(node__company__company_name='TestCo_1', node__host_name='A0040CnBEPC1')
+    #
+
+    # todo 1: put in error checks
+    query = Q()
+    if isinstance(company, basestring):
+        company = Company.objects.get(company_name=company)
+    if isinstance(node, basestring):
+        node = Node.objects.get(company=company, host_name=node)
+    qs = Syslog.objects.filter(node=node)
+    # if start_time:
+    #     query = query & Q(Syslog.objects.filter(time__gte=start_time))
+    # if end_time:
+    #     query = query & Q(Syslog.objects.filter(time__lte=start_time))
+    return qs
