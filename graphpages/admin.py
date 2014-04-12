@@ -150,7 +150,7 @@ class GraphPageAdmin(admin.ModelAdmin):
         :rtype: unicode
         """
         rtn = suggest_tags(obj.description).values_list('name', flat=True)
-        return '; '.join(rtn)
+        return ', '.join(rtn)
 
     def formfield_for_dbfield(self, db_field, **kwargs):
         """

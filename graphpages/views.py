@@ -34,7 +34,7 @@ from django import forms
 from graphpages.models import GraphPage
 
 # noinspection PyUnresolvedReferences
-from graphpages.utilities import XGraphPage, XGraphRow, XGraphCK
+from graphpages.utilities import XGraphPage, XGraphRow, XGraphColumn, XGraphCK
 
 # Supress unresolvedreferences as these are actually needed inside
 # the exec for the graph query.
@@ -133,8 +133,7 @@ class GraphPageView(View):
         return t.render(c)
 
     # noinspection PyUnresolvedReferences
-    @staticmethod
-    def get_form_object_and_context(gpg):
+    def get_form_object_and_context(self, gpg):
         """
         Get the forms.form object and any context defined with the form.
         Note, a graphpage form may contain arbitrary python code.  This code is execed and available
@@ -150,7 +149,7 @@ class GraphPageView(View):
         form_text = self.get_form_text(gpg)
 
         # create the form object
-        exec (form, globals(), locals())
+        exec (form_text, globals(), locals())
         return GraphForm, locals()
 
     @staticmethod
@@ -221,12 +220,12 @@ class GraphPageView(View):
             context = self.execute_graphpage_query(request, gpg, form_context)
         else:
             context = form_context if form_context else {}
-        context = Context(context)
+        _context = Context(context)
 
         # get the template and render
         gp_text = self.get_graph_page_text(gpg)
         template = Template(gp_text)
-        response = template.render(context)
+        response = template.render(_context)
         return response
 
     @staticmethod

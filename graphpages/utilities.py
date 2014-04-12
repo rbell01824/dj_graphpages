@@ -133,7 +133,7 @@ class XGraphCell(object):
         self.after_html = after_html
         self.objs = []
         if objs:
-            self.col = objs                     # graph objects in this cell
+            self.objs = objs                    # graph objects in this cell
         self.width = width                      # width of this column
         self.text_before = text_before          # markdown text to output before the row
         self.text_after = text_after            # markdown text to output after the row
@@ -154,6 +154,7 @@ class XGraphCell(object):
             for obj in self.objs:
                 output += obj.render()
         else:
+            # noinspection PyUnresolvedReferences
             output += self.objs.render()
 
         if self.text_after:
@@ -166,10 +167,14 @@ class XGraphCell(object):
 # This text is used as a wrapper for a graphpage
 GRAPHPAGE_BEFORE_HTML = """
 <!-- Start of graphpage -->
-<div class="container-fluid>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-xs-WIDTH col-sm-WIDTH col-md-WIDTH col-lg-WIDTH">
 """
 
 GRAPHPAGE_AFTER_HTML = """
+        </div>
+    </div>
 </div>
 <!-- End of graphpage -->
 """
@@ -218,10 +223,14 @@ class XGraphPage(XGraphCell):
 # This text is used as a wrapper for a graphpage row
 GRAPHROW_BEFORE_HTML = """
 <!-- Start of graphpage row -->
-<div class="row">
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-xs-WIDTH col-sm-WIDTH col-md-WIDTH col-lg-WIDTH">
 """
 
 GRAPHROW_AFTER_HTML = """
+        </div>
+    </div>
 </div>
 <!-- End of graphpage row -->
 """
@@ -295,12 +304,10 @@ class XGraphColumn(XGraphCell):
 # This text is used as a wrapper for a graphpage graph
 GRAPH_BEFORE_HTML = """
 <!-- Start of graph -->
-<div class="row">
-    <div class="col-xs-WIDTH col-sm-WIDTH col-md-WIDTH col-lg-WIDTH">
+<div class="col-xs-WIDTH col-sm-WIDTH col-md-WIDTH col-lg-WIDTH">
 """
 
 GRAPH_AFTER_HTML = """
-    </div>
 </div>
 <!-- End of graph -->
 """
@@ -308,12 +315,10 @@ GRAPH_AFTER_HTML = """
 # This text is used as a wrapper for chartkick template tags
 CHARTKICK_BEFORE_HTML = """
 <!-- Start of chartkick graph -->
-<div class="row">
-    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 """
 
 CHARTKICK_AFTER_HTML = """
-    </div>
 </div>
 <!-- End of chartkick graph -->
 """
