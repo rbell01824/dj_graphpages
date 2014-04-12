@@ -23,7 +23,7 @@ __status__ = "dev"
 
 
 from django.contrib import admin
-from .models import CIA, Countries, Syslog
+from .models import CIA, Countries, Company, Node, Syslog
 
 
 # noinspection PyDocstring
@@ -43,6 +43,10 @@ class CIAAdmin(admin.ModelAdmin):
               ('phone_mobiles', 'phone_mainlines'),
               ('internet_users', 'isps'),
               ('birth_rate', 'death_rate'))
+    readonly_fields = ('name', 'country_code', 'total_area', 'land_area', 'water_area',
+                       'coastline', 'total_border', 'labor_force', 'p_young', 'p_adult', 'p_old', 'p_growth',
+                       'phone_mobiles', 'phone_mainlines', 'internet_users', 'isps',
+                       'birth_rate', 'death_rate')
     # filter_horizontal = ('users',)
     list_editable = ('phone_mobiles', 'internet_users',)
     save_on_top = True
@@ -64,6 +68,8 @@ class CountriesAdmin(admin.ModelAdmin):
               ('country_size',),
               'population', 'life_expectancy', 'infant_mortality')
     list_editable = ('population', )
+    readonly_fields = ('country_name', 'a2', 'a3', 'id', 'num', 'country_size',
+                       'population', 'life_expectancy', 'infant_mortality')
     # list_filter = ('country_size', 'population', 'life_expectancy', 'infant_mortality')
     # filter_horizontal = ('users',)
     save_on_top = True
@@ -72,12 +78,27 @@ admin.site.register(Countries, CountriesAdmin)
 
 
 # noinspection PyDocstring
+class CompanyAdmin(admin.ModelAdmin):
+    model = Company
+    pass
+admin.site.register(Company, CompanyAdmin)
+
+
+# noinspection PyDocstring
+class NodeAdmin(admin.ModelAdmin):
+    model = Node
+    pass
+admin.site.register(Node, NodeAdmin)
+
+
+# noinspection PyDocstring
 class SyslogAdmin(admin.ModelAdmin):
     model = Syslog
-    search_fields = ('host', 'text', 'type', 'error',)
-    list_filter = ('host', 'type', 'error')
-    list_display = ('host', 'time', 'text', 'type', 'error')
-    fields = ('host', 'time', 'text', 'type', 'error')
+    search_fields = ('node', 'text', 'type', 'error',)
+    list_filter = ('node', 'type', 'error')
+    list_display = ('node', 'time', 'text', 'type', 'error')
+    fields = ('node', 'time', 'text', 'type', 'error')
+    readonly_fields = ('node', 'time', 'text', 'type', 'error')
     save_on_top = True
     pass
 admin.site.register(Syslog, SyslogAdmin)

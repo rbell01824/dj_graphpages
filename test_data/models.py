@@ -77,11 +77,57 @@ class Countries(models.Model):
         return u'{}'.format(self.country_name)
 
 
+class Company(models.Model):
+    company_name = models.CharField(max_length=50,  # the name of the company
+                                    blank=False,
+                                    help_text='Enter company name',
+                                    unique=True,
+                                    verbose_name='Company name')
+
+    #noinspection PyClassicStyleClass
+    class Meta:
+        verbose_name = 'Company'
+        verbose_name_plural = 'Companies'
+
+    def __unicode__(self):
+        return unicode(self.company_name)
+
+
+class Node(models.Model):
+    company = models.ForeignKey(Company,            # company who has this node
+                                #help_text="Select company for this node",
+                                # limit_choices_to={'company_name__in': ['TestCo', 'TestCo_1']},
+                                verbose_name="Company")
+    node_ip = models.GenericIPAddressField(blank=True,              # node ip address
+                                           null=True,
+                                           # default='0.0.0.0',
+                                           #help_text='IP address for this node',
+                                           verbose_name='Node IP address')
+    host_name = models.CharField(max_length=50,                     # host name
+                                 blank=True,
+                                 default='',
+                                 #help_text='Host name',
+                                 unique=False,
+                                 verbose_name='Host name')
+
+    #noinspection PyClassicStyleClass
+    class Meta:
+        verbose_name = 'Node'
+        verbose_name_plural = 'Nodes'
+
+    def __unicode__(self):
+        return unicode(u"{} {}:{}".format(self.company.company_name,
+                                          self.host_name, self.node_ip))
+
+
 class Syslog(models.Model):
     """
     Syslog data
     """
-    host = models.CharField(max_length=20)
+    node = models.ForeignKey(Node,
+                             null=True,
+                             verbose_name='Node',
+                             help_text='The node for this syslog entry')
     time = models.DateTimeField()
     text = models.CharField(max_length=128)
     type = models.CharField(max_length=50)
@@ -92,5 +138,5 @@ class Syslog(models.Model):
         verbose_name_plural = 'Syslog'
 
     def __unicode__(self):
-        return u'{}:{}:{}:{}:{}'.format(self.host, self.time, self.text, self.type, self.error)
+        return u'{}:{}:{}:{}:{}'.format(self.node, self.time, self.text, self.type, self.error)
 
