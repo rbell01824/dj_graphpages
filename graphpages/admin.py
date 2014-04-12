@@ -87,7 +87,7 @@ class GraphPageAdmin(admin.ModelAdmin):
     model = GraphPage
     search_fields = ('title', 'description',)
     list_display_links = ('title',)
-    list_display = ('display_graph', 'title', 'tags_slug', 'description', )
+    list_display = ('display_graph', 'title', 'description', 'tags_slug',)
     readonly_fields = ('tags_suggest',)
     fieldsets = (
         (None, {'classes': ('suit-tab suit-tab-general',),
