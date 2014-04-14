@@ -174,15 +174,20 @@ def syslog_query(company, node, start_time=None, end_time=None):
     # Syslog.objects.filter(node__company__company_name='TestCo_1', node__host_name='A0040CnBEPC1')
     #
 
-    # todo 1: put in error checks
-    query = Q()
+    # make sure company and node are objects
     if isinstance(company, basestring):
         company = Company.objects.get(company_name=company)
-    if isinstance(node, basestring):
+    if company and isinstance(node, basestring):
         node = Node.objects.get(company=company, host_name=node)
-    qs = Syslog.objects.filter(node=node)
-    # if start_time:
-    #     query = query & Q(Syslog.objects.filter(time__gte=start_time))
-    # if end_time:
-    #     query = query & Q(Syslog.objects.filter(time__lte=start_time))
+
+    if node:                    # if we have a node, use it to subset the syslog records
+        qs = Syslog.objects.filter(node=node)
+    elif company:               # if we have a company, use it to subset the syslog records
+        qs = Syslog.ojbects.filter(node__company=company)
+    else:                       # work with all companies, all nodes
+        qs = Syslog.objects.all()
+    if start_time:
+        qs = qs.filter(time__gte=start_time)
+    if end_time:
+        qs = qs.filter(time__lte=end_time)
     return qs
