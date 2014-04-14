@@ -145,7 +145,7 @@ class Syslog(models.Model):
 from django.db.models import Q
 
 
-def syslog_query(company, node, start_time=None, end_time=None):
+def syslog_query(company=None, node=None, start_time=None, end_time=None):
     """
     Method to build a syslog query set of records in the specified company(s) and node(s).
     :param company: A company
