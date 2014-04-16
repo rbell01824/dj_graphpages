@@ -328,7 +328,7 @@ LEGAL_GRAPH_TYPES = ['line', 'pie', 'column', 'bar', 'area']
 
 class XGraphCK(object):
     """
-    Graph object class.  Class that actually holds the graph object definition.
+    Graph object class for Chartkick.  Class that actually holds the graph object definition.
     """
     def __init__(self, graph_type, data, options=None,
                  width=12, text_before=None, text_after=None):
@@ -397,6 +397,82 @@ class XGraphCK(object):
         Render the graph
         """
         return self.output
+
+########################################################################################################################
+
+
+class XGraphHC(object):
+    """
+    Graph object class for Hichcharts.  Class that actually holds the graph object definition.
+    """
+    def __init__(self, graph_type, data, options=None,
+                 width=12, text_before=None, text_after=None):
+        """
+        Create a graph object
+
+        :param graph_type: The type of this graph.  Must be line, pie, column, bar, or area.
+        :type graph_type: unicode
+        :param data: The name of the context variable holding the graph's data
+        :type data: unicode
+        :param options: 'with' options for the chartkick graph.
+        :type options: unicode
+        :param width: Bootstrap3 grid width for graph
+        :type width: int
+        :param text_before: Markdown text to display before the graph.
+        :type text_before: unicode
+        :param text_after: Markdown text to display after the graph.
+        :type text_after: unicode
+        """
+
+        # if not graph_type in LEGAL_GRAPH_TYPES:
+        #     raise ValueError('In Graph illegal graph type {}'.format(graph_type))
+        #
+        # # todo 2: when this is working, remove the unneeded class attributes since all that's really needed is self.output
+        # self.graph_type = graph_type                    # save type of graph
+        # self.data = data                                # the data to display
+        # self.options = options                          # chartkick with options
+        # self.width = width
+        # self.text_before = text_before                  # markdown text to display before the graph
+        # self.text_after = text_after                    # markdown text to display after the graph
+        #
+        # #
+        # #  Generate the html to render this graph with this data
+        # #
+        #
+        # # Generate the row for the graph within it's containing col
+        # output = GRAPH_BEFORE_HTML.replace('WIDTH', str(width))
+        #
+        # # Output text_before if there is any
+        # if text_before:
+        #     output += MARKDOWN_TEXT_TEMPLATE.render(Context({'markdown_text': process_markdown(text_before)}))
+        #     pass
+        #
+        # # Output the chartkick graph
+        # if options:
+        #     chart = '{}_chart {} with {}'.format(graph_type, data, options)
+        #     pass
+        # else:
+        #     chart = '{}_chart {}'.format(graph_type, data)
+        #     pass
+        # chart = '{% ' + chart + ' %}'
+        # chart = CHARTKICK_BEFORE_HTML + chart + CHARTKICK_AFTER_HTML
+        #
+        # output += chart
+        #
+        # # Output text_after if there is any
+        # if text_after:
+        #     output += MARKDOWN_TEXT_TEMPLATE.render(Context({'markdown_text': process_markdown(text_after)}))
+        #
+        # output += GRAPH_AFTER_HTML
+        # self.output = output
+        pass
+
+    def render(self):
+        """
+        Render the graph
+        """
+        # return self.output
+        pass
 
 ########################################################################################################################
 
