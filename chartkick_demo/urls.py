@@ -20,10 +20,8 @@ __status__ = "dev"
 
 from django.conf.urls import patterns, url
 
-from .views import index
 from .views import charts
 
 urlpatterns = patterns('',
     url(r'^chartkick$', charts, name='charts'),
-    url(r'^$', index, name='index'),
 )

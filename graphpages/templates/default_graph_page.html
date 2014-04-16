@@ -16,6 +16,7 @@ It supports BOTH graphpages defined with
 {% comment %}
 This section holds any content defined in graphpage using the GraphPage class interface.
 {% endcomment %}
+<p>Graphpage before test: {{ graphpage }}</p>
 {% if graphpage %}
     {% render_as_template graphpage.render %}
 {% endif %}

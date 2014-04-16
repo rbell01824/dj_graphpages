@@ -25,14 +25,14 @@ __email__ = "rbell01824@gmail.com"
 __status__ = "dev"
 
 from django.shortcuts import render
-from django.http import HttpResponse
-
-
-def index(request):
-    return HttpResponse("Hello, world. You're at the demo index.")
 
 
 def charts(request):
+    """
+
+    :type request: django.core.handlers.wsgi.WSGIRequest
+    :return: :rtype:
+    """
     exchange = {'2001-01-31': 1.064, '2002-01-31': 1.1305,
                 '2003-01-31': 0.9417, '2004-01-31': 0.7937,
                 '2005-01-31': 0.7609, '2006-01-31': 0.827,
