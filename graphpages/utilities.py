@@ -151,6 +151,7 @@ class XGraphCell(object):
         # if whatever is in objs is iterable, iterate over the objects and render each according to whatever it is
         # otherwise, just render whatever it is
         if isinstance(self.objs, collections.Iterable):
+            # noinspection PyTypeChecker
             for obj in self.objs:
                 output += obj.render()
         else:
@@ -352,7 +353,8 @@ class XGraphCK(object):
         if not graph_type in LEGAL_GRAPH_TYPES:
             raise ValueError('In Graph illegal graph type {}'.format(graph_type))
 
-        # todo 2: when this is working, remove the unneeded class attributes since all that's really needed is self.output
+        # todo 2: when this is working, remove the unneeded class attributes
+        # todo 2: since all that's really needed is self.output
         self.graph_type = graph_type                    # save type of graph
         self.data = data                                # the data to display
         self.options = options                          # chartkick with options
@@ -427,7 +429,8 @@ class XGraphHC(object):
         # if not graph_type in LEGAL_GRAPH_TYPES:
         #     raise ValueError('In Graph illegal graph type {}'.format(graph_type))
         #
-        # # todo 2: when this is working, remove the unneeded class attributes since all that's really needed is self.output
+        # # todo 2: when this is working, remove the unneeded class attributes
+        # # todo 2: since all that's really needed is self.output
         # self.graph_type = graph_type                    # save type of graph
         # self.data = data                                # the data to display
         # self.options = options                          # chartkick with options
@@ -494,4 +497,3 @@ def process_markdown(value):
                              output_format='html5',
                              safe_mode=False,
                              enable_attributes=False)
-

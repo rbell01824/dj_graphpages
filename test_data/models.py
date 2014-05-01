@@ -76,9 +76,24 @@ class Countries(models.Model):
     def __unicode__(self):
         return u'{}'.format(self.country_name)
 
+########################################################################################################################
+#
+# Matrix experimental data
+#
+########################################################################################################################
 
-class Company(models.Model):
-    company_name = models.CharField(max_length=50,  # the name of the company
+MAX_SYSLOG_MESSAGE_LENGTH = 100
+MAX_SYSLOG_MESSAGE_TYPE = 20
+MAX_SYSLOG_ERROR_MESSAGE = 100
+MAX_HOSTNAME = 50
+MAX_COMPANY_NAME = 50
+
+
+class VCompany(models.Model):
+    """
+    Holds definition of a company and company related data.
+    """
+    company_name = models.CharField(max_length=MAX_COMPANY_NAME,  # the name of the company
                                     blank=False,
                                     help_text='Enter company name',
                                     unique=True,
@@ -86,60 +101,92 @@ class Company(models.Model):
 
     #noinspection PyClassicStyleClass
     class Meta:
-        verbose_name = 'Company'
-        verbose_name_plural = 'Companies'
+        verbose_name = 'V Company'
+        verbose_name_plural = 'V Companies'
 
     def __unicode__(self):
         return unicode(self.company_name)
 
 
-class Node(models.Model):
-    company = models.ForeignKey(Company,            # company who has this node
+class VNode(models.Model):
+    """
+    Holds definition of a single node for use within the core matrix applications.
+    """
+    company = models.ForeignKey(VCompany,  # company who has this node
                                 #help_text="Select company for this node",
                                 # limit_choices_to={'company_name__in': ['TestCo', 'TestCo_1']},
                                 verbose_name="Company")
-    node_ip = models.GenericIPAddressField(blank=True,              # node ip address
-                                           null=True,
-                                           # default='0.0.0.0',
-                                           #help_text='IP address for this node',
-                                           verbose_name='Node IP address')
-    host_name = models.CharField(max_length=50,                     # host name
+    host_name = models.CharField(max_length=MAX_HOSTNAME,  # host name
                                  blank=True,
                                  default='',
                                  #help_text='Host name',
                                  unique=False,
                                  verbose_name='Host name')
+    node_ip = models.GenericIPAddressField(blank=True,  # node ip address
+                                           null=True,
+                                           # default='0.0.0.0',
+                                           #help_text='IP address for this node',
+                                           verbose_name='Node IP address')
+    # node_type = models.ManyToManyField(VNodeType,
+    #                                    blank=True,
+    #                                    null=True,
+    #                                    #help_text='Select node type',
+    #                                    verbose_name='Node types')
+    is_active = models.BooleanField(default=True,
+                                    help_text='True if this node is actively in use',
+                                    verbose_name='Is Active')
+    has_syslog_records = models.BooleanField(default=True,
+                                             help_text='True if this node has any syslog records',
+                                             verbose_name='Has syslog records')
 
     #noinspection PyClassicStyleClass
     class Meta:
-        verbose_name = 'Node'
-        verbose_name_plural = 'Nodes'
+        verbose_name = 'V Node'
+        verbose_name_plural = 'V Nodes'
+        permissions = (('change_restricted_vnode', 'Restricted edits'),)
 
     def __unicode__(self):
-        return unicode(u"{} {}:{}".format(self.company.company_name,
-                                          self.host_name, self.node_ip))
+        return unicode(u"{} {}:{}".format(self.company.company_name, self.host_name, self.node_ip))
 
 
-class Syslog(models.Model):
+class VSyslog(models.Model):
     """
     Syslog data
     """
-    node = models.ForeignKey(Node,
+    node = models.ForeignKey(VNode,                                             # got from IP, otherwise None
+                             db_index=True,
                              null=True,
                              verbose_name='Node',
                              help_text='The node for this syslog entry')
-    time = models.DateTimeField()
-    text = models.CharField(max_length=128)
-    type = models.CharField(max_length=50)
-    error = models.CharField(max_length=50)
+    time = models.DateTimeField(db_index=True,
+                                null=True,                                      # got from datetime
+                                verbose_name='Record date time',
+                                help_text='The date time for this syslog entry')
+    # when the message is cli 30051 trace
+    message_text = models.CharField(max_length=MAX_SYSLOG_MESSAGE_LENGTH,       # cli 30051
+                                    verbose_name='Message text',
+                                    help_text='The syslog message left of type, ex. sessctrl 8855')
+    message_type = models.CharField(max_length=MAX_SYSLOG_MESSAGE_TYPE,         # trace
+                                    verbose_name='Message type',
+                                    help_text='The syslog message type, ex. info')
+    message_error = models.CharField(max_length=MAX_SYSLOG_ERROR_MESSAGE,       # in this case none
+                                     verbose_name='Syslog error message',
+                                     help_text='The syslog error message, if any, extracted from line')
+    line = models.TextField(verbose_name='Raw line',
+                            help_text='The raw syslog line')
 
     class Meta:
         verbose_name = 'Syslog'
         verbose_name_plural = 'Syslog'
 
     def __unicode__(self):
-        return u'{}:{}:{}:{}:{}'.format(self.node, self.time, self.text, self.type, self.error)
+        return u'{}:{}:{}:{}:{}'.format(self.node, self.time,
+                                        self.message_text, self.message_type, self.message_error)
 
+########################################################################################################################
+#
+# Helper for Matrix query and graph experiments
+#
 ########################################################################################################################
 
 from django.db.models import Q
