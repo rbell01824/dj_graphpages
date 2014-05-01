@@ -24,6 +24,8 @@ Define tests
 Set login required everywhere (current scheme only applies to a few urls, not all and there are issues with class views)
 Define default graph page template
 Add tag view page
+Row doesn't scale properly for phones
+Check options on markdown wrt line wraps.
 """
 
 # todo 1: include css and js in the project

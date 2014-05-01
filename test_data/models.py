@@ -146,7 +146,7 @@ class VNode(models.Model):
         permissions = (('change_restricted_vnode', 'Restricted edits'),)
 
     def __unicode__(self):
-        return unicode(u"{} {}:{}".format(self.company.company_name, self.host_name, self.node_ip))
+        return unicode(u"{}-{}:{}".format(self.company.company_name, self.host_name, self.node_ip))
 
 
 class VSyslog(models.Model):
@@ -223,16 +223,16 @@ def syslog_query(company=None, node=None, start_time=None, end_time=None):
 
     # make sure company and node are objects
     if isinstance(company, basestring):
-        company = Company.objects.get(company_name=company)
+        company = VCompany.objects.get(company_name=company)
     if company and isinstance(node, basestring):
-        node = Node.objects.get(company=company, host_name=node)
+        node = VNode.objects.get(company=company, host_name=node)
 
     if node:                    # if we have a node, use it to subset the syslog records
-        qs = Syslog.objects.filter(node=node)
+        qs = VSyslog.objects.filter(node=node)
     elif company:               # if we have a company, use it to subset the syslog records
-        qs = Syslog.ojbects.filter(node__company=company)
+        qs = VSyslog.objects.filter(node__company=company)
     else:                       # work with all companies, all nodes
-        qs = Syslog.objects.all()
+        qs = VSyslog.objects.all()
     if start_time:
         qs = qs.filter(time__gte=start_time)
     if end_time:

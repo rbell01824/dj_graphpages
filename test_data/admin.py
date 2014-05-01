@@ -23,7 +23,7 @@ __status__ = "dev"
 
 
 from django.contrib import admin
-from .models import CIA, Countries, Company, Node, Syslog
+from .models import CIA, Countries, VCompany, VNode, VSyslog
 
 
 # noinspection PyDocstring
@@ -79,26 +79,34 @@ admin.site.register(Countries, CountriesAdmin)
 
 # noinspection PyDocstring
 class CompanyAdmin(admin.ModelAdmin):
-    model = Company
+    model = VCompany
     pass
-admin.site.register(Company, CompanyAdmin)
+admin.site.register(VCompany, CompanyAdmin)
 
 
 # noinspection PyDocstring
 class NodeAdmin(admin.ModelAdmin):
-    model = Node
+    model = VNode
+    search_fields = ('company__company_name', 'host_name', 'node_ip',)
+    list_filter = ('company__company_name', 'host_name', 'node_ip', 'has_syslog_records',)
+    list_display = ('company', 'host_name', 'node_ip', 'has_syslog_records',)
+    fields = ('company', 'host_name', 'node_ip', 'has_syslog_records',)
+    save_on_top = True
     pass
-admin.site.register(Node, NodeAdmin)
+admin.site.register(VNode, NodeAdmin)
 
 
 # noinspection PyDocstring
 class SyslogAdmin(admin.ModelAdmin):
-    model = Syslog
-    search_fields = ('node', 'text', 'type', 'error',)
-    list_filter = ('node', 'type', 'error')
-    list_display = ('node', 'time', 'text', 'type', 'error')
-    fields = ('node', 'time', 'text', 'type', 'error')
-    readonly_fields = ('node', 'time', 'text', 'type', 'error')
+    model = VSyslog
+    search_fields = ('node__company__company_name',
+                     'node__host_name',
+                     'node__node_ip',
+                     'message_text', 'message_type', 'message_error',)
+    list_filter = ('node', 'message_type', 'message_error')
+    list_display = ('node', 'time', 'message_text', 'message_type', 'message_error')
+    fields = ('node', 'time', 'message_text', 'message_type', 'message_error')
+    readonly_fields = ('node', 'time', 'message_text', 'message_type', 'message_error')
     save_on_top = True
     pass
-admin.site.register(Syslog, SyslogAdmin)
+admin.site.register(VSyslog, SyslogAdmin)
