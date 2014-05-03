@@ -48,7 +48,7 @@ register = template.Library()
 ########################################################################################################################
 
 
-@register.filter(is_safe=True)
+@register.filter(name='graphpage_markdown', is_safe=True)
 @stringfilter
 def graphpage_markdown(value):
     """
@@ -56,7 +56,8 @@ def graphpage_markdown(value):
     :type value: unicode, the value to process
     :rtype: unicode, html result from markdown processing
     """
-    extensions = ["nl2br", ]                    # enable new line to break extension
+    extensions = []
+    # extensions = ["nl2br", ]                    # enable new line to break extension
 
     return mark_safe(markdown.markdown(force_unicode(value),
                                        extensions,

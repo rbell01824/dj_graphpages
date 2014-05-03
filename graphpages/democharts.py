@@ -43,10 +43,9 @@ def syslog_demo_8b():
     graphpage = XGraphPage()
 
     # Put title and some text on the page
-    graphpage.text_before = """
-    Critical and Error Event Summary for {{ company }}
-    ==================================================
-    """
+    graphpage.text_before = "Critical and Error Event Summary for {{ company }}\n" \
+                            "==================================================\n"
+
 
     ################################################################################
     #
@@ -82,9 +81,8 @@ def syslog_demo_8b():
     graph34 = XGraphCK('pie', 'error_event_count',
                        width=3,
                        text_before=error_event_count_title)
-    text_before = """<h3>Company {{company}} All Hosts</h3>
-    <p>Total syslog records {{all_count}}</p>
-    """
+    text_before = "<h3>Company {{company}} All Hosts</h3>" \
+                  "<p>Total syslog records {{all_count}}</p>"
     graphpage.objs.append(XGraphRow([graph31, graph32, graph33, graph34], text_before=text_before))
 
     ################################################################################

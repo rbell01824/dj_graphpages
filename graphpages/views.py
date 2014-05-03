@@ -393,7 +393,6 @@ class Demo8bView(View):
         gp_text = conf['graphpageheader'] + page + conf['graphpagefooter']
 
         template = Template(gp_text)
-
         response = template.render(_context)
         return HttpResponse(response)
 
