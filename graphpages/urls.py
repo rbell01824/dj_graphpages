@@ -22,7 +22,9 @@ __status__ = "dev"
 from django.conf.urls import patterns, url
 
 from graphpages.views import GraphPageView
+from graphpages.views import Demo8bView
 
 urlpatterns = patterns('',
+                       url(r'demo8b$', Demo8bView.as_view(), name='demo8b'),
                        url(r'graphpage/(?P<graph_pk>.+)$', GraphPageView.as_view(), name='graphpage'),
                        )

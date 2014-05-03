@@ -21,7 +21,7 @@ __status__ = "dev"
 
 from django.core.exceptions import ValidationError
 from django.http import HttpResponse
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, render_to_response
 from django.template import Context, RequestContext, Template
 from django.views.generic.list import ListView
 from django.views.generic import View
@@ -340,8 +340,11 @@ class GraphPageView(View):
         page = conf['graphpageheader'] + page + conf['graphpagefooter']
         return page
 
-
-###############################################################################
+########################################################################################################################
+#
+# List graphpage DB entries and allow user to select one
+#
+########################################################################################################################
 
 
 class GraphPageListView(ListView):
@@ -355,3 +358,50 @@ class GraphPageListView(ListView):
         Force queryset sort order.
         """
         return GraphPage.objects.all().order_by('title')
+
+
+########################################################################################################################
+#
+# Test graphpage method interfaces
+#
+########################################################################################################################
+
+from graphpages.democharts import syslog_demo_8b
+
+
+class Demo8bView(View):
+    """
+    View class to test demo8b method.
+    """
+
+    # noinspection PyMethodMayBeStatic
+    def get(self, request):
+        """
+        Executre the graph method and display the results.
+
+        :param request:
+        """
+        context = syslog_demo_8b()
+        # return render_to_response('default_graph_page.html', context)
+        _context = Context(context)
+
+        # get the template and render
+        page = '{% include "default_graph_page.html" %}'
+
+        # build the page text
+        conf = settings.GRAPHPAGE_CONFIG
+        gp_text = conf['graphpageheader'] + page + conf['graphpagefooter']
+
+        template = Template(gp_text)
+
+        response = template.render(_context)
+        return HttpResponse(response)
+
+
+        #
+        # gpg = get_object_or_404(GraphPage, pk=graph_pk)
+        #
+        # if self.page_has_form(gpg):         # process form if present
+        #     return HttpResponse(self.build_display_form_response(request, gpg))
+        # else:                               # no form, build and display the graph
+        #     return HttpResponse(self.build_graph_graph_response(request, gpg))

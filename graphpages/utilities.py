@@ -520,8 +520,8 @@ def process_markdown(value):
     :return: HTML version of the markdown text.
     :rtype: unicode, html result from markdown processing
     """
-    # extensions = []
-    extensions = ["nl2br", ]                    # enable new line to break extension
+    extensions = []
+    # extensions = ["nl2br", ]                    # enable new line to break extension
     # todo 2: review other markdown extensions and enable as appropriate
 
     return markdown.markdown(force_unicode(value),

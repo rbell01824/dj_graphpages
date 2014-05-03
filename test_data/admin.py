@@ -103,7 +103,7 @@ class SyslogAdmin(admin.ModelAdmin):
                      'node__host_name',
                      'node__node_ip',
                      'message_text', 'message_type', 'message_error',)
-    list_filter = ('node', 'message_type', 'message_error')
+    list_filter = ('node', 'message_type', 'message_error', 'node__company')
     list_display = ('node', 'time', 'message_text', 'message_type', 'message_error')
     fields = ('node', 'time', 'message_text', 'message_type', 'message_error')
     readonly_fields = ('node', 'time', 'message_text', 'message_type', 'message_error')
