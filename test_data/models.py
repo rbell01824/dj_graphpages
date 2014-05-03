@@ -101,8 +101,8 @@ class VCompany(models.Model):
 
     #noinspection PyClassicStyleClass
     class Meta:
-        verbose_name = 'V Company'
-        verbose_name_plural = 'V Companies'
+        verbose_name = 'Company'
+        verbose_name_plural = 'Companies'
 
     def __unicode__(self):
         return unicode(self.company_name)
@@ -141,8 +141,8 @@ class VNode(models.Model):
 
     #noinspection PyClassicStyleClass
     class Meta:
-        verbose_name = 'V Node'
-        verbose_name_plural = 'V Nodes'
+        verbose_name = 'Node'
+        verbose_name_plural = 'Nodes'
         permissions = (('change_restricted_vnode', 'Restricted edits'),)
 
     def __unicode__(self):

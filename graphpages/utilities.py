@@ -88,10 +88,9 @@ def load_templatetags():
 # todo 1: add support for direct highchart interface
 # todo 1: add support for ajax interface for highcharts
 # todo 1: add popup window feature to all graph pages and for graph objects
-# todo 1: contrive method to bind data values instead of using name in chartkick, ex [1,2,3] not 'somevar'
+
 #
-# Warning Will Rogers, magic_... is a hack pending changes to bind earlier
-#
+# This hack may prove useful.  Hang onto this comment for a bit.
 # It works by injecting a uniquely named variable for each host into the local name space
 # Later when chartkick runs it is fed data by this variable
 # What really is wanted is to bind the variable value into chartkick at the time the graphpage
@@ -341,6 +340,17 @@ CHARTKICK_AFTER_HTML = """
 LEGAL_GRAPH_TYPES = ['line', 'pie', 'column', 'bar', 'area']
 
 
+def static_name_generator(base_name='x'):
+    """
+    Returns a unique name of the form base_name_counter
+    :param base_name:
+    """
+    if not hasattr(static_name_generator, "counter"):
+        static_name_generator.counter = 0  # it doesn't exist yet, so initialize it
+    static_name_generator.counter += 1
+    return '{}_{}'.format(base_name, static_name_generator.counter)
+
+
 class XGraphCK(object):
     """
     Graph object class for Chartkick.  Class that actually holds the graph object definition.
@@ -389,9 +399,12 @@ class XGraphCK(object):
             pass
 
         # create a context variable to hold the data if necessary
+        # Note: because the expr is evaluated and then the value immediately used when the template is rendered
+        # we do NOT need unique variables.
         if not isinstance(data, basestring):
-            output += '{{% expr {} as xxx %}}'.format(data.__repr__())
-            data = 'xxx'
+            name = static_name_generator()
+            output += '{{% expr {} as {} %}}'.format(data.__repr__(), name)
+            data = name
 
         # Output the chartkick graph
         if options:
