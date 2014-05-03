@@ -88,6 +88,20 @@ def load_templatetags():
 # todo 1: add support for direct highchart interface
 # todo 1: add support for ajax interface for highcharts
 # todo 1: add popup window feature to all graph pages and for graph objects
+# todo 1: contrive method to bind data values instead of using name in chartkick, ex [1,2,3] not 'somevar'
+#
+# Warning Will Rogers, magic_... is a hack pending changes to bind earlier
+#
+# It works by injecting a uniquely named variable for each host into the local name space
+# Later when chartkick runs it is fed data by this variable
+# What really is wanted is to bind the variable value into chartkick at the time the graphpage
+# query is run
+#
+# Don't do this:
+#     magic_name = '{}_cbtt'.format(host)
+#     magic_assign = '{}=count_by_type_type'.format(magic_name)
+#     exec(magic_assign)
+#
 
 # This template is used to render markdown text full width in a col div.
 MARKDOWN_TEMPLATE_TEXT = """
@@ -373,6 +387,11 @@ class XGraphCK(object):
         if text_before:
             output += MARKDOWN_TEXT_TEMPLATE.render(Context({'markdown_text': process_markdown(text_before)}))
             pass
+
+        # create a context variable to hold the data if necessary
+        if not isinstance(data, basestring):
+            output += '{{% expr {} as xxx %}}'.format(data.__repr__())
+            data = 'xxx'
 
         # Output the chartkick graph
         if options:
