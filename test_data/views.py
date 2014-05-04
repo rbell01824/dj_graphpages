@@ -28,7 +28,9 @@ from django.http import HttpResponse
 from graphpages.utilities import xgraph_response
 
 from .models import CIA, Countries
+from .democharts import syslog_demo_8a
 from .democharts import syslog_demo_8b
+from .democharts import syslog_demo_8c
 
 
 # noinspection PyDocstring
@@ -39,6 +41,22 @@ class ListCIAView(ListView):
 # noinspection PyDocstring
 class ListCountriesView(ListView):
     model = Countries
+
+
+class Demo8aView(View):
+    """
+    View class to test demo8a method.
+    """
+
+    # noinspection PyMethodMayBeStatic
+    def get(self, request):
+        """
+        Executre the graph method and display the results.
+
+        :param request:
+        """
+        context = syslog_demo_8a()
+        return HttpResponse(xgraph_response(context))
 
 
 class Demo8bView(View):
@@ -54,4 +72,20 @@ class Demo8bView(View):
         :param request:
         """
         context = syslog_demo_8b()
+        return HttpResponse(xgraph_response(context))
+
+
+class Demo8cView(View):
+    """
+    View class to test demo8c method.
+    """
+
+    # noinspection PyMethodMayBeStatic
+    def get(self, request):
+        """
+        Executre the graph method and display the results.
+
+        :param request:
+        """
+        context = syslog_demo_8c()
         return HttpResponse(xgraph_response(context))
