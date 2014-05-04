@@ -23,10 +23,12 @@ __status__ = "dev"
 
 from django.conf.urls import patterns, include, url
 
-from test_data.views import ListCIAView, ListCountriesView
-
+from test_data.views import ListCIAView
+from test_data.views import ListCountriesView
+from test_data.views import Demo8bView
 
 urlpatterns = patterns('',
+                       url(r'demo8b$', Demo8bView.as_view(), name='demo8b'),
                        url(r'^cia$', ListCIAView.as_view(), name='cia_list', ),
                        url(r'^countries$', ListCountriesView.as_view(), name='countries_list', ),
                        )

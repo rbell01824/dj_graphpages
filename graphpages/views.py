@@ -21,7 +21,7 @@ __status__ = "dev"
 
 from django.core.exceptions import ValidationError
 from django.http import HttpResponse
-from django.shortcuts import get_object_or_404, render_to_response
+from django.shortcuts import get_object_or_404
 from django.template import Context, RequestContext, Template
 from django.views.generic.list import ListView
 from django.views.generic import View
@@ -358,48 +358,3 @@ class GraphPageListView(ListView):
         Force queryset sort order.
         """
         return GraphPage.objects.all().order_by('title')
-
-
-########################################################################################################################
-#
-# Test graphpage method interfaces
-#
-########################################################################################################################
-
-from graphpages.democharts import syslog_demo_8b
-
-
-def method_render(context):         # fixme: move to utilities and rename
-    """
-
-    :param context:
-    :return: :rtype:
-    """
-    _context = Context(context)
-
-    # get the template and render
-    page = '{% include "default_graph_page.html" %}'
-
-    # build the page text
-    conf = settings.GRAPHPAGE_CONFIG
-    gp_text = conf['graphpageheader'] + page + conf['graphpagefooter']
-
-    template = Template(gp_text)
-    response = template.render(_context)
-    return response
-
-
-class Demo8bView(View):
-    """
-    View class to test demo8b method.
-    """
-
-    # noinspection PyMethodMayBeStatic
-    def get(self, request):
-        """
-        Executre the graph method and display the results.
-
-        :param request:
-        """
-        context = syslog_demo_8b()
-        return HttpResponse(method_render(context))

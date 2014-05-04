@@ -27,57 +27,6 @@ from django.template.loader import render_to_string
 from django.template import Context, Template
 from django.utils.encoding import force_unicode
 
-
-########################################################################################################################
-
-def load_templatetags():
-    """
-    Load custom template tags so they are always available.  See https://djangosnippets.org/snippets/342/.
-
-    In your settings file:
-
-    TEMPLATE_TAGS = ( "djutils.templatetags.sqldebug", )
-
-    Make sure load_templatetags() gets called somewhere, for example in your apps init.py
-    """
-    # This is important: If the function is called early, and some of the custom
-    # template tags use superclasses of django template tags, or otherwise cause
-    # the following situation to happen, it is possible that circular imports
-    # cause problems:
-    #
-    # If any of those superclasses import django.template.loader (for example,
-    # django.template.loader_tags does this), it will immediately try to register
-    # some builtins, possibly including some of the superclasses the custom template
-    # uses. This will then fail because the importing of the modules that contain
-    # those classes is already in progress (but not yet complete), which means that
-    # usually the module's register object does not yet exist.
-    #
-    # In other words:
-    #       {custom-templatetag-module} ->
-    #       {django-templatetag-module} ->
-    #       django.template.loader ->
-    #           add_to_builtins(django-templatetag-module)
-    #           <-- django-templatetag-module.register does not yet exist
-    #
-    # It is therefor imperative that django.template.loader gets imported *before*
-    # any of the templatetags it registers.
-    #
-
-    #
-    # Note: For reasons I don't understand this code gets ececuted twice when
-    # Django starts.  Nothing bad seems to happen so I'll use the technique.
-    # print '=== in utilities init ==='
-    #
-    # Register the template tag as <application>.templatetags.<template tag lib>
-    #
-    try:
-        for lib in settings.TEMPLATE_TAGS:
-            add_to_builtins(lib)
-    except AttributeError:
-        pass
-
-########################################################################################################################
-
 # fixme: finish syslog cruft.  add iterator on nodes.  add the last 2 things JZ did, build as a method
 # todo 1: add syslog example with form for selecting node and dt range
 # todo 1: add extension to allow include from db models
@@ -101,6 +50,66 @@ def load_templatetags():
 #     magic_assign = '{}=count_by_type_type'.format(magic_name)
 #     exec(magic_assign)
 #
+
+########################################################################################################################
+#
+# Force load of template tags that are generally needed by graphpages
+#
+# This is important: If the function is called early, and some of the custom
+# template tags use superclasses of django template tags, or otherwise cause
+# the following situation to happen, it is possible that circular imports
+# cause problems:
+#
+# If any of those superclasses import django.template.loader (for example,
+# django.template.loader_tags does this), it will immediately try to register
+# some builtins, possibly including some of the superclasses the custom template
+# uses. This will then fail because the importing of the modules that contain
+# those classes is already in progress (but not yet complete), which means that
+# usually the module's register object does not yet exist.
+#
+# In other words:
+#       {custom-templatetag-module} ->
+#       {django-templatetag-module} ->
+#       django.template.loader ->
+#           add_to_builtins(django-templatetag-module)
+#           <-- django-templatetag-module.register does not yet exist
+#
+# It is therefor imperative that django.template.loader gets imported *before*
+# any of the templatetags it registers.
+#
+########################################################################################################################
+
+
+def load_templatetags():
+    """
+    Load custom template tags so they are always available.  See https://djangosnippets.org/snippets/342/.
+
+    In your settings file:
+
+    TEMPLATE_TAGS = ( "djutils.templatetags.sqldebug", )
+
+    Make sure load_templatetags() gets called somewhere, for example in your apps init.py
+    """
+
+    #
+    # Note: For reasons I don't understand this code gets ececuted twice when
+    # Django starts.  Nothing bad seems to happen so I'll use the technique.
+    # print '=== in utilities init ==='
+    #
+    # Register the template tag as <application>.templatetags.<template tag lib>
+    #
+    try:
+        for lib in settings.TEMPLATE_TAGS:
+            add_to_builtins(lib)
+    except AttributeError:
+        pass
+
+########################################################################################################################
+#
+# The following classes define the XGraph... methods used to support graphpages
+#
+########################################################################################################################
+
 
 # This template is used to render markdown text full width in a col div.
 MARKDOWN_TEMPLATE_TEXT = """
@@ -158,7 +167,7 @@ class XGraphCell(object):
         """
         output = self.before_html
         if self.text_before:
-            output += MARKDOWN_TEXT_TEMPLATE.render(Context({'markdown_text': process_markdown(self.text_before)}))
+            output += MARKDOWN_TEXT_TEMPLATE.render(Context({'markdown_text': xgraph_markdown(self.text_before)}))
             pass
 
         # if whatever is in objs is iterable, iterate over the objects and render each according to whatever it is
@@ -172,7 +181,7 @@ class XGraphCell(object):
             output += self.objs.render()
 
         if self.text_after:
-            output += MARKDOWN_TEXT_TEMPLATE.render(Context({'markdown_text': process_markdown(self.text_after)}))
+            output += MARKDOWN_TEXT_TEMPLATE.render(Context({'markdown_text': xgraph_markdown(self.text_after)}))
         output += self.after_html
         return output
 
@@ -395,7 +404,7 @@ class XGraphCK(object):
 
         # Output text_before if there is any
         if text_before:
-            output += MARKDOWN_TEXT_TEMPLATE.render(Context({'markdown_text': process_markdown(text_before)}))
+            output += MARKDOWN_TEXT_TEMPLATE.render(Context({'markdown_text': xgraph_markdown(text_before)}))
             pass
 
         # create a context variable to hold the data if necessary
@@ -420,7 +429,7 @@ class XGraphCK(object):
 
         # Output text_after if there is any
         if text_after:
-            output += MARKDOWN_TEXT_TEMPLATE.render(Context({'markdown_text': process_markdown(text_after)}))
+            output += MARKDOWN_TEXT_TEMPLATE.render(Context({'markdown_text': xgraph_markdown(text_after)}))
 
         output += GRAPH_AFTER_HTML
         self.output = output
@@ -479,7 +488,7 @@ class XGraphHC(object):
         #
         # # Output text_before if there is any
         # if text_before:
-        #     output += MARKDOWN_TEXT_TEMPLATE.render(Context({'markdown_text': process_markdown(text_before)}))
+        #     output += MARKDOWN_TEXT_TEMPLATE.render(Context({'markdown_text': xgraph_markdown(text_before)}))
         #     pass
         #
         # # Output the chartkick graph
@@ -496,7 +505,7 @@ class XGraphHC(object):
         #
         # # Output text_after if there is any
         # if text_after:
-        #     output += MARKDOWN_TEXT_TEMPLATE.render(Context({'markdown_text': process_markdown(text_after)}))
+        #     output += MARKDOWN_TEXT_TEMPLATE.render(Context({'markdown_text': xgraph_markdown(text_after)}))
         #
         # output += GRAPH_AFTER_HTML
         # self.output = output
@@ -509,10 +518,39 @@ class XGraphHC(object):
         # return self.output
         pass
 
+
+########################################################################################################################
+#
+# Test graphpage method interfaces
+#
 ########################################################################################################################
 
 
-def process_markdown(value):
+def xgraph_response(context):
+    """
+    Given a graphpage context (a context containing an XGraphpage object and the context needed to render it)
+    generate a response page that can be returned.
+
+    :param context:
+    :return: :rtype:
+    """
+    _context = Context(context)
+
+    # get the template and render
+    page = '{% include "default_graph_page.html" %}'
+
+    # build the page text
+    conf = settings.GRAPHPAGE_CONFIG
+    gp_text = conf['graphpageheader'] + page + conf['graphpagefooter']
+
+    template = Template(gp_text)
+    response = template.render(_context)
+    return response
+
+########################################################################################################################
+
+
+def xgraph_markdown(value):
     """
     Process markdown.
     :param value: The text to process as markdown
@@ -521,7 +559,8 @@ def process_markdown(value):
     :rtype: unicode, html result from markdown processing
     """
     extensions = []
-    # extensions = ["nl2br", ]                    # enable new line to break extension
+    # extensions = ["nl2br", ]                  # enable new line to break extension (not a good idea as
+                                                # it forces VERY long lines in the graphpage definition
     # todo 2: review other markdown extensions and enable as appropriate
 
     return markdown.markdown(force_unicode(value),
