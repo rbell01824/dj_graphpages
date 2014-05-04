@@ -372,7 +372,7 @@ class XGraphCK(object):
         :param graph_type: The type of this graph.  Must be line, pie, column, bar, or area.
         :type graph_type: unicode
         :param data: The name of the context variable holding the graph's data
-        :type data: unicode or list[dict]
+        :type data: unicode or list[dict] or dict
         :param options: 'with' options for the chartkick graph.
         :type options: unicode
         :param width: Bootstrap3 grid width for graph
@@ -549,6 +549,10 @@ def xgraph_response(context):
     return response
 
 ########################################################################################################################
+#
+# Utility support functions
+#
+########################################################################################################################
 
 
 def xgraph_markdown(value):
@@ -569,3 +573,61 @@ def xgraph_markdown(value):
                              output_format='html5',
                              safe_mode=False,
                              enable_attributes=False)
+
+
+def xgraph_nested_set(dic, key, value):
+    """
+    Set value in nested dictionary.
+
+    :param dic: dictionary where value needs to be set
+    :type dic: dict
+    :param key: a.b.c key into dic
+    :type key: unicode
+    :param value:
+    :type value: varies
+    :return: dictionary with value set for specified key
+    :rtype: dict
+    """
+    keys = key.split('.')
+    xdic = dic
+    for k in keys[:-1]:
+        xdic = xdic.setdefault(k, {})
+    xdic[keys[-1]] = value
+    return dic
+
+
+def xgraphck_multiple_series(list_of_dicts, name, data_label, data_value):
+    """
+    Turn a list of dictionaries into a 'multiple series list suitable for chartkick.
+
+        Turn this:
+
+            [{'num_results': 26, 'node__host_name': u'A0040CnBEPC1', 'message_type': u'critical'},
+             {'num_results': 69, 'node__host_name': u'A0040CnBEPC2', 'message_type': u'critical'},
+            ...
+             {'num_results': 8, 'node__host_name': u'A0040CnBEPC2', 'message_type': u'warning'},
+             {'num_results': 3170, 'node__host_name': u'A0040CnBPGC1', 'message_type': u'warning'}]
+
+        into this:
+
+            [{'data': [['A0040CnBEPC1', 26], ['A0040CnBEPC2', 69]], 'name': 'critical'},
+            ...
+             {'data': [['A0040CnBEPC2', 8], ['A0040CnBPGC1', 3170]], 'name': 'warning'}]
+
+    :param list_of_dicts: List of dictionary entries to process
+    :type list_of_dicts: list of dict
+    :param name: dictionary name for the name field
+    :type name: unicode
+    :param data_label: dictionary name for the data label field
+    :type data_label: unicode
+    :param data_value: dictionary name for the data value field
+    :type data_value: unicode
+    :return: List of dictionary entries suitable for chartkick multiple series
+    :rtype: list of dict
+    """
+    names = list(set([x[name] for x in list_of_dicts]))
+    data = []
+    for a_name in names:
+        z = {'name': a_name, 'data': [[x[data_label], x[data_value]] for x in list_of_dicts if x[name] == a_name]}
+        data.append(z)
+    return data

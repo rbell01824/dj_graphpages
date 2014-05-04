@@ -31,6 +31,7 @@ from .models import CIA, Countries
 from .democharts import syslog_demo_8a
 from .democharts import syslog_demo_8b
 from .democharts import syslog_demo_8c
+from .democharts import syslog_demo_8d
 
 
 # noinspection PyDocstring
@@ -67,7 +68,7 @@ class Demo8bView(View):
     # noinspection PyMethodMayBeStatic
     def get(self, request):
         """
-        Executre the graph method and display the results.
+        Execute the graph method and display the results.
 
         :param request:
         """
@@ -83,9 +84,25 @@ class Demo8cView(View):
     # noinspection PyMethodMayBeStatic
     def get(self, request):
         """
-        Executre the graph method and display the results.
+        Execute the graph method and display the results.
 
         :param request:
         """
         context = syslog_demo_8c()
+        return HttpResponse(xgraph_response(context))
+
+
+class Demo8dView(View):
+    """
+    View class to test demo8d method.
+    """
+
+    # noinspection PyMethodMayBeStatic
+    def get(self, request):
+        """
+        Execute the graph method and display the results.
+
+        :param request:
+        """
+        context = syslog_demo_8d()
         return HttpResponse(xgraph_response(context))

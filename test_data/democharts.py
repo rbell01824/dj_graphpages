@@ -24,6 +24,8 @@ from graphpages.utilities import XGraphRow
 from graphpages.utilities import XGraphColumn
 from graphpages.utilities import XGraphCK
 from graphpages.utilities import XGraphHC
+from graphpages.utilities import xgraphck_multiple_series
+from graphpages.utilities import xgraph_nested_set
 
 from test_data.models import syslog_query, VNode
 from django.db.models import Count
@@ -227,63 +229,6 @@ def syslog_demo_8b():
 #
 ########################################################################################################################
 
-def xgraph_nested_set(dic, key, value):
-    """
-    Set value in nested dictionary.
-
-    :param dic: dictionary where value needs to be set
-    :type dic: dict
-    :param key: a.b.c key into dic
-    :type key: unicode
-    :param value:
-    :type value: varies
-    :return: dictionary with value set for specified key
-    :rtype: dict
-    """
-    keys = key.split('.')
-    xdic = dic
-    for k in keys[:-1]:
-        xdic = xdic.setdefault(k, {})
-    xdic[keys[-1]] = value
-    return dic
-
-
-def xgraphck_multiple_series(list_of_dicts, name, data_label, data_value):
-    """
-    Turn a list of dictionaries into a 'multiple series list suitable for chartkick.
-
-        Turn this:
-
-            [{'num_results': 26, 'node__host_name': u'A0040CnBEPC1', 'message_type': u'critical'},
-             {'num_results': 69, 'node__host_name': u'A0040CnBEPC2', 'message_type': u'critical'},
-            ...
-             {'num_results': 8, 'node__host_name': u'A0040CnBEPC2', 'message_type': u'warning'},
-             {'num_results': 3170, 'node__host_name': u'A0040CnBPGC1', 'message_type': u'warning'}]
-
-        into this:
-
-            [{'data': [['A0040CnBEPC1', 26], ['A0040CnBEPC2', 69]], 'name': 'critical'},
-            ...
-             {'data': [['A0040CnBEPC2', 8], ['A0040CnBPGC1', 3170]], 'name': 'warning'}]
-
-    :param list_of_dicts: List of dictionary entries to process
-    :type list_of_dicts: list of dict
-    :param name: dictionary name for the name field
-    :type name: unicode
-    :param data_label: dictionary name for the data label field
-    :type data_label: unicode
-    :param data_value: dictionary name for the data value field
-    :type data_value: unicode
-    :return: List of dictionary entries suitable for chartkick multiple series
-    :rtype: list of dict
-    """
-    names = list(set([x[name] for x in list_of_dicts]))
-    data = []
-    for a_name in names:
-        z = {'name': a_name, 'data': [[x[data_label], x[data_value]] for x in list_of_dicts if x[name] == a_name]}
-        data.append(z)
-    return data
-
 
 # noinspection PyDocstring
 def syslog_demo_8c():
@@ -296,7 +241,7 @@ def syslog_demo_8c():
 
     # Put title and some text on the page
     graphpage.text_before = 'Critical and Error Event Summary for {{ company }}\n' \
-                            '==================================================\n'
+                            '==================================================\n'\
 
     ################################################################################
     #
@@ -332,8 +277,7 @@ def syslog_demo_8c():
     graph34 = XGraphCK('pie', 'error_event_count',
                        width=3,
                        text_before=error_event_count_title)
-    text_before = '<h3>Company {{company}} All Hosts</h3>' \
-                  '<p>Total syslog records {{all_count}}</p>'
+    text_before = '<h3>{{company}} All Hosts, Total Syslog Records: {{all_count}}</h3>'
     graphpage.objs.append(XGraphRow([graph31, graph32, graph33, graph34], text_before=text_before))
 
     ################################################################################
@@ -346,21 +290,19 @@ def syslog_demo_8c():
 
     # count and build title
     count = qs.count()
-    host_text = '<h3>Company: {}</h3>' \
-                '<p>Total syslog records {}</p>' \
-        .format(company, count)
 
     # Count by type
     xqs = qs.values('message_type').annotate(num_results=Count('id'))
+    text_before = '<h3>{{ company }} summary for all host by message type</h3>'
 
     count_by_type_type = map(list, xqs.order_by('message_type').values_list('message_type', 'num_results'))
-    graph21 = XGraphCK('column', count_by_type_type, width=6)
+    graph21 = XGraphCK('column', count_by_type_type, width=6, text_before=text_before)
 
     count_by_type_count = map(list, xqs.order_by('-num_results').values_list('message_type', 'num_results'))
-    graph22 = XGraphCK('pie', count_by_type_count, width=6)
+    graph22 = XGraphCK('pie', count_by_type_count, width=6, text_before=text_before)
 
     # Put graphs on page
-    graphpage.objs.append(XGraphRow([graph21, graph22], text_before=host_text))
+    graphpage.objs.append(XGraphRow([graph21, graph22]))
 
     ################################################################################
     #
@@ -373,27 +315,25 @@ def syslog_demo_8c():
     # count and build title
     count = qs.count()
 
-    # Count by type
+    # Get counts by type and host
     xqs = qs.values('message_type', 'node__host_name').annotate(num_results=Count('id'))
     xxx = xqs.order_by('message_type').values('message_type', 'node__host_name', 'num_results')
+
+    # create series for summary by host & make a graph
     data = xgraphck_multiple_series(xxx, 'message_type', 'node__host_name', 'num_results')
-
-
-    # count_by_type_type = map(list,
-    #                          xqs.order_by('message_type').values_list('message_type', 'node__host_name', 'num_results'))
-    title = '{} Syslog Type Summary By Host (total: {})'.format(company, count)
-    library = {"title": {"text": title},
-               "plotOptions":{"column":{"stacking":"normal"}}}
-    options = "height='500px' library={}".format(library.__repr__())
     library = {}
-    xgraph_nested_set(library, 'title.text', '{} Syslog Type Summary By Host (total: {})'.format(company, count))
-
+    xgraph_nested_set(library, 'title.text', '{} Syslog Type Summary By Host'.format(company))
+    xgraph_nested_set(library, 'plotOptions.column.stacking', 'normal')
+    options = "height='500px' library=" + str(library)
     graph41 = XGraphCK('column', data, width=6, options=options)
 
-    # count_by_type_count = map(list, xqs.order_by('-num_results').
-    #                           values_list('message_type', 'node__host_name', 'num_results'))
+    # create series for summary by message type and make a graph
     data = xgraphck_multiple_series(xxx, 'node__host_name', 'message_type', 'num_results')
-    graph42 = XGraphCK('column', data, width=6)
+    library = {}
+    xgraph_nested_set(library, 'title.text', '{} Syslog Type Summary By Type'.format(company))
+    # xgraph_nested_set(library, 'plotOptions.column.stacking', 'normal')
+    options = "height='500px' library=" + str(library)
+    graph42 = XGraphCK('column', data, width=6, options=options)
 
     # Put graphs on page
     # graphpage.objs.append(XGraphRow([graph41, graph42], text_before=host_text))
@@ -407,8 +347,11 @@ def syslog_demo_8c():
 
     # get the hosts for this company and put it on the page
     hosts = [n[0] for n in VNode.objects.filter(company__company_name=company).values_list('host_name')]
+    text_before = 'Details by Host\n' \
+                  '===============\n' \
+                  '{{ company }} has the following hosts: ' + ', '.join(hosts)
     hosts_text = '<h3>The company has the following hosts: ' + ', '.join(hosts) + '</h3>'
-    graphpage.objs.append(XGraphRow(text_before=hosts_text))
+    graphpage.objs.append(XGraphRow(text_before=text_before))
 
     for host in hosts:
         # get the syslog qs for this company/node
@@ -429,5 +372,64 @@ def syslog_demo_8c():
 
         # Put graphs on page
         graphpage.objs.append(XGraphRow([graph11, graph12], text_before=host_text))
+
+    return locals()
+
+
+########################################################################################################################
+#
+# syslog_demo 8d
+#
+########################################################################################################################
+
+
+# noinspection PyDocstring
+def syslog_demo_8d():
+    import datetime, qsstats
+
+    # set the company and node values, ignour start/end date time for now
+    company = 'BMC_1'
+    host = 'A0040CnBPGC1'
+
+    # Create graphpage
+    graphpage = XGraphPage()
+
+    # Put title and some text on the page
+    graphpage.text_before = 'Critical and Error Event Summary for {{ company }}\n' \
+                            '==================================================\n'
+
+    ################################################################################
+    #
+    # Display chart of syslogs per hour Dec 1, 2012 to Feb 8, 2013
+    #
+    ################################################################################
+
+    qs = syslog_query(company)
+    all_count = qs.count()
+
+    # setup the qss object
+    qss = qsstats.QuerySetStats(qs, 'time')
+
+    # build our time series
+    date_start = datetime.date(2012, 12, 1)
+    date_end = datetime.date(2013, 2, 9)
+    time_series = qss.time_series(date_start, date_end, 'hours')
+
+    # format for chartkick
+    data = {t[0].strftime('%Y-%m-%d %H'): t[1] for t in time_series}
+
+    # set graph options
+    library = {}
+    xgraph_nested_set(library, 'title.text', '{} Syslog All Events By Hour'.format(company))
+    xgraph_nested_set(library, 'subtitle.text', '{} to {}'.format(date_start, date_end))
+    options = "height='500px' library=" + str(library)
+
+    # make the graph
+    graph1 = XGraphCK('line', data, width=12, options=options)
+
+    # Put graphs on page
+    graphpage.objs.append(XGraphRow([graph1], text_before='Single line graph'))
+
+    # fixme: stacked area chart a la highchart demo
 
     return locals()
