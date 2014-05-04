@@ -432,4 +432,23 @@ def syslog_demo_8d():
 
     # fixme: stacked area chart a la highchart demo
 
+    areas = [{'name': 'set1', 'data': [['2013-07-27 07:08:00 UTC', 4], ['2013-07-27 07:09:00 UTC', 3],
+                                       ['2013-07-27 07:10:00 UTC', 2], ['2013-07-27 07:04:00 UTC', 2],
+                                       ['2013-07-27 07:02:00 UTC', 3], ['2013-07-27 07:00:00 UTC', 2],
+                                       ['2013-07-27 07:06:00 UTC', 1], ['2013-07-27 07:01:00 UTC', 5],
+                                       ['2013-07-27 07:05:00 UTC', 5], ['2013-07-27 07:03:00 UTC', 3],
+                                       ['2013-07-27 07:07:00 UTC', 3]]},
+             {'name': 'set2', 'data': [['2013-07-27 07:08:00 UTC', 5], ['2013-07-27 07:09:00 UTC', 3],
+                                        ['2013-07-27 07:10:00 UTC', 4], ['2013-07-27 07:04:00 UTC', 2],
+                                        ['2013-07-27 07:02:00 UTC', 4], ['2013-07-27 07:00:00 UTC', 2],
+                                        ['2013-07-27 07:06:00 UTC', 3], ['2013-07-27 07:01:00 UTC', 5],
+                                        ['2013-07-27 07:05:00 UTC', 2], ['2013-07-27 07:03:00 UTC', 3],
+                                        ['2013-07-27 07:07:00 UTC', 1]]}
+             ]
+    library = {}
+    xgraph_nested_set(library, 'title.text', '{} Test Stacked Area'.format(company))
+    xgraph_nested_set(library, 'plotOptions.area.stacking', 'normal')
+    options = "height='500px' library=" + str(library)
+    graph2 = XGraphCK('area', areas, width=6, options=options)
+    graphpage.objs.append(XGraphRow([graph2]))
     return locals()
