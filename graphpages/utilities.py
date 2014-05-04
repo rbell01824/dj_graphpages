@@ -372,7 +372,7 @@ class XGraphCK(object):
         :param graph_type: The type of this graph.  Must be line, pie, column, bar, or area.
         :type graph_type: unicode
         :param data: The name of the context variable holding the graph's data
-        :type data: unicode
+        :type data: unicode or list[dict]
         :param options: 'with' options for the chartkick graph.
         :type options: unicode
         :param width: Bootstrap3 grid width for graph
@@ -424,6 +424,7 @@ class XGraphCK(object):
             pass
         chart = '{% ' + chart + ' %}'
         chart = CHARTKICK_BEFORE_HTML + chart + CHARTKICK_AFTER_HTML
+        # print '===', chart
 
         output += chart
 
