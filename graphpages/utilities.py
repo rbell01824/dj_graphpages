@@ -29,9 +29,15 @@ from django.utils.encoding import force_unicode
 
 # fixme: finish syslog cruft.  add iterator on nodes.  add the last 2 things JZ did, build as a method
 # todo 1: add title and stacked to xgraph it will need to be type sensitive
-# todo 1: add collapse bootstrap to elements as an option
+# todo 1: add collapse bootstrap to elements as an option see http://getbootstrap.com/javascript/#collapse
 # todo 1: add button group with links to elements as an option
-# todo 1: add smart table in xgraph stack as xtable
+# todo 1: add smart table in xgraph stack as xtable see
+    # todo 1: Internal APIs — django-tables2 0.16.0.dev documentation:
+    # todo 1: export using jquery http://jsfiddle.net/terryyounghk/KPEGU/
+    # todo 1: http://www.kunalbabre.com/projects/table2CSV.php  use this one
+    # todo 1: http://stackoverflow.com/questions/4639372/export-to-csv-in-jquery/7588465#7588465
+    # todo 1: django-tables2 - An app for creating HTML tables — django-tables2 0.16.0.dev documentation:
+    # todo 1: http://elsdoerfer.name/docs/django-tables/
 # todo 1: create options class to support xgraph options
 # todo 1: add syslog example with form for selecting node and dt range
 # todo 1: add extension to allow include from db models
