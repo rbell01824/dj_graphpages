@@ -28,6 +28,11 @@ from django.template import Context, Template
 from django.utils.encoding import force_unicode
 
 # fixme: finish syslog cruft.  add iterator on nodes.  add the last 2 things JZ did, build as a method
+# todo 1: add title and stacked to xgraph it will need to be type sensitive
+# todo 1: add collapse bootstrap to elements as an option
+# todo 1: add button group with links to elements as an option
+# todo 1: add smart table in xgraph stack as xtable
+# todo 1: create options class to support xgraph options
 # todo 1: add syslog example with form for selecting node and dt range
 # todo 1: add extension to allow include from db models
 # todo 1: add convenience menthod for add row, add graph, insert row/graph, delete row/graph etc.
@@ -364,8 +369,11 @@ class XGraphCK(object):
     """
     Graph object class for Chartkick.  Class that actually holds the graph object definition.
     """
+    # noinspection PyShadowingBuiltins
     def __init__(self, graph_type, data, options=None,
-                 width=12, text_before=None, text_after=None):
+                 width=12,
+                 min=None, max=None, height=None, library=None,
+                 text_before=None, text_after=None):
         """
         Create a graph object
 
@@ -377,6 +385,14 @@ class XGraphCK(object):
         :type options: unicode
         :param width: Bootstrap3 grid width for graph
         :type width: int
+        :param min: Min data value
+        :type min: int or float
+        :param max: Max data value
+        :type max: int or float
+        :param height: string version of height, ex '500px'
+        :type height: unicode
+        :param library: highcharts library values, ex. [('title.text', 'graph title'),...]
+        :type library: list[tuple] or tuple
         :param text_before: Markdown text to display before the graph.
         :type text_before: unicode
         :param text_after: Markdown text to display after the graph.
@@ -392,6 +408,10 @@ class XGraphCK(object):
         self.data = data                                # the data to display
         self.options = options                          # chartkick with options
         self.width = width
+        self.min = min
+        self.max = max
+        self.height = height
+        self.library = library
         self.text_before = text_before                  # markdown text to display before the graph
         self.text_after = text_after                    # markdown text to display after the graph
 
@@ -441,6 +461,19 @@ class XGraphCK(object):
         Render the graph
         """
         return self.output
+
+    # noinspection PyShadowingBuiltins
+    def options(self, min=None, max=None, height=None, library=None):
+        """
+        Set chartkick & highchart options
+        :param min:
+        :param max:
+        :param height:
+        :param library:
+        """
+        # fixme: finish options method for XGraphCK
+        pass
+
 
 ########################################################################################################################
 
